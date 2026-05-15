@@ -1,19 +1,25 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 export function useForm(initialValues, validate) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const valuesRef = useRef(initialValues);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setValues(prev => ({ ...prev, [name]: value }));
+    setValues(prev => {
+      const nextValues = { ...prev, [name]: value };
+      valuesRef.current = nextValues;
 
-    if (touched[name] && validate) {
-      const fieldErrors = validate({ ...values, [name]: value });
-      setErrors(prev => ({ ...prev, [name]: fieldErrors[name] }));
-    }
+      if (touched[name] && validate) {
+        const fieldErrors = validate(nextValues);
+        setErrors(prevErrors => ({ ...prevErrors, [name]: fieldErrors[name] }));
+      }
+
+      return nextValues;
+    });
   };
 
   const handleBlur = (e) => {
@@ -21,16 +27,18 @@ export function useForm(initialValues, validate) {
     setTouched(prev => ({ ...prev, [name]: true }));
 
     if (validate) {
-      const fieldErrors = validate(values);
+      const fieldErrors = validate(valuesRef.current);
       setErrors(prev => ({ ...prev, [name]: fieldErrors[name] }));
     }
   };
 
   const handleSubmit = async (onSubmit) => {
+    const currentValues = valuesRef.current;
+
     if (validate) {
-      const formErrors = validate(values);
+      const formErrors = validate(currentValues);
       setErrors(formErrors);
-      const allTouched = Object.keys(values).reduce(
+      const allTouched = Object.keys(currentValues).reduce(
         (acc, key) => ({ ...acc, [key]: true }), {}
       );
       setTouched(allTouched);
@@ -42,7 +50,7 @@ export function useForm(initialValues, validate) {
 
     try {
       setIsSubmitting(true);
-      await onSubmit(values);
+      await onSubmit(currentValues);
     } finally {
       setIsSubmitting(false);
     }
@@ -50,6 +58,7 @@ export function useForm(initialValues, validate) {
 
   const reset = () => {
     setValues(initialValues);
+    valuesRef.current = initialValues;
     setErrors({});
     setTouched({});
   };

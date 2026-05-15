@@ -1,16 +1,17 @@
 import api from './api';
+import { setAuthToken, clearAuthToken, getAuthToken } from './tokenStore';
 
 export const authService = {
   async login(username, password) {
     const data = await api.post('/auth/login', { username, password });
     if (data.token) {
-      localStorage.setItem('auth_token', data.token);
+      setAuthToken(data.token);
     }
     return data;
   },
 
   async logout() {
-    localStorage.removeItem('auth_token');
+    clearAuthToken();
   },
 
   async getCurrentUser() {
@@ -18,7 +19,7 @@ export const authService = {
   },
 
   isAuthenticated() {
-    return !!localStorage.getItem('auth_token');
+    return !!getAuthToken();
   },
 };
 

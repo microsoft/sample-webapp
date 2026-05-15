@@ -1,3 +1,5 @@
+import { getAuthToken } from './tokenStore';
+
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 class ApiError extends Error {
@@ -28,7 +30,7 @@ function getHeaders() {
     'Content-Type': 'application/json',
   };
 
-  const token = localStorage.getItem('auth_token');
+  const token = getAuthToken();
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
