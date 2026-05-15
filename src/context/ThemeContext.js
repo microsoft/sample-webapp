@@ -13,28 +13,37 @@ function getInitialTheme() {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
+function hasStoredThemePreference() {
+  const stored = localStorage.getItem(THEME_KEY);
+  return stored !== null && THEMES.includes(stored);
+}
+
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(getInitialTheme);
+  const [hasExplicitTheme, setHasExplicitTheme] = useState(hasStoredThemePreference);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = (e) => {
-      const stored = localStorage.getItem(THEME_KEY);
-      if (!stored) {
+      if (!hasExplicitTheme) {
         setTheme(e.matches ? 'dark' : 'light');
       }
     };
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
+  }, [hasExplicitTheme]);
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme(prev => {
+      const nextTheme = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem(THEME_KEY, nextTheme);
+      return nextTheme;
+    });
+    setHasExplicitTheme(true);
   };
 
   return (
