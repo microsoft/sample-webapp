@@ -15,7 +15,7 @@ function Toast({ message, type = 'info', onClose }) {
       <span className="toast-message">{message}</span>
       {onClose && (
         <button className="toast-close" onClick={onClose} aria-label="Close notification">
-          \u00d7
+          {'\u00d7'}
         </button>
       )}
     </div>
