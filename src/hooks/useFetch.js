@@ -1,0 +1,50 @@
+import { useState, useEffect, useCallback, useRef } from 'react';
+
+export function useFetch(fetchFn, dependencies = []) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const requestIdRef = useRef(0);
+  const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+
+  const execute = useCallback(async () => {
+    requestIdRef.current += 1;
+    const requestId = requestIdRef.current;
+    const isCurrentRequest = () =>
+      isMountedRef.current && requestId === requestIdRef.current;
+
+    try {
+      if (isCurrentRequest()) {
+        setLoading(true);
+        setError(null);
+      }
+      const result = await fetchFn();
+      if (isCurrentRequest()) {
+        setData(result);
+      }
+    } catch (err) {
+      if (isCurrentRequest()) {
+        setError(err.message || 'An error occurred');
+      }
+    } finally {
+      if (isCurrentRequest()) {
+        setLoading(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, dependencies);
+
+  useEffect(() => {
+    execute();
+  }, [execute]);
+
+  return { data, loading, error, refetch: execute };
+}
+
+export default useFetch;
