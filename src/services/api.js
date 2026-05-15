@@ -12,11 +12,23 @@ class ApiError extends Error {
 }
 
 async function handleResponse(response) {
-  const data = await response.json().catch(() => null);
+  // Handle 204 No Content - no body to parse
+  if (response.status === 204) {
+    return null;
+  }
+
+  // Check if response has JSON content
+  const contentType = response.headers.get('content-type');
+  const hasJson = contentType && contentType.includes('application/json');
+
+  let data = null;
+  if (hasJson) {
+    data = await response.json().catch(() => null);
+  }
 
   if (!response.ok) {
     throw new ApiError(
-      data?.message || `HTTP ${response.status}`,
+      data?.message || `HTTP ${response.status} ${response.statusText}`,
       response.status,
       data
     );
