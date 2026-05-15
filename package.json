@@ -1,0 +1,16 @@
+{
+  "name": "sample-webapp",
+  "version": "1.0.0",
+  "description": "Sample web application for Playwright testing",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0"
+  }
+}

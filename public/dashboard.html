@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Sample Web App</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">SampleApp</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/login">Login</a>
+      <a href="/dashboard">Dashboard</a>
+    </div>
+  </nav>
+  <main>
+    <h1>Dashboard</h1>
+    <div class="dashboard-grid">
+      <div class="card">
+        <h3>Users</h3>
+        <p class="stat" id="user-count">128</p>
+      </div>
+      <div class="card">
+        <h3>Revenue</h3>
+        <p class="stat" id="revenue">$12,450</p>
+      </div>
+      <div class="card">
+        <h3>Orders</h3>
+        <p class="stat" id="order-count">340</p>
+      </div>
+    </div>
+    <section>
+      <h2>Recent Activity</h2>
+      <table id="activity-table">
+        <thead>
+          <tr><th>User</th><th>Action</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Alice</td><td>Created account</td><td>2026-05-14</td></tr>
+          <tr><td>Bob</td><td>Placed order</td><td>2026-05-13</td></tr>
+          <tr><td>Charlie</td><td>Updated profile</td><td>2026-05-12</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
