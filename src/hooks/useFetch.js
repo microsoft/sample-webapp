@@ -15,20 +15,24 @@ export function useFetch(fetchFn, dependencies = []) {
 
   const execute = useCallback(async () => {
     const requestId = ++requestIdRef.current;
+    const isCurrentRequest = () =>
+      isMountedRef.current && requestId === requestIdRef.current;
 
     try {
-      setLoading(true);
-      setError(null);
+      if (isCurrentRequest()) {
+        setLoading(true);
+        setError(null);
+      }
       const result = await fetchFn();
-      if (isMountedRef.current && requestId === requestIdRef.current) {
+      if (isCurrentRequest()) {
         setData(result);
       }
     } catch (err) {
-      if (isMountedRef.current && requestId === requestIdRef.current) {
+      if (isCurrentRequest()) {
         setError(err.message || 'An error occurred');
       }
     } finally {
-      if (isMountedRef.current && requestId === requestIdRef.current) {
+      if (isCurrentRequest()) {
         setLoading(false);
       }
     }
