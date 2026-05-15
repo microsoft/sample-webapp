@@ -91,5 +91,5 @@ th, td {
 
 th {
   background: var(--color-table-header);
-  color: white;
+  color: var(--color-table-header-text, white);
 }
