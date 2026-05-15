@@ -1,0 +1,23 @@
+.not-found {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.not-found-code {
+  font-size: 6rem;
+  font-weight: 800;
+  color: #4361ee;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.not-found h2 {
+  margin-bottom: 1rem;
+  color: #1a1a2e;
+}
+
+.not-found p {
+  color: #666;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
