@@ -51,9 +51,6 @@ export function useForm(initialValues, validate) {
     try {
       setIsSubmitting(true);
       await onSubmit(currentValues);
-    } catch (error) {
-      // Re-throw to allow caller to handle, but ensure isSubmitting is reset
-      throw error;
     } finally {
       setIsSubmitting(false);
     }
