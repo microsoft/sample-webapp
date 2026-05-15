@@ -64,6 +64,24 @@
   max-width: 500px;
 }
 
+.about-contact .form-group {
+  margin-bottom: 1rem;
+}
+
+.about-contact .form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+}
+
+.about-contact .form-group input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
 .about-contact textarea {
   width: 100%;
   padding: 0.6rem;
