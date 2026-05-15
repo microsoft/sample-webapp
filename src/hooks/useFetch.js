@@ -14,7 +14,8 @@ export function useFetch(fetchFn, dependencies = []) {
   }, []);
 
   const execute = useCallback(async () => {
-    const requestId = ++requestIdRef.current;
+    requestIdRef.current += 1;
+    const requestId = requestIdRef.current;
     const isCurrentRequest = () =>
       isMountedRef.current && requestId === requestIdRef.current;
 

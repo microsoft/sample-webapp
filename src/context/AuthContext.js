@@ -8,10 +8,14 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    authService.getCurrentUser()
-      .then(setUser)
-      .catch(() => authService.logout())
-      .finally(() => setLoading(false));
+    if (authService.isAuthenticated()) {
+      authService.getCurrentUser()
+        .then(setUser)
+        .catch(() => authService.logout())
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   const login = async (username, password) => {
