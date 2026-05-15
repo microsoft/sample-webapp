@@ -1,0 +1,44 @@
+:root {
+  /* Light theme (default) */
+  --color-bg: #f5f5f5;
+  --color-surface: #ffffff;
+  --color-text: #333333;
+  --color-text-secondary: #666666;
+  --color-primary: #4361ee;
+  --color-primary-hover: #3a56d4;
+  --color-nav-bg: #1a1a2e;
+  --color-nav-text: #ffffff;
+  --color-nav-link: #cccccc;
+  --color-border: #cccccc;
+  --color-input-bg: #ffffff;
+  --color-card-shadow: rgba(0, 0, 0, 0.1);
+  --color-heading: #1a1a2e;
+  --color-table-header: #1a1a2e;
+  --color-danger: #dc3545;
+  --color-success-bg: #d4edda;
+  --color-success-text: #155724;
+  --color-error-bg: #f8d7da;
+  --color-error-text: #721c24;
+}
+
+[data-theme='dark'] {
+  --color-bg: #121212;
+  --color-surface: #1e1e1e;
+  --color-text: #e0e0e0;
+  --color-text-secondary: #aaaaaa;
+  --color-primary: #5a7bff;
+  --color-primary-hover: #4a6ae8;
+  --color-nav-bg: #0d0d1a;
+  --color-nav-text: #ffffff;
+  --color-nav-link: #aaaaaa;
+  --color-border: #333333;
+  --color-input-bg: #2a2a2a;
+  --color-card-shadow: rgba(0, 0, 0, 0.3);
+  --color-heading: #e0e0e0;
+  --color-table-header: #0d0d1a;
+  --color-danger: #ff6b7a;
+  --color-success-bg: #1a3a2a;
+  --color-success-text: #6fcf97;
+  --color-error-bg: #3a1a1e;
+  --color-error-text: #ff8a95;
+}

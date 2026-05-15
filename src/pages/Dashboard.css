@@ -6,17 +6,17 @@
 }
 
 .card {
-  background: white;
+  background: var(--color-surface);
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--color-card-shadow);
   text-align: center;
 }
 
 .stat {
   font-size: 2rem;
   font-weight: bold;
-  color: #4361ee;
+  color: var(--color-primary);
   margin-top: 0.5rem;
 }
 
@@ -33,9 +33,11 @@
 .todo-form input {
   flex: 1;
   padding: 0.6rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   font-size: 1rem;
+  background: var(--color-input-bg);
+  color: var(--color-text);
 }
 
 .todo-list {
@@ -48,7 +50,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem;
-  background: white;
+  background: var(--color-surface);
   border-radius: 6px;
   margin-bottom: 0.5rem;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
@@ -56,7 +58,7 @@
 
 .todo-list li.done span {
   text-decoration: line-through;
-  color: #999;
+  color: var(--color-text-secondary);
 }
 
 .todo-list li span {
@@ -67,7 +69,7 @@
   background: none;
   border: none;
   font-size: 1.4rem;
-  color: #dc3545;
+  color: var(--color-danger);
   cursor: pointer;
   line-height: 1;
 }
@@ -75,19 +77,19 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: var(--color-surface);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px var(--color-card-shadow);
 }
 
 th, td {
   padding: 0.75rem 1rem;
   text-align: left;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
 }
 
 th {
-  background: #1a1a2e;
+  background: var(--color-table-header);
   color: white;
 }
