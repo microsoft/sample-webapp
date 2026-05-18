@@ -21,13 +21,10 @@ jobs:
           creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
 
       - name: Install the App Testing Agent CLI
-        env:
-          GH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
         run: |
-          TAG=$(gh release list --repo microsoft/app-testing-agent --limit 1 --exclude-drafts --json tagName --jq '.[0].tagName')
-          echo "Installing ata $TAG"
-          gh release download "$TAG" --repo microsoft/app-testing-agent -p '*.tgz' --dir /tmp/ata-install
-          npm install -g /tmp/ata-install/microsoft-app-testing-agent-*.tgz
+          echo "@microsoft:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PACKAGES_TOKEN }}" >> ~/.npmrc
+          npm i -g @microsoft/app-testing-agent
 
       - name: Run Playwright tests and upload results
         run: ata run --save-results
