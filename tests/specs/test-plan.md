@@ -1,7 +1,7 @@
 # Test Plan
 
 ## Application
-Sample Web App — an Express server serving static HTML pages (login form, dashboard with stats/activity table) at `http://localhost:3000`. Tests run with Playwright against the Express-served pages.
+Sample Web App — a React application with React Router that provides routes such as the login form and dashboard (with stats/activity table) at `http://localhost:3000`. Tests run with Playwright against the React app, typically via the local dev server. If `server.js` is also used to serve static pages, treat that as an alternate serving option rather than the primary app description.
 
 ## Suites
 
