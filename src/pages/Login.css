@@ -10,14 +10,17 @@
   display: block;
   margin-bottom: 0.4rem;
   font-weight: 500;
+  color: var(--color-text);
 }
 
 .form-group input {
   width: 100%;
   padding: 0.6rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   font-size: 1rem;
+  background: var(--color-input-bg);
+  color: var(--color-text);
 }
 
 .message {
@@ -27,5 +30,5 @@
   max-width: 400px;
 }
 
-.message.success { background: #d4edda; color: #155724; }
-.message.error { background: #f8d7da; color: #721c24; }
+.message.success { background: var(--color-success-bg); color: var(--color-success-text); }
+.message.error { background: var(--color-error-bg); color: var(--color-error-text); }
