@@ -13,4 +13,4 @@
 
 ## Test Conventions
 
-No existing Playwright tests found. `@playwright/test` ^1.48.0 is listed as a devDependency but no `playwright.config.ts` or test files exist yet.
+Playwright `@playwright/test` ^1.48.0 with `dotenv` for env loading. Config: `playwright.config.ts` (baseURL `http://localhost:3000`, three projects: `setup`, `chromium`, `login-tests`). Tests live in `tests/` with `*.spec.ts` naming. A shared `auth.setup.ts` signs in once and saves `storageState` to `.testing-agent/auth/storageState.json`; the `chromium` project depends on it while `login-tests` runs without cached state. No page objects or custom fixtures yet.
