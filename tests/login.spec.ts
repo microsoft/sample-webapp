@@ -25,6 +25,7 @@ test.describe('Login page', () => {
     const message = page.locator('#message');
     await expect(message).toBeVisible();
     await expect(message).toHaveClass(/success/);
+    await expect(message).toContainText('Welcome');
 
     await expect(page).toHaveURL(/.*dashboard/);
   });
