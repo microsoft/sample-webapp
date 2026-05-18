@@ -39,10 +39,10 @@ jobs:
           npm i -g @microsoft/app-testing-agent
 
       - name: Start app
-        run: npm start &
+        run: node server.js &
 
       - name: Wait for app
-        run: npx wait-on http://localhost:3000 --timeout 30000
+        run: npx wait-on http://localhost:3000 --timeout 60000
 
       - name: Heal failing tests and open a PR
         run: ata heal --create-pr --draft

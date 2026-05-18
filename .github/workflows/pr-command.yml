@@ -80,10 +80,10 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Start app
-        run: npm start &
+        run: node server.js &
 
       - name: Wait for app
-        run: npx wait-on http://localhost:3000 --timeout 30000
+        run: npx wait-on http://localhost:3000 --timeout 60000
 
       - name: Azure Login
         uses: azure/login@v2
