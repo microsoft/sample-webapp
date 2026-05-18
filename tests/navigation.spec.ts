@@ -15,4 +15,14 @@ test.describe('Navigation', () => {
     await page.getByRole('link', { name: 'Login' }).click();
     await expect(page).toHaveURL(/.*login/);
   });
+
+  test('should navigate to home using Home link and logo', async ({ page }) => {
+    await page.goto('/dashboard');
+    await page.getByRole('link', { name: 'Home' }).click();
+    await expect(page).toHaveURL(/\/$/);
+
+    await page.goto('/login');
+    await page.getByRole('link', { name: 'SampleApp' }).click();
+    await expect(page).toHaveURL(/\/$/);
+  });
 });
