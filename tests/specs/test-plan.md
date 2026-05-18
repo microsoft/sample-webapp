@@ -41,3 +41,40 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Login page loads
      4. Step: Click "SampleApp" logo link
         Expectation: URL changes to /
+
+### Login → Dashboard Journey
+4. **Login redirects to dashboard with full content** — `tests/login.spec.ts`
+   - Preconditions: TEST_USER_EMAIL and TEST_USER_PASSWORD env vars set
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /login
+        Expectation: Login page loads with form visible
+     2. Step: Fill username and password fields with valid credentials, click Login
+        Expectation: Success message appears with "Welcome" text
+     3. Step: Wait for redirect to complete
+        Expectation: URL changes to /dashboard
+     4. Step: Inspect dashboard content
+        Expectation: Dashboard heading is visible and stat cards are present
+
+### Dashboard Data
+5. **Activity table displays correct row data** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts)
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard
+        Expectation: Dashboard page loads
+     2. Step: Inspect first activity row
+        Expectation: Row contains "Alice", "Created account", "2026-05-14"
+     3. Step: Inspect second activity row
+        Expectation: Row contains "Bob", "Placed order", "2026-05-13"
+     4. Step: Inspect third activity row
+        Expectation: Row contains "Charlie", "Updated profile", "2026-05-12"
+
+### Login Validation
+6. **Empty form submission shows specific error message** — `tests/login.spec.ts`
+   - Preconditions: None (no auth needed)
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /login
+        Expectation: Login page loads
+     2. Step: Bypass HTML5 required validation and submit empty form
+        Expectation: Error message appears with class "error"
+     3. Step: Inspect error message text
+        Expectation: Message contains "Username and password required"
