@@ -20,6 +20,39 @@ test.describe('Dashboard page', () => {
     await expect(page.locator('#order-count')).not.toBeEmpty();
   });
 
+  test('should display correct stat card values', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    await expect(page.locator('#user-count')).toHaveText('128');
+    await expect(page.locator('#revenue')).toHaveText('$12,450');
+    await expect(page.locator('#order-count')).toHaveText('340');
+  });
+
+  test('should display correct activity table row data', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const table = page.locator('#activity-table');
+    await expect(table).toBeVisible();
+
+    const rows = table.locator('tbody tr');
+    await expect(rows).toHaveCount(3);
+
+    const firstRow = rows.nth(0);
+    await expect(firstRow.getByRole('cell', { name: 'Alice' })).toBeVisible();
+    await expect(firstRow.getByRole('cell', { name: 'Created account' })).toBeVisible();
+    await expect(firstRow.getByRole('cell', { name: '2026-05-14' })).toBeVisible();
+
+    const secondRow = rows.nth(1);
+    await expect(secondRow.getByRole('cell', { name: 'Bob' })).toBeVisible();
+    await expect(secondRow.getByRole('cell', { name: 'Placed order' })).toBeVisible();
+    await expect(secondRow.getByRole('cell', { name: '2026-05-13' })).toBeVisible();
+
+    const thirdRow = rows.nth(2);
+    await expect(thirdRow.getByRole('cell', { name: 'Charlie' })).toBeVisible();
+    await expect(thirdRow.getByRole('cell', { name: 'Updated profile' })).toBeVisible();
+    await expect(thirdRow.getByRole('cell', { name: '2026-05-12' })).toBeVisible();
+  });
+
   test('should display Recent Activity table with data', async ({ page }) => {
     await page.goto('/dashboard');
 
