@@ -21,12 +21,12 @@ test.describe('Navigation', () => {
     await expect(page).toHaveURL(/.*dashboard/);
 
     await page.getByRole('link', { name: 'Home' }).click();
-    await expect(page).toHaveURL(/.*\//);
+    await expect(page).toHaveURL('/');
 
     await page.goto('/login');
     await expect(page).toHaveURL(/.*login/);
 
     await page.getByRole('link', { name: 'SampleApp' }).click();
-    await expect(page).toHaveURL(/.*\//);
+    await expect(page).toHaveURL('/');
   });
 });
