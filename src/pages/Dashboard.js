@@ -15,20 +15,33 @@ const activityData = [
   { user: 'Charlie', action: 'Updated profile', date: '2026-05-12' },
 ];
 
+const stats = [
+  { id: 'user-count', label: 'Users', value: '128' },
+  { id: 'revenue', label: 'Revenue', value: '$12,450' },
+  { id: 'order-count', label: 'Orders', value: '340' },
+];
+
 const FILTERS = ['all', 'active', 'completed'];
 
 function loadTodos() {
   if (typeof window === 'undefined' || !window.localStorage) {
     return defaultTodos;
   }
+
   try {
     const raw = window.localStorage.getItem(TODOS_STORAGE_KEY);
     if (!raw) return defaultTodos;
+
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return defaultTodos;
+
     return parsed
-      .filter(t => t && typeof t.text === 'string')
-      .map(t => ({ id: t.id ?? Date.now(), text: t.text, done: !!t.done }));
+      .filter((todo) => todo && typeof todo.text === 'string')
+      .map((todo) => ({
+        id: todo.id ?? Date.now(),
+        text: todo.text,
+        done: !!todo.done,
+      }));
   } catch {
     return defaultTodos;
   }
@@ -38,9 +51,19 @@ function Dashboard() {
   const [todos, setTodos] = useState(loadTodos);
   const [newTodo, setNewTodo] = useState('');
   const [filter, setFilter] = useState('all');
+  const [isChartsLoading, setIsChartsLoading] = useState(true);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setIsChartsLoading(false);
+    }, 900);
+
+    return () => clearTimeout(timerId);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.localStorage) return;
+
     try {
       window.localStorage.setItem(TODOS_STORAGE_KEY, JSON.stringify(todos));
     } catch {
@@ -51,48 +74,48 @@ function Dashboard() {
   const addTodo = (e) => {
     e.preventDefault();
     if (!newTodo.trim()) return;
+
     setTodos([...todos, { id: Date.now(), text: newTodo.trim(), done: false }]);
     setNewTodo('');
   };
 
   const toggleTodo = (id) => {
-    setTodos(todos.map(t => t.id === id ? { ...t, done: !t.done } : t));
+    setTodos(todos.map((todo) => (todo.id === id ? { ...todo, done: !todo.done } : todo)));
   };
 
   const deleteTodo = (id) => {
-    setTodos(todos.filter(t => t.id !== id));
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   const clearCompleted = () => {
-    setTodos(todos.filter(t => !t.done));
+    setTodos(todos.filter((todo) => !todo.done));
   };
 
   const visibleTodos = useMemo(() => {
-    if (filter === 'active') return todos.filter(t => !t.done);
-    if (filter === 'completed') return todos.filter(t => t.done);
+    if (filter === 'active') return todos.filter((todo) => !todo.done);
+    if (filter === 'completed') return todos.filter((todo) => todo.done);
+
     return todos;
   }, [todos, filter]);
 
-  const remainingCount = todos.filter(t => !t.done).length;
-  const hasCompleted = todos.some(t => t.done);
+  const remainingCount = todos.filter((todo) => !todo.done).length;
+  const hasCompleted = todos.some((todo) => todo.done);
 
   return (
     <div className="dashboard">
       <h1>Dashboard</h1>
 
-      <div className="dashboard-grid">
-        <div className="card">
-          <h3>Users</h3>
-          <p className="stat" id="user-count">128</p>
-        </div>
-        <div className="card">
-          <h3>Revenue</h3>
-          <p className="stat" id="revenue">$12,450</p>
-        </div>
-        <div className="card">
-          <h3>Orders</h3>
-          <p className="stat" id="order-count">340</p>
-        </div>
+      <div className="dashboard-grid" aria-busy={isChartsLoading}>
+        {stats.map((stat) => (
+          <div className="card" key={stat.id}>
+            <h3>{stat.label}</h3>
+            {isChartsLoading ? (
+              <div className="chart-skeleton" role="status" aria-label={`Loading ${stat.label} chart`} />
+            ) : (
+              <p className="stat" id={stat.id}>{stat.value}</p>
+            )}
+          </div>
+        ))}
       </div>
 
       <section className="todo-section">
@@ -110,15 +133,15 @@ function Dashboard() {
 
         <div className="todo-toolbar" role="toolbar" aria-label="Todo filters">
           <div className="todo-filters" role="group" aria-label="Filter todos">
-            {FILTERS.map(f => (
+            {FILTERS.map((currentFilter) => (
               <button
-                key={f}
+                key={currentFilter}
                 type="button"
-                className={`todo-filter${filter === f ? ' active' : ''}`}
-                aria-pressed={filter === f}
-                onClick={() => setFilter(f)}
+                className={`todo-filter${filter === currentFilter ? ' active' : ''}`}
+                aria-pressed={filter === currentFilter}
+                onClick={() => setFilter(currentFilter)}
               >
-                {f.charAt(0).toUpperCase() + f.slice(1)}
+                {currentFilter.charAt(0).toUpperCase() + currentFilter.slice(1)}
               </button>
             ))}
           </div>
@@ -145,7 +168,7 @@ function Dashboard() {
                   : 'No tasks yet. Add one above to get started.'}
             </li>
           ) : (
-            visibleTodos.map(todo => (
+            visibleTodos.map((todo) => (
               <li key={todo.id} className={todo.done ? 'done' : ''}>
                 <input
                   type="checkbox"

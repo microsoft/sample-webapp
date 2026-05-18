@@ -1,9 +1,9 @@
 name: E2E Tests
 
+# Auto-trigger disabled (was: push to main + pull_request).
+# Run manually from the Actions tab when needed.
 on:
-  push:
-    branches: [main]
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   e2e:
