@@ -1,0 +1,130 @@
+name: "Testing Agent — PR Command"
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  parse:
+    if: >
+      github.event.issue.pull_request &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association) &&
+      (contains(github.event.comment.body, '/ata heal') || contains(github.event.comment.body, '/ata scout'))
+    runs-on: ubuntu-latest
+    outputs:
+      command: ${{ steps.parse.outputs.command }}
+      prompt: ${{ steps.parse.outputs.prompt }}
+    steps:
+      - name: Parse command
+        id: parse
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+        run: |
+          if echo "$COMMENT_BODY" | grep -q '/ata heal'; then
+            echo "command=heal" >> "$GITHUB_OUTPUT"
+          elif echo "$COMMENT_BODY" | grep -q '/ata scout'; then
+            echo "command=scout" >> "$GITHUB_OUTPUT"
+          fi
+          # Extract optional prompt after the command
+          PROMPT=$(echo "$COMMENT_BODY" | sed -n 's|.*/ata \(heal\|scout\)\s*||p')
+          echo "prompt=$PROMPT" >> "$GITHUB_OUTPUT"
+
+      - name: React to comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            });
+
+  run-ata:
+    needs: parse
+    if: needs.parse.outputs.command
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get PR branch
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            core.setOutput('ref', pr.data.head.ref);
+            core.setOutput('sha', pr.data.head.sha);
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pr.outputs.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install app dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Start app
+        run: npm run dev &
+
+      - name: Wait for app
+        run: npx wait-on http://localhost:3000 --timeout 30000
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Install ata
+        env:
+          GH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: |
+          TAG=$(gh release list --repo microsoft/app-testing-agent --limit 1 --exclude-drafts --json tagName --jq '.[0].tagName')
+          echo "Installing ata $TAG"
+          gh release download "$TAG" --repo microsoft/app-testing-agent -p '*.tgz' --dir /tmp/ata-install
+          npm install -g /tmp/ata-install/microsoft-app-testing-agent-*.tgz
+
+      - name: Run ata ${{ needs.parse.outputs.command }}
+        env:
+          COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+          ATA_CMD: ${{ needs.parse.outputs.command }}
+          ATA_PROMPT: ${{ needs.parse.outputs.prompt }}
+        run: |
+          ARGS="--save-results --create-pr"
+          if [ -n "$ATA_PROMPT" ]; then
+            ata "$ATA_CMD" $ARGS -p "$ATA_PROMPT"
+          else
+            ata "$ATA_CMD" $ARGS
+          fi
+
+      - name: Signal completion
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: '${{ job.status == 'success' && '+1' || '-1' }}',
+            });
