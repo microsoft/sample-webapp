@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
+/**
+ * Login page component.
+ *
+ * Accessibility & test conventions used throughout this repo:
+ * - Heading: <h1>Login</h1>, targeted via
+ *   getByRole('heading', { name: 'Login', level: 1 }).
+ * - Inputs: username and password are <input> elements with associated <label>;
+ *   target via getByRole('textbox', { name: 'Username' | 'Password' }).
+ * - Submit: <button type="submit">Login</button>; target via
+ *   getByRole('button', { name: 'Login' }).
+ * - Message banner: a single <div id="message"> that toggles between
+ *   role="status" (success) and role="alert" (error). It has
+ *   aria-live="polite" and a className containing 'success' or 'error'.
+ *   Playwright specs target it via page.getByRole('status') or
+ *   page.getByRole('alert'), then assert .toHaveClass(/success|error/).
+ */
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
