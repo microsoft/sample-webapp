@@ -65,4 +65,22 @@ test.describe('Login page', () => {
     await expect(message).toBeVisible();
     await expect(message).toHaveClass(/error/);
   });
+
+  test('should show correct error text when submitting empty form', async ({ page }) => {
+    await page.goto('/login');
+
+    await page.getByRole('textbox', { name: 'Username' }).evaluate(
+      (el: HTMLInputElement) => el.removeAttribute('required')
+    );
+    await page.getByRole('textbox', { name: 'Password' }).evaluate(
+      (el: HTMLInputElement) => el.removeAttribute('required')
+    );
+
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    const message = page.locator('#message');
+    await expect(message).toBeVisible();
+    await expect(message).toHaveClass(/error/);
+    await expect(message).toHaveText('Username and password required');
+  });
 });
