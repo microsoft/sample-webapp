@@ -58,7 +58,12 @@ function Login() {
         <button type="submit" className="btn btn-primary">Login</button>
       </form>
       {message && (
-        <div id="message" className={`message ${error ? 'error' : 'success'}`}>
+        <div
+          id="message"
+          role={error ? 'alert' : 'status'}
+          aria-live="polite"
+          className={`message ${error ? 'error' : 'success'}`}
+        >
           {message}
         </div>
       )}

@@ -22,7 +22,7 @@ test.describe('Login page', () => {
     await page.getByRole('textbox', { name: 'Password' }).fill(password);
     await page.getByRole('button', { name: 'Login' }).click();
 
-    const message = page.locator('#message');
+    const message = page.getByRole('status');
     await expect(message).toBeVisible();
     await expect(message).toHaveClass(/success/);
 
@@ -40,7 +40,7 @@ test.describe('Login page', () => {
     await page.getByRole('textbox', { name: 'Password' }).fill(password);
     await page.getByRole('button', { name: 'Login' }).click();
 
-    const message = page.locator('#message');
+    const message = page.getByRole('status');
     await expect(message).toBeVisible();
     await expect(message).toContainText('Welcome');
     await expect(message).toContainText(email);
@@ -61,7 +61,7 @@ test.describe('Login page', () => {
 
     await page.getByRole('button', { name: 'Login' }).click();
 
-    const message = page.locator('#message');
+    const message = page.getByRole('alert');
     await expect(message).toBeVisible();
     await expect(message).toHaveClass(/error/);
   });
