@@ -36,4 +36,4 @@ jobs:
         run: ata scout --create-pr --draft
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}

@@ -36,6 +36,6 @@ jobs:
         run: ata heal --create-pr --draft
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
-          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
           TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
