@@ -25,6 +25,7 @@ test.describe('Login page', () => {
     const message = page.locator('#message');
     await expect(message).toBeVisible();
     await expect(message).toHaveClass(/success/);
+    await expect(message).toContainText('Welcome');
 
     await expect(page).toHaveURL(/.*dashboard/);
   });
@@ -45,5 +46,25 @@ test.describe('Login page', () => {
     const message = page.locator('#message');
     await expect(message).toBeVisible();
     await expect(message).toHaveClass(/error/);
+  });
+
+  test('should show fallback error on network failure', async ({ page }) => {
+    await page.goto('/login');
+
+    await page.route('**/login', (route) => {
+      if (route.request().method() === 'POST') {
+        return route.abort('connectionrefused');
+      }
+      return route.continue();
+    });
+
+    await page.getByRole('textbox', { name: 'Username' }).fill('anyuser');
+    await page.getByRole('textbox', { name: 'Password' }).fill('anypassword');
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    const message = page.locator('#message');
+    await expect(message).toBeVisible();
+    await expect(message).toHaveClass(/error/);
+    await expect(message).toContainText('An error occurred');
   });
 });
