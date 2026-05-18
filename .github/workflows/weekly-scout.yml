@@ -1,8 +1,8 @@
 name: Weekly scout
 
+# Auto-trigger disabled (was: schedule cron '0 9 * * 1').
+# Run manually from the Actions tab when needed.
 on:
-  schedule:
-    - cron: '0 9 * * 1'   # Mondays at 09:00 UTC
   workflow_dispatch:
 
 permissions:
