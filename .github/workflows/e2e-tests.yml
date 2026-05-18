@@ -15,6 +15,12 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Install app dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
       - name: Azure login
         uses: azure/login@v2
         with:
@@ -25,6 +31,12 @@ jobs:
           echo "@microsoft:registry=https://npm.pkg.github.com" >> ~/.npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.GH_PACKAGES_TOKEN }}" >> ~/.npmrc
           npm i -g @microsoft/app-testing-agent
+
+      - name: Start app
+        run: npm run dev &
+
+      - name: Wait for app
+        run: npx wait-on http://localhost:3000 --timeout 30000
 
       - name: Run Playwright tests and upload results
         run: ata run --save-results
