@@ -3,3 +3,5 @@ build/
 test-results/
 playwright-report/
 .env
+.env.local
+.testing-agent/auth/

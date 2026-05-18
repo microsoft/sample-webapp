@@ -1,0 +1,29 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - link "SampleApp" [ref=e5] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e6]:
+      - link "Home" [ref=e7] [cursor=pointer]:
+        - /url: /
+      - link "Login" [ref=e8] [cursor=pointer]:
+        - /url: /login
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /dashboard
+      - link "About" [ref=e10] [cursor=pointer]:
+        - /url: /about
+  - main [ref=e11]:
+    - generic [ref=e12]:
+      - heading "Welcome to Sample Web App" [level=1] [ref=e13]
+      - paragraph [ref=e14]: A React web application built for Playwright testing.
+      - generic [ref=e15]:
+        - link "Get Started" [ref=e16] [cursor=pointer]:
+          - /url: /login
+        - link "View Dashboard" [ref=e17] [cursor=pointer]:
+          - /url: /dashboard
+      - generic [ref=e18]:
+        - heading "Features" [level=2] [ref=e19]
+        - list [ref=e20]:
+          - listitem [ref=e21]: User authentication with form validation
+          - listitem [ref=e22]: Interactive dashboard with stats
+          - listitem [ref=e23]: Client-side routing with React Router
+          - listitem [ref=e24]: Responsive design

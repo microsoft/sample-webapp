@@ -1,0 +1,5 @@
+{
+  "resourceId": "/subscriptions/653394e4-62a6-416f-abaa-ab0da6947792/resourceGroups/test-rg/providers/Microsoft.LoadTestService/playwrightworkspaces/eastus-permanent1",
+  "browserMode": "local",
+  "projectId": "83501d5a-8f41-4e2c-a7b5-04875b0eea53"
+}

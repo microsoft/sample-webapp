@@ -1,0 +1,44 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - link "SampleApp" [ref=e3] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e4]:
+      - link "Home" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - link "Login" [ref=e6] [cursor=pointer]:
+        - /url: /login
+      - link "Dashboard" [ref=e7] [cursor=pointer]:
+        - /url: /dashboard
+  - main [ref=e8]:
+    - heading "Dashboard" [level=1] [ref=e9]
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - heading "Users" [level=3] [ref=e12]
+        - paragraph [ref=e13]: "128"
+      - generic [ref=e14]:
+        - heading "Revenue" [level=3] [ref=e15]
+        - paragraph [ref=e16]: $12,450
+      - generic [ref=e17]:
+        - heading "Orders" [level=3] [ref=e18]
+        - paragraph [ref=e19]: "340"
+    - generic [ref=e20]:
+      - heading "Recent Activity" [level=2] [ref=e21]
+      - table [ref=e22]:
+        - rowgroup [ref=e23]:
+          - row "User Action Date" [ref=e24]:
+            - columnheader "User" [ref=e25]
+            - columnheader "Action" [ref=e26]
+            - columnheader "Date" [ref=e27]
+        - rowgroup [ref=e28]:
+          - row "Alice Created account 2026-05-14" [ref=e29]:
+            - cell "Alice" [ref=e30]
+            - cell "Created account" [ref=e31]
+            - cell "2026-05-14" [ref=e32]
+          - row "Bob Placed order 2026-05-13" [ref=e33]:
+            - cell "Bob" [ref=e34]
+            - cell "Placed order" [ref=e35]
+            - cell "2026-05-13" [ref=e36]
+          - row "Charlie Updated profile 2026-05-12" [ref=e37]:
+            - cell "Charlie" [ref=e38]
+            - cell "Updated profile" [ref=e39]
+            - cell "2026-05-12" [ref=e40]

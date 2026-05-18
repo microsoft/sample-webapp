@@ -1,0 +1,23 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - link "SampleApp" [ref=e3] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e4]:
+      - link "Home" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - link "Login" [ref=e6] [cursor=pointer]:
+        - /url: /login
+      - link "Dashboard" [ref=e7] [cursor=pointer]:
+        - /url: /dashboard
+  - main [ref=e8]:
+    - heading "Login" [level=1] [ref=e9]
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: Username
+        - textbox "Username" [ref=e13]:
+          - /placeholder: Enter username
+      - generic [ref=e14]:
+        - generic [ref=e15]: Password
+        - textbox "Password" [ref=e16]:
+          - /placeholder: Enter password
+      - button "Login" [ref=e17] [cursor=pointer]
