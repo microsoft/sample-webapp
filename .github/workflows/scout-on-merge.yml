@@ -1,8 +1,8 @@
 name: Scout on merge
 
+# Auto-trigger disabled (was: push to main).
+# Run manually from the Actions tab when needed.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
