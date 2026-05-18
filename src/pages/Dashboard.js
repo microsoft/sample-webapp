@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Dashboard.css';
 
 const initialTodos = [
@@ -13,9 +13,24 @@ const activityData = [
   { user: 'Charlie', action: 'Updated profile', date: '2026-05-12' },
 ];
 
+const stats = [
+  { id: 'user-count', label: 'Users', value: '128' },
+  { id: 'revenue', label: 'Revenue', value: '$12,450' },
+  { id: 'order-count', label: 'Orders', value: '340' },
+];
+
 function Dashboard() {
   const [todos, setTodos] = useState(initialTodos);
   const [newTodo, setNewTodo] = useState('');
+  const [isChartsLoading, setIsChartsLoading] = useState(true);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setIsChartsLoading(false);
+    }, 900);
+
+    return () => clearTimeout(timerId);
+  }, []);
 
   const addTodo = (e) => {
     e.preventDefault();
@@ -36,19 +51,17 @@ function Dashboard() {
     <div className="dashboard">
       <h1>Dashboard</h1>
 
-      <div className="dashboard-grid">
-        <div className="card">
-          <h3>Users</h3>
-          <p className="stat" id="user-count">128</p>
-        </div>
-        <div className="card">
-          <h3>Revenue</h3>
-          <p className="stat" id="revenue">$12,450</p>
-        </div>
-        <div className="card">
-          <h3>Orders</h3>
-          <p className="stat" id="order-count">340</p>
-        </div>
+      <div className="dashboard-grid" aria-busy={isChartsLoading}>
+        {stats.map((stat) => (
+          <div className="card" key={stat.id}>
+            <h3>{stat.label}</h3>
+            {isChartsLoading ? (
+              <div className="chart-skeleton" role="status" aria-label={`Loading ${stat.label} chart`} />
+            ) : (
+              <p className="stat" id={stat.id}>{stat.value}</p>
+            )}
+          </div>
+        ))}
       </div>
 
       <section className="todo-section">
