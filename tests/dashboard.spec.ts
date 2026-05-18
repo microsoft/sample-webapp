@@ -43,4 +43,29 @@ test.describe('Dashboard page', () => {
     const rows = table.locator('tbody tr');
     await expect(rows).not.toHaveCount(0);
   });
+
+  test('should display correct data in activity table rows', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const table = page.locator('#activity-table');
+    await expect(table).toBeVisible();
+
+    const rows = table.locator('tbody tr');
+    await expect(rows).toHaveCount(3);
+
+    const firstRow = rows.nth(0);
+    await expect(firstRow.getByRole('cell').nth(0)).toHaveText('Alice');
+    await expect(firstRow.getByRole('cell').nth(1)).toHaveText('Created account');
+    await expect(firstRow.getByRole('cell').nth(2)).toHaveText('2026-05-14');
+
+    const secondRow = rows.nth(1);
+    await expect(secondRow.getByRole('cell').nth(0)).toHaveText('Bob');
+    await expect(secondRow.getByRole('cell').nth(1)).toHaveText('Placed order');
+    await expect(secondRow.getByRole('cell').nth(2)).toHaveText('2026-05-13');
+
+    const thirdRow = rows.nth(2);
+    await expect(thirdRow.getByRole('cell').nth(0)).toHaveText('Charlie');
+    await expect(thirdRow.getByRole('cell').nth(1)).toHaveText('Updated profile');
+    await expect(thirdRow.getByRole('cell').nth(2)).toHaveText('2026-05-12');
+  });
 });
