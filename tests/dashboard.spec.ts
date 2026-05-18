@@ -20,6 +20,14 @@ test.describe('Dashboard page', () => {
     await expect(page.locator('#order-count')).not.toBeEmpty();
   });
 
+  test('should display correct values in stat cards', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    await expect(page.locator('#user-count')).toHaveText('128');
+    await expect(page.locator('#revenue')).toHaveText('$12,450');
+    await expect(page.locator('#order-count')).toHaveText('340');
+  });
+
   test('should display Recent Activity table with data', async ({ page }) => {
     await page.goto('/dashboard');
 
