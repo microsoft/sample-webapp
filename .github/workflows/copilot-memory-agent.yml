@@ -11,7 +11,9 @@ permissions:
 
 jobs:
   assign:
-    if: startsWith(github.event.issue.title, '[copilot-memory]')
+    if: >
+      startsWith(github.event.issue.title, '[copilot-memory]') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
     runs-on: ubuntu-latest
     steps:
       - name: Assign issue to Copilot cloud agent
