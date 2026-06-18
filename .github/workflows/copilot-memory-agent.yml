@@ -1,0 +1,24 @@
+name: Copilot memory agent
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  assign:
+    if: startsWith(github.event.issue.title, '[copilot-memory]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign issue to Copilot cloud agent
+        uses: github/copilot-cloud-agent@v1
+        with:
+          safe-outputs: assign-to-agent
+          name: copilot
+          target: triggering
+          target-repo: ${{ github.repository }}
+          github-token: ${{ secrets.GH_AW_AGENT_TOKEN }}
