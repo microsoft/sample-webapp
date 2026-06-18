@@ -26,7 +26,7 @@ if ! gh api \
   -H "Accept: application/vnd.github+json" \
   "repos/${repo}/pulls/${pr_number}/requested_reviewers" \
   -f "reviewers[]=github-copilot[bot]" >"$request_output" 2>&1; then
-  if ! grep -qiE 'already exists|review.*requested|unprocessable' "$request_output"; then
+  if ! grep -qiE 'already exists|review.*already.*requested|already.*requested' "$request_output"; then
     cat "$request_output" >&2
     rm -f "$request_output"
     exit 1
