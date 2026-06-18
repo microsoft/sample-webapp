@@ -7,7 +7,7 @@ Authentication tokens are kept in memory (not persisted in browser storage) to r
 
 GitHub Copilot Memory cannot be written to directly. The supported path is to give Copilot durable repository facts through normal GitHub activity, then let Copilot cloud agent and Copilot review capture those facts from the resulting issue and pull request history.
 
-This repository now includes a lightweight flow built around `github/copilot-cloud-agent` and `gh`:
+This repository now includes a lightweight flow built around `github/copilot-cloud-agent` and `gh` (requires configuring the `GH_AW_AGENT_TOKEN` repository secret for the workflow):
 
 1. Create an issue from the included template.
 2. The `Copilot memory agent` workflow assigns that issue to Copilot cloud agent when the title starts with `[copilot-memory]`.
