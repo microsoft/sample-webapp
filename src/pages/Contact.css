@@ -1,0 +1,49 @@
+.contact {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-intro {
+  margin-bottom: 2rem;
+  line-height: 1.7;
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.contact .form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.contact label {
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.contact input,
+.contact textarea {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.contact input:focus,
+.contact textarea:focus {
+  outline: none;
+  border-color: #4361ee;
+  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+}
+
+.contact input[aria-invalid="true"],
+.contact textarea[aria-invalid="true"] {
+  border-color: #e63946;
+}
+
+.field-error {
+  margin-top: 0.35rem;
+  color: #e63946;
+  font-size: 0.85rem;
+}
