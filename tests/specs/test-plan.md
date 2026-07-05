@@ -61,3 +61,10 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Field errors "Name is required", "Email is required", and "Message is required" are shown; no success toast appears (getByTestId('toast') has count 0)
      2. Step: Fill Name with "Jane", Email with an invalid address "not-an-email", and Message with a short value "short", then click "Send Message"
         Expectation: The email error "Enter a valid email address" and the message error "Message must be at least 10 characters" are shown, the Name field has no error, and still no success toast appears
+6. **Contact form clears a field error live once the field is corrected** — `tests/contact.spec.ts`
+   - Preconditions: None — `/contact` is a public route; the form is client-only, so there is nothing to create or clean up.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /contact and click "Send Message" with all fields empty
+        Expectation: Field errors "Name is required" and "Email is required" are shown (all fields marked touched)
+     2. Step: Type a valid value into the Name field (without resubmitting)
+        Expectation: The "Name is required" error clears immediately while "Email is required" remains; no success toast appears
