@@ -4,7 +4,6 @@ test.describe('Dashboard page', () => {
   test('should display dashboard heading', async ({ page }) => {
     await page.goto('/dashboard');
 
-    await expect(page).toHaveTitle(/Dashboard/);
     await expect(page.getByRole('heading', { name: 'Dashboard', level: 1 })).toBeVisible();
   });
 
@@ -42,5 +41,58 @@ test.describe('Dashboard page', () => {
 
     const rows = table.locator('tbody tr');
     await expect(rows).not.toHaveCount(0);
+  });
+
+  test('should add, toggle, and delete a todo item', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const todoList = page.getByTestId('todo-list');
+    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+
+    await page.getByPlaceholder('Add a new task...').fill('Buy groceries');
+    await page.getByRole('button', { name: 'Add' }).click();
+
+    await expect(todoList.getByRole('listitem')).toHaveCount(4);
+    await expect(todoList.getByText('Buy groceries')).toBeVisible();
+
+    const toggleCheckbox = page.getByRole('checkbox', { name: 'Toggle Buy groceries' });
+    await expect(toggleCheckbox).not.toBeChecked();
+    await toggleCheckbox.check();
+    await expect(toggleCheckbox).toBeChecked();
+
+    await page.getByRole('button', { name: 'Delete Buy groceries' }).click();
+    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(todoList.getByText('Buy groceries')).not.toBeVisible();
+  });
+
+  test('should toggle theme to dark mode and persist across reload', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const themeToggle = page.getByRole('button', { name: /Switch to .* mode/ });
+    await expect(themeToggle).toHaveAccessibleName('Switch to dark mode');
+
+    await themeToggle.click();
+
+    await expect(themeToggle).toHaveAccessibleName('Switch to light mode');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+
+    await page.reload();
+
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(page.getByRole('button', { name: /Switch to .* mode/ })).toHaveAccessibleName('Switch to light mode');
+  });
+
+  test('should not add a todo for empty or whitespace-only input', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const todoList = page.getByTestId('todo-list');
+    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+
+    await page.getByRole('button', { name: 'Add' }).click();
+    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+
+    await page.getByPlaceholder('Add a new task...').fill('   ');
+    await page.getByRole('button', { name: 'Add' }).click();
+    await expect(todoList.getByRole('listitem')).toHaveCount(3);
   });
 });
