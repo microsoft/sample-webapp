@@ -105,3 +105,21 @@ Sample Web App — a React application with React Router that provides routes su
       3. Step: Click the scroll-to-top button
          Expectation: The page returns to the top and the button disappears again (it unmounts once the scroll offset drops back to/below 300px)
 
+### Not Found
+11. **Unknown route renders the custom 404 page and Back to Home returns to the landing page** — `tests/navigation.spec.ts`
+    - Preconditions: None — the catch-all `*` route is public; no auth or seeded data required, nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to an unknown route (e.g. `/some-nonexistent-route`)
+         Expectation: The custom 404 page renders — the "404" heading (level 1) and "Page Not Found" heading (level 2) are visible (getByTestId('not-found-page') present), and the app shell (navbar) is still shown
+      2. Step: Click the "Back to Home" link
+         Expectation: The URL changes to `/` and the home landing page ("Welcome to Sample Web App" heading, level 1) is visible
+
+### Login — additional coverage
+12. **Login rejects a too-short password with an error and no redirect** — `tests/login.spec.ts`
+    - Preconditions: None — `/login` is a public route; the too-short-password branch is client-side validation, so no valid credentials or seeded data are required.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /login, fill Username with any non-empty value and Password with a value shorter than 6 characters (e.g. "abc"), then click "Login"
+         Expectation: An error banner (getByRole('alert')) appears with the text "Password must be at least 6 characters" and carries the error class (toHaveClass(/error/))
+      2. Step: Observe the URL and page after submission
+         Expectation: The URL remains `/login` (no redirect to /dashboard occurs) and no success/"Welcome" status banner is shown
+

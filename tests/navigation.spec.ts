@@ -29,4 +29,19 @@ test.describe('Navigation', () => {
     await page.getByRole('link', { name: 'SampleApp' }).click();
     await expect(page).toHaveURL('/');
   });
+
+  test('should render the custom 404 page for an unknown route and recover via Back to Home', async ({ page }) => {
+    await page.goto('/some-nonexistent-route');
+
+    await expect(page.getByTestId('not-found-page')).toBeVisible();
+    await expect(page.getByRole('heading', { name: '404', level: 1 })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Page Not Found', level: 2 })).toBeVisible();
+    // The app shell (navbar) still renders around the 404 content.
+    await expect(page.getByRole('link', { name: 'SampleApp' })).toBeVisible();
+
+    await page.getByRole('link', { name: 'Back to Home' }).click();
+
+    await expect(page).toHaveURL('/');
+    await expect(page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })).toBeVisible();
+  });
 });
