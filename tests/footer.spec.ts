@@ -34,4 +34,12 @@ test.describe('Site footer', () => {
     await expect(footer).toBeVisible();
     await expect(footer).toHaveText(copyright);
   });
+
+  test('exposes exactly one contentinfo landmark with the copyright symbol', async ({ page }) => {
+    await page.goto('/');
+    const footers = page.getByRole('contentinfo');
+    await expect(footers).toHaveCount(1);
+    await expect(footers).toContainText('©');
+    await expect(footers).toContainText(String(currentYear));
+  });
 });
