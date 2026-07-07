@@ -75,3 +75,33 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Only the "Name is required" error appears; the Email and Message fields show no error (they are still untouched), and no success toast appears (getByTestId('toast') has count 0)
      2. Step: Blur the still-empty Email field (e.g. focus the Message field) without submitting
         Expectation: The "Email is required" error now also appears (each field is validated on its own blur), while the still-untouched Message field shows no error and no success toast appears
+
+### FAQ
+8. **FAQ question expands to reveal its answer and collapses again** — `tests/faq.spec.ts`
+   - Preconditions: None — `/faq` is a public route with hard-coded content; nothing to create or clean up.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to / then click the "FAQ" navbar link
+        Expectation: URL changes to /faq and the "Frequently Asked Questions" heading (level 1) is visible; all five question buttons are collapsed (aria-expanded="false") and no answer region is shown
+     2. Step: Click the first question button ("What is Sample Web App?")
+        Expectation: That button becomes aria-expanded="true" and its answer region (role="region", named by the question) becomes visible with the answer text
+     3. Step: Click the same question button again
+        Expectation: The button returns to aria-expanded="false" and its answer region is no longer visible
+9. **FAQ accordion keeps only one answer open at a time** — `tests/faq.spec.ts`
+   - Preconditions: None — `/faq` is a public route with hard-coded content; nothing to create or clean up.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /faq and click the first question ("What is Sample Web App?")
+        Expectation: The first question is aria-expanded="true" and its answer region is visible
+     2. Step: Click a second, different question ("How do I create an account?")
+        Expectation: The second question's answer region becomes visible (aria-expanded="true"), while the first question collapses to aria-expanded="false" and its answer region is no longer visible (only one panel open at a time)
+
+### Scroll To Top
+10. **Scroll-to-top button appears after scrolling down and returns the page to the top** — `tests/scroll-to-top.spec.ts`
+    - Preconditions: None — uses the public `/about` page (the tallest public route) rendered at a reduced viewport height so it is scrollable well past the button's 300px threshold; nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Set a short viewport (e.g. 1280×400) and navigate to /about
+         Expectation: The scroll-to-top button (getByTestId('scroll-to-top'), aria-label "Scroll back to top") is not present (the component renders nothing while the page is at the top)
+      2. Step: Scroll the page down past the 300px threshold (e.g. page.mouse.wheel(0, 600))
+         Expectation: The scroll-to-top button becomes visible
+      3. Step: Click the scroll-to-top button
+         Expectation: The page returns to the top and the button disappears again (it unmounts once the scroll offset drops back to/below 300px)
+
