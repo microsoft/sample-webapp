@@ -27,4 +27,11 @@ test.describe('Site footer', () => {
       await expect(footer).toHaveText(copyright);
     });
   }
+
+  test('still renders on an unknown (404) route', async ({ page }) => {
+    await page.goto('/this-route-does-not-exist');
+    const footer = page.getByRole('contentinfo');
+    await expect(footer).toBeVisible();
+    await expect(footer).toHaveText(copyright);
+  });
 });
