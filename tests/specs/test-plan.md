@@ -105,3 +105,14 @@ Sample Web App — a React application with React Router that provides routes su
       3. Step: Click the scroll-to-top button
          Expectation: The page returns to the top and the button disappears again (it unmounts once the scroll offset drops back to/below 300px)
 
+### Footer
+11. **Site footer shows the runtime copyright year on every page** — `tests/footer.spec.ts`
+    - Preconditions: None — the footer is a global component (rendered outside `<Routes>` in `App.js`) on public routes; nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+        Expectation: The footer (getByRole('contentinfo')) is visible and contains the text `© <currentYear> SampleApp. All rights reserved.`, where `<currentYear>` is computed in-test via `new Date().getFullYear()` (mirrors the component's runtime logic, so the assertion does not rot across years)
+      2. Step: Navigate to /login
+        Expectation: The same footer is visible with the same current-year copyright text (confirms it renders globally, not just on the landing page)
+      3. Step: Navigate to /dashboard
+        Expectation: The same footer is visible with the same current-year copyright text (confirms global placement across an authenticated-style route as well)
+
