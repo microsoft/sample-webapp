@@ -11,6 +11,7 @@ function Navbar() {
         <Link to="/">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/contact">Contact</Link>
+        <Link to="/faq">FAQ</Link>
         <Link to="/login">Login</Link>
         <Link to="/dashboard">Dashboard</Link>
         <ThemeToggle />
