@@ -103,4 +103,26 @@ test.describe('Contact page', () => {
     await expect(form.getByText('Email is required')).toBeVisible();
     await expect(page.getByTestId('toast')).toHaveCount(0);
   });
+
+  test('should show a single field error on blur without submitting', async ({ page }) => {
+    await page.goto('/contact');
+
+    const form = contactForm(page);
+
+    // Focus then blur the empty Name field (move focus to Email) — no submit.
+    await form.getByRole('textbox', { name: 'Name' }).focus();
+    await form.getByRole('textbox', { name: 'Email' }).focus();
+
+    // Only the blurred field is validated; the still-untouched fields stay error-free.
+    await expect(form.getByText('Name is required')).toBeVisible();
+    await expect(form.getByText('Email is required')).toHaveCount(0);
+    await expect(form.getByText('Message is required')).toHaveCount(0);
+    await expect(page.getByTestId('toast')).toHaveCount(0);
+
+    // Blurring the empty Email in turn validates only that field, adding its error.
+    await form.getByRole('textbox', { name: 'Message' }).focus();
+    await expect(form.getByText('Email is required')).toBeVisible();
+    await expect(form.getByText('Message is required')).toHaveCount(0);
+    await expect(page.getByTestId('toast')).toHaveCount(0);
+  });
 });

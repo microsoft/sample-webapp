@@ -68,3 +68,10 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Field errors "Name is required" and "Email is required" are shown (all fields marked touched)
      2. Step: Type a valid value into the Name field (without resubmitting)
         Expectation: The "Name is required" error clears immediately while "Email is required" remains; no success toast appears
+7. **Contact form shows a single field's error on blur without submitting** — `tests/contact.spec.ts`
+   - Preconditions: None — `/contact` is a public route; the form is client-only, so there is nothing to create or clean up.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /contact, focus the Name field, then blur it (e.g. focus the Email field) while Name is left empty — do NOT click "Send Message"
+        Expectation: Only the "Name is required" error appears; the Email and Message fields show no error (they are still untouched), and no success toast appears (getByTestId('toast') has count 0)
+     2. Step: Blur the still-empty Email field (e.g. focus the Message field) without submitting
+        Expectation: The "Email is required" error now also appears (each field is validated on its own blur), while the still-untouched Message field shows no error and no success toast appears
