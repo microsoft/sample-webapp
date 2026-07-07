@@ -15,21 +15,16 @@ import { test, expect } from '@playwright/test';
 const currentYear = new Date().getFullYear();
 const copyright = `© ${currentYear} SampleApp. All rights reserved.`;
 
+// Every public route in App.js renders the global <Footer /> outside <Routes>.
+const publicRoutes = ['/', '/login', '/dashboard', '/about', '/contact', '/faq'];
+
 test.describe('Site footer', () => {
-  test('shows the runtime copyright year on every page', async ({ page }) => {
-    await page.goto('/');
-    const homeFooter = page.getByRole('contentinfo');
-    await expect(homeFooter).toBeVisible();
-    await expect(homeFooter).toHaveText(copyright);
-
-    await page.goto('/login');
-    const loginFooter = page.getByRole('contentinfo');
-    await expect(loginFooter).toBeVisible();
-    await expect(loginFooter).toHaveText(copyright);
-
-    await page.goto('/dashboard');
-    const dashboardFooter = page.getByRole('contentinfo');
-    await expect(dashboardFooter).toBeVisible();
-    await expect(dashboardFooter).toHaveText(copyright);
-  });
+  for (const route of publicRoutes) {
+    test(`shows the runtime copyright year on ${route}`, async ({ page }) => {
+      await page.goto(route);
+      const footer = page.getByRole('contentinfo');
+      await expect(footer).toBeVisible();
+      await expect(footer).toHaveText(copyright);
+    });
+  }
 });
