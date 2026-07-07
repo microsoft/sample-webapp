@@ -1,0 +1,12 @@
+.app-footer {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  text-align: center;
+  background: var(--color-nav-bg);
+  color: var(--color-nav-link);
+  font-size: 0.9rem;
+}
+
+.app-footer p {
+  margin: 0;
+}
