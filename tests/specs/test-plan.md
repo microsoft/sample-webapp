@@ -105,3 +105,14 @@ Sample Web App — a React application with React Router that provides routes su
       3. Step: Click the scroll-to-top button
          Expectation: The page returns to the top and the button disappears again (it unmounts once the scroll offset drops back to/below 300px)
 
+### Footer
+11. **Site footer shows the runtime copyright year on every page** — `tests/footer.spec.ts`
+    - Preconditions: None — the footer is a global component (rendered outside `<Routes>` in `App.js`) on public routes; nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to each public route (`/`, `/login`, `/dashboard`, `/about`, `/contact`, `/faq`)
+        Expectation: The footer (getByRole('contentinfo')) is visible and contains the text `© <currentYear> SampleApp. All rights reserved.`, where `<currentYear>` is computed in-test via `new Date().getFullYear()` (mirrors the component's runtime logic, so the assertion does not rot across years)
+      2. Step: Navigate to an unknown route (e.g. `/this-route-does-not-exist`) that renders the NotFound page
+        Expectation: The same footer is still visible with the same current-year copyright text (confirms it renders globally, even on unmatched routes)
+      3. Step: Navigate to / and query the `contentinfo` landmark role
+        Expectation: Exactly one `contentinfo` landmark exists, and it contains both the `©` symbol and the current year (accessibility landmark uniqueness check)
+
