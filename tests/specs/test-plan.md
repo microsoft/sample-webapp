@@ -116,3 +116,26 @@ Sample Web App — a React application with React Router that provides routes su
       3. Step: Navigate to / and query the `contentinfo` landmark role
         Expectation: Exactly one `contentinfo` landmark exists, and it contains both the `©` symbol and the current year (accessibility landmark uniqueness check)
 
+
+### Feedback
+12. **Feedback rejects submission when no rating is selected** — `tests/feedback.spec.ts`
+    - Preconditions: None — `/feedback` is a public route; the form is in-memory component state that resets on navigation. Nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / then click the "Feedback" navbar link
+         Expectation: URL changes to /feedback and the "Feedback" heading (level 1) is visible
+      2. Step: Without selecting a rating, click "Send feedback" (getByTestId('feedback-submit'))
+         Expectation: The error alert (getByTestId('feedback-error'), role="alert") is visible with text "Please select a rating between 1 and 5.", and no success message (getByTestId('feedback-success')) is present
+13. **Feedback submits successfully with a rating and optional comment** — `tests/feedback.spec.ts`
+    - Preconditions: None — public `/feedback` route; nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /feedback, select a rating (e.g. getByTestId('feedback-rating-4')) and type text into the comment field (getByTestId('feedback-comment'))
+         Expectation: The rating radio is checked and the comment field holds the typed text
+      2. Step: Click "Send feedback"
+         Expectation: The success message (getByTestId('feedback-success'), role="status") is visible with text "Thanks for your feedback!", and no error alert (getByTestId('feedback-error')) is present
+14. **Feedback clears the error and succeeds after a rating is chosen** — `tests/feedback.spec.ts`
+    - Preconditions: None — public `/feedback` route; nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /feedback and click "Send feedback" without selecting a rating
+         Expectation: The error alert (getByTestId('feedback-error')) is visible with the "Please select a rating between 1 and 5." message
+      2. Step: Select a valid rating (e.g. getByTestId('feedback-rating-5')) and click "Send feedback" again
+         Expectation: The error alert is no longer present (count 0) and the success message (getByTestId('feedback-success')) becomes visible with "Thanks for your feedback!"
