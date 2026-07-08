@@ -116,3 +116,28 @@ Sample Web App — a React application with React Router that provides routes su
       3. Step: Navigate to / and query the `contentinfo` landmark role
         Expectation: Exactly one `contentinfo` landmark exists, and it contains both the `©` symbol and the current year (accessibility landmark uniqueness check)
 
+
+### Newsletter
+12. **Newsletter subscription succeeds with a valid email and clears the field** — `tests/newsletter.spec.ts`
+    - Preconditions: None — `/newsletter` is a public route; the subscribed list is in-memory component state, so each test starts fresh on navigation. Use a unique email per test run to keep tests independent.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / then click the "Newsletter" navbar link
+         Expectation: URL changes to /newsletter and the "Newsletter" heading (level 1) is visible
+      2. Step: Fill the email field (getByTestId('newsletter-email')) with a unique valid address and click "Subscribe" (getByTestId('newsletter-subscribe'))
+         Expectation: The success message (getByTestId('newsletter-success'), role="status") is visible with text "Thanks for subscribing! Please check your inbox to confirm."
+      3. Step: Inspect the email field
+         Expectation: The email field is reset to an empty value; no error or duplicate alert is present
+13. **Newsletter rejects an invalid email with an error and no success** — `tests/newsletter.spec.ts`
+    - Preconditions: None — public `/newsletter` route; nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter, fill the email field with an invalid value (e.g. "notanemail") and click "Subscribe"
+         Expectation: The error alert (getByTestId('newsletter-error'), role="alert") is visible with text "Please enter a valid email address."
+      2. Step: Inspect the page state
+         Expectation: No success message (getByTestId('newsletter-success') has count 0) and the email field retains the invalid value (not cleared)
+14. **Newsletter blocks a duplicate subscription within the same session** — `tests/newsletter.spec.ts`
+    - Preconditions: None — public `/newsletter` route; the duplicate guard relies on the in-memory subscribed list, so the resubscribe must happen in the same page session without reloading. Use a unique valid email.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter, subscribe with a unique valid email and confirm the success message appears
+         Expectation: The success message (getByTestId('newsletter-success')) is visible and the field is cleared
+      2. Step: Without reloading, fill the same email again and click "Subscribe"
+         Expectation: The duplicate alert (getByTestId('newsletter-duplicate'), role="alert") is visible with text "You are already subscribed with this email.", and no success message is shown for the second attempt
