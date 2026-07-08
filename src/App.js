@@ -10,6 +10,8 @@ import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import FAQ from './pages/FAQ';
+import Newsletter from './pages/Newsletter';
+import Feedback from './pages/Feedback';
 import NotFound from './pages/NotFound';
 import './App.css';
 
@@ -26,6 +28,8 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/newsletter" element={<Newsletter />} />
+            <Route path="/feedback" element={<Feedback />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
