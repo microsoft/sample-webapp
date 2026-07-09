@@ -93,6 +93,18 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The first question is aria-expanded="true" and its answer region is visible
      2. Step: Click a second, different question ("How do I create an account?")
         Expectation: The second question's answer region becomes visible (aria-expanded="true"), while the first question collapses to aria-expanded="false" and its answer region is no longer visible (only one panel open at a time)
+16. **FAQ search filter narrows the question list and clearing restores it** — `tests/faq.spec.ts`
+    - Preconditions: None — `/faq` is a public route with hard-coded content and the search box is in-memory component state that resets on navigation; nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /faq and type a term that appears only in answer text, not in any question — e.g. "playwright" — into the search box (getByRole('searchbox', { name: 'Search questions' }))
+         Expectation: The list narrows to exactly the two questions whose answers contain the term — "What is Sample Web App?" and "Which technologies are used?" (matched via answer content, not question text) — and the other three question buttons are no longer present
+      2. Step: Clear the search box (fill with an empty string)
+         Expectation: All five question buttons are visible again (the empty query restores the full list)
+17. **FAQ search with no matches shows the empty-state message** — `tests/faq.spec.ts`
+    - Preconditions: None — `/faq` is a public route with hard-coded content; the search box is in-memory state that resets on navigation. Nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /faq and type a query that matches no question or answer (e.g. "zzzznomatch") into the search box
+         Expectation: No question buttons are present (count 0) and the empty-state message (role="status", `.faq-empty`) is visible with the text `No questions match "zzzznomatch".` (the trimmed query is echoed back)
 
 ### Scroll To Top
 10. **Scroll-to-top button appears after scrolling down and returns the page to the top** — `tests/scroll-to-top.spec.ts`
