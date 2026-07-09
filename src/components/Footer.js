@@ -12,6 +12,7 @@ function Footer() {
         <Link to="/contact">Contact</Link>
         <Link to="/faq">FAQ</Link>
       </nav>
+      <p className="footer-tagline">Built with React &amp; tested with Playwright.</p>
       <p>&copy; {year} SampleApp. All rights reserved.</p>
     </footer>
   );

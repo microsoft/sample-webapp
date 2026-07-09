@@ -11,6 +11,12 @@
   margin: 0;
 }
 
+.footer-tagline {
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  color: var(--color-nav-text);
+}
+
 .footer-links {
   display: flex;
   justify-content: center;
