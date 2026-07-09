@@ -105,6 +105,15 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to /faq and type a query that matches no question or answer (e.g. "zzzznomatch") into the search box
          Expectation: No question buttons are present (count 0) and the empty-state message (role="status", `.faq-empty`) is visible with the text `No questions match "zzzznomatch".` (the trimmed query is echoed back)
+18. **FAQ search shows a results count while filtering and hides it when cleared** — `tests/faq.spec.ts`
+    - Preconditions: None — `/faq` is a public route with hard-coded content; the search box and results count are in-memory state that resets on navigation. Nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /faq without typing anything
+         Expectation: No results-count text (`Showing N of M questions`, `.faq-results-count`) is present — the count only appears once a query is entered
+      2. Step: Type a term that matches a subset of FAQs (e.g. "playwright", which matches two of five)
+         Expectation: The results count is visible and reads `Showing 2 of 5 questions`
+      3. Step: Clear the search box (fill with an empty string)
+         Expectation: The results-count text is no longer present (the count is hidden when there is no active query)
 
 ### Scroll To Top
 10. **Scroll-to-top button appears after scrolling down and returns the page to the top** — `tests/scroll-to-top.spec.ts`

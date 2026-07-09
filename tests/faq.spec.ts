@@ -92,6 +92,23 @@ test.describe('FAQ page', () => {
     await expect(questions).toHaveCount(5);
   });
 
+  test('search shows a results count while filtering and hides it when cleared', async ({ page }) => {
+    await page.goto('/faq');
+
+    const search = page.getByRole('searchbox', { name: 'Search questions' });
+
+    // No results count is shown before any query is entered.
+    await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
+
+    // "playwright" matches two of the five FAQs by answer text.
+    await search.fill('playwright');
+    await expect(page.getByText('Showing 2 of 5 questions')).toBeVisible();
+
+    // Clearing the query removes the results count again.
+    await search.fill('');
+    await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
+  });
+
   test('search with no matches shows the empty-state message', async ({ page }) => {
     await page.goto('/faq');
 

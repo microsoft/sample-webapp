@@ -71,6 +71,12 @@ function FAQ() {
         />
       </div>
 
+      {normalizedQuery && filteredFaqs.length > 0 && (
+        <p className="faq-results-count" role="status">
+          Showing {filteredFaqs.length} of {faqs.length} questions
+        </p>
+      )}
+
       {filteredFaqs.length === 0 ? (
         <p className="faq-empty" role="status">
           No questions match &quot;{query.trim()}&quot;.
