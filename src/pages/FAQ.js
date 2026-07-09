@@ -31,10 +31,20 @@ const faqs = [
 
 function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
+  const [query, setQuery] = useState('');
 
   const toggle = (index) => {
     setOpenIndex((current) => (current === index ? null : index));
   };
+
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredFaqs = normalizedQuery
+    ? faqs.filter(
+        (faq) =>
+          faq.question.toLowerCase().includes(normalizedQuery) ||
+          faq.answer.toLowerCase().includes(normalizedQuery)
+      )
+    : faqs;
 
   return (
     <div className="faq">
@@ -43,41 +53,65 @@ function FAQ() {
         Find answers to the most common questions about Sample Web App.
       </p>
 
-      <ul className="faq-list">
-        {faqs.map((faq, index) => {
-          const isOpen = openIndex === index;
-          const panelId = `faq-panel-${index}`;
-          const buttonId = `faq-button-${index}`;
+      <div className="faq-search">
+        <label htmlFor="faq-search-input" className="visually-hidden">
+          Search questions
+        </label>
+        <input
+          id="faq-search-input"
+          type="search"
+          className="faq-search-input"
+          placeholder="Search questions..."
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setOpenIndex(null);
+          }}
+          aria-label="Search questions"
+        />
+      </div>
 
-          return (
-            <li key={faq.question} className="faq-item">
-              <button
-                type="button"
-                id={buttonId}
-                className="faq-question"
-                aria-expanded={isOpen}
-                aria-controls={panelId}
-                onClick={() => toggle(index)}
-              >
-                <span>{faq.question}</span>
-                <span className="faq-icon" aria-hidden="true">
-                  {isOpen ? '−' : '+'}
-                </span>
-              </button>
-              {isOpen && (
-                <div
-                  id={panelId}
-                  role="region"
-                  aria-labelledby={buttonId}
-                  className="faq-answer"
+      {filteredFaqs.length === 0 ? (
+        <p className="faq-empty" role="status">
+          No questions match &quot;{query.trim()}&quot;.
+        </p>
+      ) : (
+        <ul className="faq-list">
+          {filteredFaqs.map((faq, index) => {
+            const isOpen = openIndex === index;
+            const panelId = `faq-panel-${index}`;
+            const buttonId = `faq-button-${index}`;
+
+            return (
+              <li key={faq.question} className="faq-item">
+                <button
+                  type="button"
+                  id={buttonId}
+                  className="faq-question"
+                  aria-expanded={isOpen}
+                  aria-controls={panelId}
+                  onClick={() => toggle(index)}
                 >
-                  <p>{faq.answer}</p>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+                  <span>{faq.question}</span>
+                  <span className="faq-icon" aria-hidden="true">
+                    {isOpen ? '−' : '+'}
+                  </span>
+                </button>
+                {isOpen && (
+                  <div
+                    id={panelId}
+                    role="region"
+                    aria-labelledby={buttonId}
+                    className="faq-answer"
+                  >
+                    <p>{faq.answer}</p>
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 }
