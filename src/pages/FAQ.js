@@ -67,6 +67,12 @@ function FAQ() {
             setQuery(e.target.value);
             setOpenIndex(null);
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setQuery('');
+              setOpenIndex(null);
+            }
+          }}
           aria-label="Search questions"
         />
       </div>
