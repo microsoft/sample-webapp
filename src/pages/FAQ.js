@@ -67,9 +67,21 @@ function FAQ() {
             setQuery(e.target.value);
             setOpenIndex(null);
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setQuery('');
+              setOpenIndex(null);
+            }
+          }}
           aria-label="Search questions"
         />
       </div>
+
+      {normalizedQuery && filteredFaqs.length > 0 && (
+        <p className="faq-results-count" role="status">
+          Showing {filteredFaqs.length} of {faqs.length} questions
+        </p>
+      )}
 
       {filteredFaqs.length === 0 ? (
         <p className="faq-empty" role="status">

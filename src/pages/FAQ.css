@@ -35,6 +35,12 @@
   font-style: italic;
 }
 
+.faq-results-count {
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
