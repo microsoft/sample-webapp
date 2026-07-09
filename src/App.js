@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
 import ScrollToTop from './components/ScrollToTop';
+import ScrollProgress from './components/ScrollProgress';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -19,6 +20,7 @@ function App() {
   return (
     <ErrorBoundary>
       <div className="App">
+        <ScrollProgress />
         <Navbar />
         <main>
           <Routes>
