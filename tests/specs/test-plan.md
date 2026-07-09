@@ -115,6 +115,15 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The same footer is still visible with the same current-year copyright text (confirms it renders globally, even on unmatched routes)
       3. Step: Navigate to / and query the `contentinfo` landmark role
         Expectation: Exactly one `contentinfo` landmark exists, and it contains both the `©` symbol and the current year (accessibility landmark uniqueness check)
+15. **Footer navigation links route to About, Contact, and FAQ** — `tests/footer.spec.ts`
+    - Preconditions: None — the footer `<nav aria-label="Footer">` is a global component rendered on every route; nothing to create or clean up. Footer links are scoped to the `contentinfo` landmark because the navbar exposes links with the same accessible names (About/Contact/FAQ).
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and, within the footer nav (`getByRole('contentinfo').getByRole('navigation', { name: 'Footer' })`), click the "About" link
+        Expectation: URL changes to /about and the "About Us" heading (level 1) is visible
+      2. Step: Navigate to / and click the footer "Contact" link (same footer-scoped locator)
+        Expectation: URL changes to /contact and the "Contact Us" heading (level 1) is visible
+      3. Step: Navigate to / and click the footer "FAQ" link (same footer-scoped locator)
+        Expectation: URL changes to /faq and the "Frequently Asked Questions" heading (level 1) is visible
 
 
 ### Feedback

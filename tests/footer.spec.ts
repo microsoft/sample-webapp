@@ -42,4 +42,26 @@ test.describe('Site footer', () => {
     await expect(footers).toContainText('©');
     await expect(footers).toContainText(String(currentYear));
   });
+
+  // The footer <nav aria-label="Footer"> exposes links whose accessible names
+  // (About/Contact/FAQ) collide with the navbar's, so scope to the footer landmark.
+  const footerLinks = [
+    { name: 'About', path: '/about', heading: 'About Us' },
+    { name: 'Contact', path: '/contact', heading: 'Contact Us' },
+    { name: 'FAQ', path: '/faq', heading: 'Frequently Asked Questions' },
+  ];
+
+  for (const { name, path, heading } of footerLinks) {
+    test(`footer ${name} link navigates to ${path}`, async ({ page }) => {
+      await page.goto('/');
+
+      const footerNav = page
+        .getByRole('contentinfo')
+        .getByRole('navigation', { name: 'Footer' });
+      await footerNav.getByRole('link', { name }).click();
+
+      await expect(page).toHaveURL(new RegExp(`${path}$`));
+      await expect(page.getByRole('heading', { name: heading, level: 1 })).toBeVisible();
+    });
+  }
 });
