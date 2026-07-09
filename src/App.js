@@ -4,6 +4,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
 import ScrollToTop from './components/ScrollToTop';
 import ScrollProgress from './components/ScrollProgress';
+import CookieConsent from './components/CookieConsent';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -37,6 +38,7 @@ function App() {
         </main>
         <ScrollToTop />
         <Footer />
+        <CookieConsent />
       </div>
     </ErrorBoundary>
   );
