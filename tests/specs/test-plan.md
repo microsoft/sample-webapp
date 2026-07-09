@@ -114,6 +114,22 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The results count is visible and reads `Showing 2 of 5 questions`
       3. Step: Clear the search box (fill with an empty string)
          Expectation: The results-count text is no longer present (the count is hidden when there is no active query)
+19. **FAQ search clears when the Escape key is pressed** — `tests/faq.spec.ts`
+    - Preconditions: None — `/faq` is a public route with hard-coded content; the search box is in-memory state that resets on navigation. Nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /faq and type a filtering term (e.g. "dark") into the search box (getByRole('searchbox', { name: 'Search questions' }))
+         Expectation: The list is filtered — the search box holds the typed value and the results count (`Showing 1 of 5 questions`) is visible
+      2. Step: Press the Escape key while focus is in the search box
+         Expectation: The search box is cleared (value is empty), the results count is no longer present, and all five question buttons are visible again (the Escape handler resets the query and the list)
+
+### Scroll Progress
+20. **Scroll progress bar reflects scroll position from top (0%) to bottom (100%)** — `tests/scroll-progress.spec.ts`
+    - Preconditions: None — uses the public `/about` page (the tallest public route) rendered at a reduced viewport height so it is comfortably scrollable; the ScrollProgress component is global (rendered outside `<Routes>` in `App.js`). Nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Set a short viewport (e.g. 1280×400) and navigate to /about
+         Expectation: The progress bar (getByRole('progressbar', { name: 'Page scroll progress' })) is present with aria-valuenow="0" (nothing scrolled yet)
+      2. Step: Scroll the page to the bottom (e.g. page.mouse.wheel with a large delta, or press the End key so the scroll offset reaches the maximum)
+         Expectation: The progress bar's aria-valuenow becomes "100" (the bar is full once the page is scrolled to the bottom)
 
 ### Scroll To Top
 10. **Scroll-to-top button appears after scrolling down and returns the page to the top** — `tests/scroll-to-top.spec.ts`
