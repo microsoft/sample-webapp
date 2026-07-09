@@ -169,3 +169,15 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The error alert (getByTestId('feedback-error')) is visible with the "Please select a rating between 1 and 5." message
       2. Step: Select a valid rating (e.g. getByTestId('feedback-rating-5')) and click "Send feedback" again
          Expectation: The error alert is no longer present (count 0) and the success message (getByTestId('feedback-success')) becomes visible with "Thanks for your feedback!"
+
+### Cookie Consent
+19. **Cookie consent banner is shown to a first-time visitor and stays dismissed after Accept** — `tests/cookie-consent.spec.ts`
+    - Preconditions: A first-time-visitor state — the `cookie-consent-accepted` localStorage key is not set for the origin. Each test runs in a fresh browser context whose localStorage starts empty (the shared auth `storageState` only logs in; it never accepts the banner), so the banner shows by default with no manual clearing. No server-side data is created.
+    - Postconditions: None — the consent state lives only in the test's own browser-context localStorage, which is discarded when the context closes. Parallel-safe; nothing to clean up.
+    - Step/Expectation Pairs:
+      1. Step: Ensure `cookie-consent-accepted` is not set, then navigate to /
+         Expectation: The cookie consent banner (getByRole('dialog', { name: 'Cookie consent' })) is visible and contains an "Accept" button (getByRole('button', { name: 'Accept' }))
+      2. Step: Click the "Accept" button
+         Expectation: The consent banner is no longer present (count 0) — accepting dismisses it immediately
+      3. Step: Reload the page (same browser context)
+         Expectation: The consent banner is still not present (count 0) — acceptance persists across reloads via localStorage, so a returning visitor is not shown the banner again
