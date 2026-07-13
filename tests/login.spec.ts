@@ -65,4 +65,19 @@ test.describe('Login page', () => {
     await expect(message).toBeVisible();
     await expect(message).toHaveClass(/error/);
   });
+
+  test('should reject a password shorter than 6 characters', async ({ page }) => {
+    await page.goto('/login');
+
+    await page.getByRole('textbox', { name: 'Username' }).fill('tester');
+    await page.getByRole('textbox', { name: 'Password' }).fill('abc');
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    const message = page.getByRole('alert');
+    await expect(message).toBeVisible();
+    await expect(message).toHaveText('Password must be at least 6 characters');
+
+    // The guard blocks submission: no redirect to the dashboard occurs.
+    await expect(page).toHaveURL(/.*login/);
+  });
 });
