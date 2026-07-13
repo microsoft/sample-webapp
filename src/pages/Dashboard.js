@@ -48,6 +48,10 @@ function Dashboard() {
     setTodos(todos.filter(t => t.id !== id));
   };
 
+  const clearCompleted = () => {
+    setTodos(todos.filter(t => !t.done));
+  };
+
   const query = activityQuery.trim().toLowerCase();
   const filteredActivity = query
     ? activityData.filter((row) =>
@@ -74,6 +78,9 @@ function Dashboard() {
 
       <section className="todo-section">
         <h2>Todo List</h2>
+        <p className="todo-summary" id="todo-summary">
+          {todos.filter(t => t.done).length} of {todos.length} tasks completed
+        </p>
         <form onSubmit={addTodo} className="todo-form">
           <input
             type="text"
@@ -104,6 +111,16 @@ function Dashboard() {
             </li>
           ))}
         </ul>
+        {todos.some(t => t.done) && (
+          <button
+            type="button"
+            className="btn"
+            id="clear-completed"
+            onClick={clearCompleted}
+          >
+            Clear completed
+          </button>
+        )}
       </section>
 
       <section>
@@ -118,6 +135,9 @@ function Dashboard() {
             onChange={(e) => setActivityQuery(e.target.value)}
           />
         </div>
+        <p className="activity-count" id="activity-count">
+          Showing {filteredActivity.length} of {activityData.length}
+        </p>
         <table id="activity-table">
           <thead>
             <tr><th>User</th><th>Action</th><th>Date</th></tr>
