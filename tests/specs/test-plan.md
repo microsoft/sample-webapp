@@ -36,6 +36,18 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Displays "$12,450"
      4. Step: Inspect Orders stat card value
         Expectation: Displays "340"
+27. **Recent Activity search filters the table and shows an empty state for no matches** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — the activity rows are client-side static data; the filter resets on navigation, so nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and locate the "Search activity" searchbox (`#activity-search`) under the "Recent Activity" heading
+        Expectation: The searchbox is visible and the activity table (`#activity-table`) shows all three data rows (Alice, Bob, Charlie)
+     2. Step: Type a query matching a single row (e.g. "Bob") into the searchbox
+        Expectation: The table body shows only the matching row ("Bob"); the non-matching rows ("Alice", "Charlie") are no longer present
+     3. Step: Replace the query with one that matches nothing (e.g. "zzz")
+        Expectation: No activity data rows remain and the empty-state message `#activity-empty` "No matching activity found." is visible
+     4. Step: Clear the searchbox
+        Expectation: All three data rows are restored and the empty-state message is no longer shown
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`

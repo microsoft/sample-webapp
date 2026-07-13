@@ -95,4 +95,28 @@ test.describe('Dashboard page', () => {
     await page.getByRole('button', { name: 'Add' }).click();
     await expect(todoList.getByRole('listitem')).toHaveCount(3);
   });
+
+  test('should filter Recent Activity by search query and show an empty state for no matches', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const searchBox = page.getByRole('searchbox', { name: 'Search activity' });
+    await expect(searchBox).toBeVisible();
+
+    const dataRows = page.locator('#activity-table tbody tr');
+    await expect(dataRows).toHaveCount(3);
+
+    await searchBox.fill('Bob');
+    await expect(dataRows).toHaveCount(1);
+    await expect(dataRows).toContainText('Bob');
+    await expect(page.locator('#activity-table tbody')).not.toContainText('Alice');
+    await expect(page.locator('#activity-table tbody')).not.toContainText('Charlie');
+
+    await searchBox.fill('zzz');
+    await expect(dataRows).toHaveCount(0);
+    await expect(page.locator('#activity-empty')).toHaveText('No matching activity found.');
+
+    await searchBox.fill('');
+    await expect(dataRows).toHaveCount(3);
+    await expect(page.locator('#activity-empty')).toHaveCount(0);
+  });
 });
