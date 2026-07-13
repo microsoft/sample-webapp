@@ -121,4 +121,22 @@ test.describe('FAQ page', () => {
     await expect(empty).toBeVisible();
     await expect(empty).toHaveText('No questions match "zzzznomatch".');
   });
+
+  test('search clears when the Escape key is pressed', async ({ page }) => {
+    await page.goto('/faq');
+
+    const search = page.getByRole('searchbox', { name: 'Search questions' });
+    const questions = page.getByRole('button').filter({ hasText: '?' });
+
+    // Typing a term filters the list and shows the results count.
+    await search.fill('dark');
+    await expect(search).toHaveValue('dark');
+    await expect(page.getByText('Showing 1 of 5 questions')).toBeVisible();
+
+    // Pressing Escape in the search box clears the query and restores the full list.
+    await search.press('Escape');
+    await expect(search).toHaveValue('');
+    await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
+    await expect(questions).toHaveCount(5);
+  });
 });
