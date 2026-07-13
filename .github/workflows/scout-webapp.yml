@@ -1,0 +1,66 @@
+name: Scout (local app, pinned ATA)
+
+# Runs `ata scout` against the web app started locally in the runner
+# (the app is NOT deployed anywhere), using a pinned App Testing Agent
+# release asset instead of the npm registry version.
+on:
+  workflow_dispatch:
+    inputs:
+      ata_version:
+        description: 'App Testing Agent release tag to install'
+        required: true
+        default: 'v0.2.112-alpha.0'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  ATA_VERSION: ${{ github.event.inputs.ata_version || 'v0.2.112-alpha.0' }}
+
+jobs:
+  scout:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ vars.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+      - name: Install app dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Install the pinned App Testing Agent CLI (from GitHub Release)
+        env:
+          # Token with read access to the microsoft/app-testing-agent releases
+          GH_TOKEN: ${{ secrets.ATA_DOWNLOAD_TOKEN }}
+        run: |
+          gh release download "$ATA_VERSION" \
+            --repo microsoft/app-testing-agent \
+            -p '*.tgz' \
+            --clobber
+          npm i -g ./microsoft-app-testing-agent-*.tgz
+          ata --version
+
+      - name: Start app locally
+        run: node server.js &
+
+      - name: Wait for app
+        run: npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Run scout against the local app
+        run: ata scout --target http://localhost:3000 --create-pr --target-branch main --draft
+        env:
+          COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
