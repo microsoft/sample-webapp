@@ -15,6 +15,33 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Success message appears containing "Welcome" and the submitted username
      3. Step: Wait for redirect
         Expectation: URL changes to /dashboard
+22. **Login rejects a password shorter than 6 characters** — `tests/login.spec.ts`
+    - Preconditions: None — `/login` is a public route and this validation branch is purely client-side (no credentials or seeded data needed); the `login-tests` project runs without cached auth state. Nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /login, fill Username (getByRole('textbox', { name: 'Username' })) with any non-empty value (e.g. "someuser") and Password (getByRole('textbox', { name: 'Password' })) with a non-empty value shorter than 6 characters (e.g. "123"), then click "Login"
+         Expectation: The message banner appears as an error — page.getByRole('alert') is visible, has class matching /error/, and reads "Password must be at least 6 characters"
+      2. Step: Observe the URL after submitting
+         Expectation: The page stays on /login (no redirect to /dashboard) — the length guard blocks the success path; no success (role="status") banner is shown
+
+### Home
+23. **Home landing page renders and its call-to-action links navigate** — `tests/home.spec.ts`
+    - Preconditions: None — `/` is a public route with static content; nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible, and both call-to-action links — "Get Started" and "View Dashboard" — are visible
+      2. Step: Click the "Get Started" call-to-action link
+         Expectation: URL changes to /login and the "Login" heading (level 1) is visible
+      3. Step: Navigate back to / and click the "View Dashboard" call-to-action link
+         Expectation: URL changes to /dashboard and the "Dashboard" heading (level 1) is visible
+
+### Not Found
+24. **Unknown route shows the 404 page and "Back to Home" returns to the landing page** — `tests/not-found.spec.ts`
+    - Preconditions: None — the NotFound page renders for any unmatched route (client-side routing); nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to a route that does not exist (e.g. /this-route-does-not-exist)
+         Expectation: The NotFound page (getByTestId('not-found-page')) is shown — the "404" heading (level 1) and "Page Not Found" heading (level 2) are visible, and a "Back to Home" link is present
+      2. Step: Click the "Back to Home" link
+         Expectation: URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (the user recovers to the landing page)
 
 ### Dashboard
 2. **Dashboard stat cards display correct values** — `tests/dashboard.spec.ts`
