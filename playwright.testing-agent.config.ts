@@ -63,6 +63,10 @@ export default defineConfig({
   use: {
     ...(baseConfig.use ?? {}),
     ...TESTING_AGENT_USE,
+    // ATA-owned override: when the committed baseURL is unreachable (e.g. :3000 serves a
+    // different app than the suite targets), point runs at the bound URL via env without
+    // editing the user's committed playwright.config.ts. Inert when the env var is unset.
+    ...(process.env.TESTING_AGENT_BASE_URL ? { baseURL: process.env.TESTING_AGENT_BASE_URL } : {}),
     launchOptions: { ...(baseConfig.use?.launchOptions ?? {}), ...TESTING_AGENT_LAUNCH_EXTRAS },
   },
   projects: baseConfig.projects?.map((p) => ({
@@ -70,6 +74,7 @@ export default defineConfig({
     use: {
       ...(p.use ?? {}),
       ...TESTING_AGENT_USE,
+      ...(process.env.TESTING_AGENT_BASE_URL ? { baseURL: process.env.TESTING_AGENT_BASE_URL } : {}),
       launchOptions: {
         ...((p.use as { launchOptions?: object })?.launchOptions ?? {}),
         ...TESTING_AGENT_LAUNCH_EXTRAS,

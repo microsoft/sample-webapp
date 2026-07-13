@@ -15,6 +15,13 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Success message appears containing "Welcome" and the submitted username
      3. Step: Wait for redirect
         Expectation: URL changes to /dashboard
+22. **Login rejects a password shorter than 6 characters** — `tests/login.spec.ts`
+   - Preconditions: None — `/login` validation runs client-side; no auth or seeded data required. Uses a non-empty username so the empty→required guard is bypassed and the length guard is exercised.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /login and fill Username with a non-empty value (e.g. "testuser") and Password with a non-empty value under 6 characters (e.g. "abc12"), then click Login
+        Expectation: The message banner (getByRole('alert'), class 'error') reads exactly "Password must be at least 6 characters"
+     2. Step: Observe the URL and the absence of a success banner
+        Expectation: The page stays on /login and no success banner (getByRole('status')) appears
 
 ### Dashboard
 2. **Dashboard stat cards display correct values** — `tests/dashboard.spec.ts`
@@ -220,3 +227,35 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The success message (getByTestId('newsletter-success')) is visible
       2. Step: Without navigating away, fill the email field with the same email again and click Subscribe
          Expectation: The duplicate alert (getByTestId('newsletter-duplicate'), role="alert") is visible with text "You are already subscribed with this email.", and no success message (getByTestId('newsletter-success')) is present
+
+### Home
+23. **Home landing page renders its heading and both call-to-action links** — `tests/home.spec.ts`
+    - Preconditions: None — `/` is a public route; the landing page is static content, nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
+      2. Step: Inspect the landing page's main content (scoped to the `main` landmark so it does not collide with the navbar links of the same name)
+         Expectation: Both on-page call-to-action links, "Get Started" and "View Dashboard", are visible within the main content
+24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
+    - Preconditions: None — public `/` route; nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and click the "Get Started" link within the `main` landmark
+         Expectation: The URL changes to /login and the Login heading (level 1) is visible
+25. **Home "View Dashboard" call-to-action navigates to the dashboard** — `tests/home.spec.ts`
+    - Preconditions: None — public `/` route; nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and click the "View Dashboard" link within the `main` landmark
+         Expectation: The URL changes to /dashboard and the Dashboard heading (level 1) is visible
+
+### Not Found
+26. **Unknown route shows the 404 page and recovers via "Back to Home"** — `tests/not-found.spec.ts`
+    - Preconditions: None — the catch-all `*` route needs no auth or seeded data; nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to an unmatched route (e.g. /this-route-does-not-exist)
+         Expectation: The NotFound page renders — the getByTestId('not-found-page') container, the "404" heading (level 1), and the "Page Not Found" heading (level 2) are all visible
+      2. Step: Click the "Back to Home" link
+         Expectation: The URL returns to / and the "Welcome to Sample Web App" landing heading (level 1) is visible
