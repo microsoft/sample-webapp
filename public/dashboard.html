@@ -34,6 +34,10 @@
     </div>
     <section>
       <h2>Recent Activity</h2>
+      <div class="form-group">
+        <label for="activity-search">Search activity</label>
+        <input type="search" id="activity-search" placeholder="Filter by user or action">
+      </div>
       <table id="activity-table">
         <thead>
           <tr><th>User</th><th>Action</th><th>Date</th></tr>
@@ -44,7 +48,23 @@
           <tr><td>Charlie</td><td>Updated profile</td><td>2026-05-12</td></tr>
         </tbody>
       </table>
+      <p id="activity-empty" class="message" hidden>No matching activity found.</p>
     </section>
   </main>
+  <script>
+    const searchInput = document.getElementById('activity-search');
+    const rows = Array.from(document.querySelectorAll('#activity-table tbody tr'));
+    const emptyMsg = document.getElementById('activity-empty');
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+      rows.forEach((row) => {
+        const match = row.textContent.toLowerCase().includes(query);
+        row.hidden = !match;
+        if (match) visibleCount++;
+      });
+      emptyMsg.hidden = visibleCount !== 0;
+    });
+  </script>
 </body>
 </html>

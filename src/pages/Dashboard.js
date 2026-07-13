@@ -23,6 +23,7 @@ function Dashboard() {
   const [todos, setTodos] = useState(initialTodos);
   const [newTodo, setNewTodo] = useState('');
   const [isChartsLoading, setIsChartsLoading] = useState(true);
+  const [activityQuery, setActivityQuery] = useState('');
 
   useEffect(() => {
     const timerId = setTimeout(() => {
@@ -46,6 +47,13 @@ function Dashboard() {
   const deleteTodo = (id) => {
     setTodos(todos.filter(t => t.id !== id));
   };
+
+  const query = activityQuery.trim().toLowerCase();
+  const filteredActivity = query
+    ? activityData.filter((row) =>
+        `${row.user} ${row.action} ${row.date}`.toLowerCase().includes(query)
+      )
+    : activityData;
 
   return (
     <div className="dashboard">
@@ -100,12 +108,22 @@ function Dashboard() {
 
       <section>
         <h2>Recent Activity</h2>
+        <div className="form-group">
+          <label htmlFor="activity-search">Search activity</label>
+          <input
+            type="search"
+            id="activity-search"
+            placeholder="Filter by user or action"
+            value={activityQuery}
+            onChange={(e) => setActivityQuery(e.target.value)}
+          />
+        </div>
         <table id="activity-table">
           <thead>
             <tr><th>User</th><th>Action</th><th>Date</th></tr>
           </thead>
           <tbody>
-            {activityData.map((row, i) => (
+            {filteredActivity.map((row, i) => (
               <tr key={i}>
                 <td>{row.user}</td>
                 <td>{row.action}</td>
@@ -114,6 +132,9 @@ function Dashboard() {
             ))}
           </tbody>
         </table>
+        {filteredActivity.length === 0 && (
+          <p id="activity-empty">No matching activity found.</p>
+        )}
       </section>
     </div>
   );
