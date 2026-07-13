@@ -48,6 +48,18 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: No activity data rows remain and the empty-state message `#activity-empty` "No matching activity found." is visible
      4. Step: Clear the searchbox
         Expectation: All three data rows are restored and the empty-state message is no longer shown
+28. **Dashboard "Clear completed" removes finished todos and updates the summary** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — the todo list is client-side in-memory state seeded on mount with three todos, one already completed ("Deploy to staging"); it resets on navigation, so nothing to create or clean up.
+   - Postconditions: None (todo state resets on navigation).
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and locate the todo summary (`#todo-summary`) and the "Clear completed" button (`#clear-completed`)
+       Expectation: The summary reads "1 of 3 tasks completed" and the "Clear completed" button is visible (one todo, "Deploy to staging", starts completed)
+     2. Step: Toggle the "Review pull requests" todo to done via its checkbox (accessible name "Toggle Review pull requests")
+       Expectation: The summary updates to "2 of 3 tasks completed"
+     3. Step: Click the "Clear completed" button
+       Expectation: Both completed todos ("Deploy to staging" and "Review pull requests") are removed, only "Write documentation" remains in the list, and the summary reads "0 of 1 tasks completed"
+     4. Step: Observe the "Clear completed" button after clearing
+       Expectation: The button (`#clear-completed`) is no longer present, since no todos are completed
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`

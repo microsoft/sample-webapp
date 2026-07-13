@@ -119,4 +119,33 @@ test.describe('Dashboard page', () => {
     await expect(dataRows).toHaveCount(3);
     await expect(page.locator('#activity-empty')).toHaveCount(0);
   });
+
+  test('should clear completed todos and update the summary count', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const summary = page.locator('#todo-summary');
+    const todoList = page.getByTestId('todo-list');
+    const clearCompleted = page.locator('#clear-completed');
+
+    // One todo ("Deploy to staging") starts completed on mount.
+    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(summary).toHaveText('1 of 3 tasks completed');
+    await expect(clearCompleted).toBeVisible();
+
+    // Mark a second todo done; the summary recalculates.
+    await page.getByRole('checkbox', { name: 'Toggle Review pull requests' }).check();
+    await expect(summary).toHaveText('2 of 3 tasks completed');
+
+    // Clearing removes every completed todo, leaving only the unfinished one.
+    await clearCompleted.click();
+
+    await expect(todoList.getByRole('listitem')).toHaveCount(1);
+    await expect(todoList.getByText('Write documentation')).toBeVisible();
+    await expect(todoList.getByText('Deploy to staging')).toHaveCount(0);
+    await expect(todoList.getByText('Review pull requests')).toHaveCount(0);
+    await expect(summary).toHaveText('0 of 1 tasks completed');
+
+    // With no completed todos remaining, the button is no longer rendered.
+    await expect(clearCompleted).toHaveCount(0);
+  });
 });
