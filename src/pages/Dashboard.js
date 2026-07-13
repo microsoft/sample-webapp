@@ -118,6 +118,9 @@ function Dashboard() {
             onChange={(e) => setActivityQuery(e.target.value)}
           />
         </div>
+        <p className="activity-count" id="activity-count">
+          Showing {filteredActivity.length} of {activityData.length}
+        </p>
         <table id="activity-table">
           <thead>
             <tr><th>User</th><th>Action</th><th>Date</th></tr>
