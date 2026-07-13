@@ -74,6 +74,9 @@ function Dashboard() {
 
       <section className="todo-section">
         <h2>Todo List</h2>
+        <p className="todo-summary" id="todo-summary">
+          {todos.filter(t => t.done).length} of {todos.length} tasks completed
+        </p>
         <form onSubmit={addTodo} className="todo-form">
           <input
             type="text"
