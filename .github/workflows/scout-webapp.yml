@@ -60,7 +60,7 @@ jobs:
         run: npx wait-on http://localhost:3000 --timeout 60000
 
       - name: Run scout against the local app
-        run: ata scout --target http://localhost:3000 --create-pr --target-branch main --draft
+        run: ata scout --target http://localhost:3000 --create-pr --target-branch main --save-results
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
