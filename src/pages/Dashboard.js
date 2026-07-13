@@ -48,6 +48,10 @@ function Dashboard() {
     setTodos(todos.filter(t => t.id !== id));
   };
 
+  const clearCompleted = () => {
+    setTodos(todos.filter(t => !t.done));
+  };
+
   const query = activityQuery.trim().toLowerCase();
   const filteredActivity = query
     ? activityData.filter((row) =>
@@ -107,6 +111,16 @@ function Dashboard() {
             </li>
           ))}
         </ul>
+        {todos.some(t => t.done) && (
+          <button
+            type="button"
+            className="btn"
+            id="clear-completed"
+            onClick={clearCompleted}
+          >
+            Clear completed
+          </button>
+        )}
       </section>
 
       <section>
