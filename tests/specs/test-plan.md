@@ -181,3 +181,26 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The consent banner is no longer present (count 0) — accepting dismisses it immediately
       3. Step: Reload the page (same browser context)
          Expectation: The consent banner is still not present (count 0) — acceptance persists across reloads via localStorage, so a returning visitor is not shown the banner again
+### Newsletter
+19. **Newsletter subscribes successfully with a valid email and clears the field** — `tests/newsletter.spec.ts`
+    - Preconditions: None — `/newsletter` is a public route; the form (email value, status, and the in-memory list of subscribed emails) is component state that resets on navigation. Nothing to create or clean up.
+    - Postconditions: None — no server-side data is created; the subscription list lives only in the page's in-memory state and is discarded on navigation.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter, fill the email field (getByTestId('newsletter-email')) with a unique valid email, and click Subscribe (getByTestId('newsletter-subscribe'))
+         Expectation: The success message (getByTestId('newsletter-success'), role="status") is visible with text "Thanks for subscribing! Please check your inbox to confirm.", and no error (getByTestId('newsletter-error')) or duplicate (getByTestId('newsletter-duplicate')) message is present
+      2. Step: Inspect the email field after submission
+         Expectation: The email field is cleared (empty value) — a successful subscription resets the input
+20. **Newsletter rejects an invalid email address** — `tests/newsletter.spec.ts`
+    - Preconditions: None — public `/newsletter` route; in-memory form state that resets on navigation. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter, fill the email field with a value that is not a valid email (e.g. "not-an-email"), and click Subscribe
+         Expectation: The error alert (getByTestId('newsletter-error'), role="alert") is visible with text "Please enter a valid email address.", and no success message (getByTestId('newsletter-success')) is present
+21. **Newsletter rejects a duplicate subscription within the same session** — `tests/newsletter.spec.ts`
+    - Preconditions: None — public `/newsletter` route. The duplicate guard relies on the in-memory subscribed list, so both submissions happen within a single page load (no navigation/reload between them, or the list resets). Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter, subscribe a unique valid email (fill getByTestId('newsletter-email') + click getByTestId('newsletter-subscribe'))
+         Expectation: The success message (getByTestId('newsletter-success')) is visible
+      2. Step: Without navigating away, fill the email field with the same email again and click Subscribe
+         Expectation: The duplicate alert (getByTestId('newsletter-duplicate'), role="alert") is visible with text "You are already subscribed with this email.", and no success message (getByTestId('newsletter-success')) is present
