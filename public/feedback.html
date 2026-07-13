@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback - Sample Web App</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav>
+    <a href="/" class="logo">SampleApp</a>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/login">Login</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/feedback">Feedback</a>
+    </div>
+  </nav>
+  <main>
+    <h1>Send Feedback</h1>
+    <form id="feedback-form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+      </div>
+      <div class="form-group">
+        <label for="rating">Rating</label>
+        <select id="rating" name="rating" required>
+          <option value="">Select a rating</option>
+          <option value="5">5 - Excellent</option>
+          <option value="4">4 - Good</option>
+          <option value="3">3 - Average</option>
+          <option value="2">2 - Poor</option>
+          <option value="1">1 - Terrible</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="comments">Comments</label>
+        <textarea id="comments" name="comments" rows="4" placeholder="Tell us more" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </form>
+    <div id="message" class="message" hidden></div>
+  </main>
+  <script>
+    document.getElementById('feedback-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const rating = document.getElementById('rating').value;
+      const comments = document.getElementById('comments').value;
+      const msgEl = document.getElementById('message');
+      try {
+        const res = await fetch('/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, rating, comments })
+        });
+        const data = await res.json();
+        msgEl.textContent = data.message;
+        msgEl.className = data.success ? 'message success' : 'message error';
+        msgEl.hidden = false;
+        if (data.success) {
+          document.getElementById('feedback-form').reset();
+        }
+      } catch {
+        msgEl.textContent = 'An error occurred';
+        msgEl.className = 'message error';
+        msgEl.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>
