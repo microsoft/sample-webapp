@@ -15,6 +15,48 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Success message appears containing "Welcome" and the submitted username
      3. Step: Wait for redirect
         Expectation: URL changes to /dashboard
+22. **Login rejects a password shorter than 6 characters** — `tests/login.spec.ts`
+   - Preconditions: None — `/login` is a public route; the form is client-only and validated in-page (no auth or seeded data). Added as a new case in the existing login.spec.ts.
+   - Postconditions: None — no server-side state; nothing to clean up.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /login
+       Expectation: Login page loads
+     2. Step: Fill Username with a non-empty value and Password with a value under 6 characters (e.g. "abc"), click Login
+       Expectation: Error banner (role="alert", class contains "error") reads exactly "Password must be at least 6 characters"
+     3. Step: Inspect the page after submit
+       Expectation: URL stays on /login and no success banner (role="status") appears
+
+### Home
+23. **Home landing page renders the heading and both call-to-action links** — `tests/home.spec.ts`
+   - Preconditions: None — `/` is a public route with static content; nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /
+       Expectation: The "Welcome to Sample Web App" level-1 heading is visible
+     2. Step: Inspect the landing page main content
+       Expectation: Both on-page call-to-action links "Get Started" and "View Dashboard" are visible (scoped to main content so they don't collide with same-named navbar links)
+24. **Home "Get Started" CTA navigates to the login page** — `tests/home.spec.ts`
+   - Preconditions: None — `/` is a public route; nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to / and click the "Get Started" CTA in the landing page main content
+       Expectation: URL changes to /login and the Login level-1 heading is visible
+25. **Home "View Dashboard" CTA navigates to the dashboard** — `tests/home.spec.ts`
+   - Preconditions: None — `/` is a public route; nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to / and click the "View Dashboard" CTA in the landing page main content
+       Expectation: URL changes to /dashboard and the Dashboard level-1 heading is visible
+
+### Not Found
+26. **Unknown route renders the 404 page and recovers via "Back to Home"** — `tests/not-found.spec.ts`
+   - Preconditions: None — the catch-all `*` route renders static content; nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to an unmatched route (e.g. /this-route-does-not-exist)
+       Expectation: The NotFound page renders — the `not-found-page` testid, the "404" level-1 heading, and the "Page Not Found" level-2 heading are visible
+     2. Step: Click the "Back to Home" link
+       Expectation: URL returns to / and the "Welcome to Sample Web App" landing heading is visible
 
 ### Dashboard
 2. **Dashboard stat cards display correct values** — `tests/dashboard.spec.ts`

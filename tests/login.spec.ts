@@ -65,4 +65,20 @@ test.describe('Login page', () => {
     await expect(message).toBeVisible();
     await expect(message).toHaveClass(/error/);
   });
+
+  test('should reject a password shorter than 6 characters', async ({ page }) => {
+    await page.goto('/login');
+
+    await page.getByRole('textbox', { name: 'Username' }).fill('someuser');
+    await page.getByRole('textbox', { name: 'Password' }).fill('abc');
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    const message = page.getByRole('alert');
+    await expect(message).toBeVisible();
+    await expect(message).toHaveClass(/error/);
+    await expect(message).toHaveText('Password must be at least 6 characters');
+
+    await expect(page).toHaveURL(/.*login/);
+    await expect(page.getByRole('status')).toHaveCount(0);
+  });
 });
