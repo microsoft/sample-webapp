@@ -9,6 +9,7 @@ test.describe('Login page', () => {
     await expect(page.getByRole('textbox', { name: 'Username' })).toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Password' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Login' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Login' })).toBeEnabled();
   });
 
   test('should login successfully with valid credentials and redirect to dashboard', async ({ page }) => {

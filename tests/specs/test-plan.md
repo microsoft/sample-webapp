@@ -314,4 +314,5 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (recovery to the landing page)
 
 <!-- Coverage note: the Contact message character counter is covered in tests/contact.spec.ts. -->
+<!-- Maintenance note: entries are numbered sequentially and appended over time; continue from the current maximum when adding new plan items. -->
 
