@@ -21,6 +21,7 @@ import './Login.css';
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -63,13 +64,22 @@ function Login() {
         <div className="form-group">
           <label htmlFor="password">Password</label>
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
             name="password"
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <button
+            type="button"
+            id="toggle-password"
+            className="toggle-password"
+            aria-pressed={showPassword}
+            onClick={() => setShowPassword((prev) => !prev)}
+          >
+            {showPassword ? 'Hide password' : 'Show password'}
+          </button>
         </div>
         <button type="submit" className="btn btn-primary">Login</button>
       </form>
