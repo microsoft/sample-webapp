@@ -36,6 +36,7 @@ function About() {
           <li><span className="tech-badge">React Router v6</span></li>
           <li><span className="tech-badge">Playwright</span></li>
           <li><span className="tech-badge">CSS3</span></li>
+          <li><span className="tech-badge">Node.js</span></li>
         </ul>
       </section>
 
