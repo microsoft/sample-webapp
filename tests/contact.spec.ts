@@ -26,6 +26,8 @@ const VALID_INPUT = {
   message: 'This is a valid message over ten characters.',
 };
 
+// Message is intentionally >10 chars so it passes the min-length validation.
+
 function contactForm(page: Page): Locator {
   return page.locator('#contact-page-form');
 }
