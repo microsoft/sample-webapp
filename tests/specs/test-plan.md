@@ -23,6 +23,16 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The message banner (`#message`, `role="alert"`) is visible with the exact text "Password must be at least 6 characters"
      2. Step: Observe the page after submission
         Expectation: The URL stays on /login (no redirect to /dashboard occurs), confirming the guard blocks submission
+28. **Login password visibility toggle reveals and re-hides the password** — `tests/login.spec.ts`
+   - Preconditions: None — `/login` is a public route; the toggle is client-side UI state (`showPassword` in `Login.js`). Nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /login and fill the Password field with a value (e.g. "secret123")
+        Expectation: The password input (`#password`) has type "password" and the toggle button (`#toggle-password`) reads "Show password" with `aria-pressed="false"`
+     2. Step: Click the "Show password" toggle button
+        Expectation: The password input's type becomes "text" (value now visible), the button reads "Hide password", and its `aria-pressed` is "true"
+     3. Step: Click the toggle button again
+        Expectation: The password input's type returns to "password", the button reads "Show password" again, and its `aria-pressed` is "false"
 
 ### Dashboard
 2. **Dashboard stat cards display correct values** — `tests/dashboard.spec.ts`
@@ -48,6 +58,26 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: No activity data rows remain and the empty-state message `#activity-empty` "No matching activity found." is visible
      4. Step: Clear the searchbox
         Expectation: All three data rows are restored and the empty-state message is no longer shown
+29. **Dashboard "Mark all complete" marks every todo done and hides itself** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation, so nothing to create or clean up.
+   - Postconditions: None (state resets on next navigation).
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The todo list shows 3 items with one already checked, the summary (`#todo-summary`) reads "1 of 3 tasks completed", and the "Mark all complete" button (`#mark-all-complete`) is visible
+     2. Step: Click the "Mark all complete" button
+        Expectation: All three todo checkboxes become checked and the summary reads "3 of 3 tasks completed"
+     3. Step: Observe the "Mark all complete" button after all todos are done
+        Expectation: The "Mark all complete" button is no longer present (it only shows while at least one todo is incomplete)
+30. **Dashboard "Clear completed" removes only completed todos and hides itself** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation, so nothing to create or clean up.
+   - Postconditions: None (state resets on next navigation).
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The list shows 3 items — "Deploy to staging" is checked (done); the "Clear completed" button (`#clear-completed`) is visible
+     2. Step: Click the "Clear completed" button
+        Expectation: The completed todo ("Deploy to staging") is removed, leaving the two incomplete todos ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
+     3. Step: Observe the "Clear completed" button after clearing
+        Expectation: The "Clear completed" button is no longer present (it only shows while at least one todo is completed)
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`

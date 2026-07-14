@@ -119,4 +119,47 @@ test.describe('Dashboard page', () => {
     await expect(dataRows).toHaveCount(3);
     await expect(page.locator('#activity-empty')).toHaveCount(0);
   });
+
+  test('should mark all todos complete and hide the button when none remain incomplete', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const todoList = page.getByTestId('todo-list');
+    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(page.locator('#todo-summary')).toHaveText('1 of 3 tasks completed');
+
+    const markAll = page.getByRole('button', { name: 'Mark all complete' });
+    await expect(markAll).toBeVisible();
+    await markAll.click();
+
+    const checkboxes = todoList.getByRole('checkbox');
+    await expect(checkboxes).toHaveCount(3);
+    for (let i = 0; i < 3; i++) {
+      await expect(checkboxes.nth(i)).toBeChecked();
+    }
+    await expect(page.locator('#todo-summary')).toHaveText('3 of 3 tasks completed');
+
+    // Button only shows while at least one todo is incomplete.
+    await expect(page.getByRole('button', { name: 'Mark all complete' })).toHaveCount(0);
+  });
+
+  test('should clear only completed todos and hide the button when none remain completed', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const todoList = page.getByTestId('todo-list');
+    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(page.getByRole('checkbox', { name: 'Toggle Deploy to staging' })).toBeChecked();
+
+    const clearCompleted = page.getByRole('button', { name: 'Clear completed' });
+    await expect(clearCompleted).toBeVisible();
+    await clearCompleted.click();
+
+    await expect(todoList.getByRole('listitem')).toHaveCount(2);
+    await expect(todoList.getByText('Deploy to staging')).not.toBeVisible();
+    await expect(todoList.getByText('Review pull requests')).toBeVisible();
+    await expect(todoList.getByText('Write documentation')).toBeVisible();
+    await expect(page.locator('#todo-summary')).toHaveText('0 of 2 tasks completed');
+
+    // Button only shows while at least one todo is completed.
+    await expect(page.getByRole('button', { name: 'Clear completed' })).toHaveCount(0);
+  });
 });

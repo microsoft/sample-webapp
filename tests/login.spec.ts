@@ -80,4 +80,27 @@ test.describe('Login page', () => {
     // The guard blocks submission: no redirect to the dashboard occurs.
     await expect(page).toHaveURL(/.*login/);
   });
+
+  test('should reveal and re-hide the password via the visibility toggle', async ({ page }) => {
+    await page.goto('/login');
+
+    const passwordInput = page.getByRole('textbox', { name: 'Password' });
+    await passwordInput.fill('secret123');
+    await expect(passwordInput).toHaveAttribute('type', 'password');
+
+    const toggle = page.getByRole('button', { name: 'Show password' });
+    await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+
+    await toggle.click();
+
+    // Revealing the password swaps the input to a plain text field.
+    await expect(page.getByRole('textbox', { name: 'Password' })).toHaveAttribute('type', 'text');
+    const hideToggle = page.getByRole('button', { name: 'Hide password' });
+    await expect(hideToggle).toHaveAttribute('aria-pressed', 'true');
+
+    await hideToggle.click();
+
+    await expect(page.getByRole('textbox', { name: 'Password' })).toHaveAttribute('type', 'password');
+    await expect(page.getByRole('button', { name: 'Show password' })).toHaveAttribute('aria-pressed', 'false');
+  });
 });
