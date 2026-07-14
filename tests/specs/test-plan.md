@@ -181,6 +181,17 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The list is filtered — the search box holds the typed value and the results count (`Showing 1 of 5 questions`) is visible
       2. Step: Press the Escape key while focus is in the search box
          Expectation: The search box is cleared (value is empty), the results count is no longer present, and all five question buttons are visible again (the Escape handler resets the query and the list)
+32. **FAQ Clear button resets the search and collapses any open answer** — `tests/faq.spec.ts`
+    - Preconditions: None — `/faq` is a public route with hard-coded content; the search box and open-answer state are in-memory component state that resets on navigation. Nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /faq
+         Expectation: No "Clear" button is present — it only renders once the query is non-empty
+      2. Step: Type a filtering term into the search box (getByRole('searchbox', { name: 'Search questions' })) that matches a single FAQ (e.g. "dark")
+         Expectation: A "Clear" button (getByRole('button', { name: 'Clear' })) is now visible, the list is narrowed to the one matching question ("Does the app support dark mode?"), and the results count reads `Showing 1 of 5 questions`
+      3. Step: Click the matching question to expand its answer
+         Expectation: The question is aria-expanded="true" and its answer region (role="region", named by the question) is visible
+      4. Step: Click the "Clear" button
+         Expectation: The search box value is empty, the results count is no longer present, all five question buttons are visible again, the previously-open answer region is no longer visible (the click resets the query AND collapses the open answer via setOpenIndex(null)), and the "Clear" button itself is no longer present (it renders only while a query is set)
 
 ### Scroll Progress
 20. **Scroll progress bar reflects scroll position from top (0%) to bottom (100%)** — `tests/scroll-progress.spec.ts`

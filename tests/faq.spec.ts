@@ -139,4 +139,39 @@ test.describe('FAQ page', () => {
     await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
     await expect(questions).toHaveCount(5);
   });
+
+  test('Clear button resets the search and collapses any open answer', async ({ page }) => {
+    await page.goto('/faq');
+
+    const search = page.getByRole('searchbox', { name: 'Search questions' });
+    const questions = page.getByRole('button').filter({ hasText: '?' });
+    const clearButton = page.getByRole('button', { name: 'Clear' });
+
+    // The Clear button only renders once the query is non-empty.
+    await expect(clearButton).toHaveCount(0);
+
+    // Typing a term that matches a single FAQ reveals the Clear button and filters the list.
+    await search.fill('dark');
+    await expect(clearButton).toBeVisible();
+    const darkQuestion = page.getByRole('button', { name: 'Does the app support dark mode?' });
+    await expect(darkQuestion).toBeVisible();
+    await expect(questions).toHaveCount(1);
+    await expect(page.getByText('Showing 1 of 5 questions')).toBeVisible();
+
+    // Expand the matching answer so we can prove Clear also collapses it.
+    await darkQuestion.click();
+    await expect(darkQuestion).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.getByRole('region', { name: 'Does the app support dark mode?' })).toBeVisible();
+
+    // Clicking Clear resets the query (restoring the full list, hiding the count) AND
+    // collapses the open answer, and removes itself since the query is empty again.
+    await clearButton.click();
+    await expect(search).toHaveValue('');
+    await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
+    await expect(questions).toHaveCount(5);
+    await expect(
+      page.getByRole('region', { name: 'Does the app support dark mode?' })
+    ).toHaveCount(0);
+    await expect(clearButton).toHaveCount(0);
+  });
 });
