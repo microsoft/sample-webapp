@@ -75,6 +75,19 @@ function FAQ() {
           }}
           aria-label="Search questions"
         />
+        {query && (
+          <button
+            type="button"
+            id="faq-search-clear"
+            className="faq-search-clear"
+            onClick={() => {
+              setQuery('');
+              setOpenIndex(null);
+            }}
+          >
+            Clear
+          </button>
+        )}
       </div>
 
       {normalizedQuery && filteredFaqs.length > 0 && (
