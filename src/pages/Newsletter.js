@@ -49,6 +49,10 @@ function Newsletter() {
         </button>
       </form>
 
+      <p id="newsletter-count" data-testid="newsletter-count">
+        {subscribed.length} subscriber{subscribed.length === 1 ? '' : 's'}
+      </p>
+
       {status === 'success' && (
         <p role="status" data-testid="newsletter-success" style={{ color: 'green' }}>
           Thanks for subscribing! Please check your inbox to confirm.
