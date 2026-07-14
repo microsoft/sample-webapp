@@ -312,3 +312,6 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The NotFound page renders — getByTestId('not-found-page') is visible with the "404" heading (level 1), the "Page Not Found" heading (level 2), and a "Back to Home" link
       2. Step: Click the "Back to Home" link
         Expectation: The URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (recovery to the landing page)
+
+<!-- Coverage note: the Contact message character counter is covered in tests/contact.spec.ts. -->
+
