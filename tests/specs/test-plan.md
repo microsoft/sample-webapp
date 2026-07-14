@@ -240,6 +240,20 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The success message (getByTestId('newsletter-success')) is visible
       2. Step: Without navigating away, fill the email field with the same email again and click Subscribe
          Expectation: The duplicate alert (getByTestId('newsletter-duplicate'), role="alert") is visible with text "You are already subscribed with this email.", and no success message (getByTestId('newsletter-success')) is present
+22. **Newsletter subscriber count increments on success only and pluralizes correctly** — `tests/newsletter.spec.ts`
+    - Preconditions: None — public `/newsletter` route; the subscriber count reflects the in-memory `subscribed` list, which resets on navigation, so a fresh visit starts at zero. All submissions in this test happen within a single page load (no navigation/reload between them). Nothing to create or clean up.
+    - Postconditions: None — no server-side data; the in-memory count is discarded on navigation.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter and read the subscriber count line (getByTestId('newsletter-count'))
+         Expectation: The count reads "0 subscribers" (plural on zero)
+      2. Step: Subscribe a unique valid email (fill getByTestId('newsletter-email') + click getByTestId('newsletter-subscribe'))
+         Expectation: The success message (getByTestId('newsletter-success')) is visible and the count reads exactly "1 subscriber" (singular on one)
+      3. Step: Without navigating away, submit an invalid email (e.g. "not-an-email")
+         Expectation: The error alert (getByTestId('newsletter-error')) is visible and the count still reads "1 subscriber" — a rejected submission does not increment the count
+      4. Step: Without navigating away, re-submit the same valid email used in step 2
+         Expectation: The duplicate alert (getByTestId('newsletter-duplicate')) is visible and the count still reads "1 subscriber" — a duplicate does not increment the count
+      5. Step: Without navigating away, subscribe a second unique valid email
+         Expectation: The count reads "2 subscribers" (plural on more than one)
 
 ### Home
 23. **Home landing page renders the welcome heading and both call-to-action links** — `tests/home.spec.ts`

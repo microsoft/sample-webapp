@@ -72,4 +72,39 @@ test.describe('Newsletter page', () => {
     await expect(duplicate).toContainText('You are already subscribed with this email.');
     await expect(page.getByTestId('newsletter-success')).toHaveCount(0);
   });
+
+  test('should increment the subscriber count on success only and pluralize it correctly', async ({ page }) => {
+    await page.goto('/newsletter');
+
+    const emailField = page.getByTestId('newsletter-email');
+    const subscribe = page.getByTestId('newsletter-subscribe');
+    const count = page.getByTestId('newsletter-count');
+
+    // Fresh load: nobody subscribed yet — plural on zero.
+    await expect(count).toHaveText('0 subscribers');
+
+    // A successful subscription bumps the count to one — singular.
+    const first = uniqueEmail();
+    await emailField.fill(first);
+    await subscribe.click();
+    await expect(page.getByTestId('newsletter-success')).toBeVisible();
+    await expect(count).toHaveText('1 subscriber');
+
+    // A rejected (invalid) submission must not increment the count.
+    await emailField.fill('not-an-email');
+    await subscribe.click();
+    await expect(page.getByTestId('newsletter-error')).toBeVisible();
+    await expect(count).toHaveText('1 subscriber');
+
+    // A duplicate submission must not increment the count either.
+    await emailField.fill(first);
+    await subscribe.click();
+    await expect(page.getByTestId('newsletter-duplicate')).toBeVisible();
+    await expect(count).toHaveText('1 subscriber');
+
+    // A second distinct successful subscription — plural on more than one.
+    await emailField.fill(uniqueEmail());
+    await subscribe.click();
+    await expect(count).toHaveText('2 subscribers');
+  });
 });
