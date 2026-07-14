@@ -125,4 +125,24 @@ test.describe('Contact page', () => {
     await expect(form.getByText('Message is required')).toHaveCount(0);
     await expect(page.getByTestId('toast')).toHaveCount(0);
   });
+
+  test('should update the message character counter live as the user types', async ({ page }) => {
+    await page.goto('/contact');
+
+    const form = contactForm(page);
+    const message = form.getByRole('textbox', { name: 'Message' });
+    // The counter (#message-char-count) renders values.message.length live (Contact.js).
+    const charCount = page.locator('#message-char-count');
+
+    // An untouched Message field reports zero characters.
+    await expect(charCount).toHaveText('0 characters');
+
+    // Typing updates the counter live to the field's exact length.
+    await message.fill('Hello world!');
+    await expect(charCount).toHaveText('12 characters');
+
+    // Clearing the field returns the counter to zero.
+    await message.fill('');
+    await expect(charCount).toHaveText('0 characters');
+  });
 });

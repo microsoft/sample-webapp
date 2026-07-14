@@ -125,6 +125,16 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Only the "Name is required" error appears; the Email and Message fields show no error (they are still untouched), and no success toast appears (getByTestId('toast') has count 0)
      2. Step: Blur the still-empty Email field (e.g. focus the Message field) without submitting
         Expectation: The "Email is required" error now also appears (each field is validated on its own blur), while the still-untouched Message field shows no error and no success toast appears
+31. **Contact form message character counter updates live as the user types** — `tests/contact.spec.ts`
+   - Preconditions: None — `/contact` is a public route; the counter is client-side derived state (`values.message.length` rendered in `#message-char-count` in `Contact.js`). Nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /contact and read the message character counter (`#message-char-count`) with the Message field empty
+        Expectation: The counter reads "0 characters"
+     2. Step: Fill the Message field with a known value (e.g. "Hello world!", 12 characters)
+        Expectation: The counter updates live to "12 characters" (reflecting the exact field length)
+     3. Step: Clear the Message field
+        Expectation: The counter returns to "0 characters"
 
 ### FAQ
 8. **FAQ question expands to reveal its answer and collapses again** — `tests/faq.spec.ts`
