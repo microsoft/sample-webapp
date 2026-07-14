@@ -23,6 +23,16 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The message banner (`#message`, `role="alert"`) is visible with the exact text "Password must be at least 6 characters"
      2. Step: Observe the page after submission
         Expectation: The URL stays on /login (no redirect to /dashboard occurs), confirming the guard blocks submission
+28. **Login password visibility toggle reveals and re-hides the password** — `tests/login.spec.ts`
+   - Preconditions: None — `/login` is a public route; the toggle is client-side UI state (`showPassword` in `Login.js`). Nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /login and fill the Password field with a value (e.g. "secret123")
+        Expectation: The password input (`#password`) has type "password" and the toggle button (`#toggle-password`) reads "Show password" with `aria-pressed="false"`
+     2. Step: Click the "Show password" toggle button
+        Expectation: The password input's type becomes "text" (value now visible), the button reads "Hide password", and its `aria-pressed` is "true"
+     3. Step: Click the toggle button again
+        Expectation: The password input's type returns to "password", the button reads "Show password" again, and its `aria-pressed` is "false"
 
 ### Dashboard
 2. **Dashboard stat cards display correct values** — `tests/dashboard.spec.ts`
@@ -48,6 +58,26 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: No activity data rows remain and the empty-state message `#activity-empty` "No matching activity found." is visible
      4. Step: Clear the searchbox
         Expectation: All three data rows are restored and the empty-state message is no longer shown
+29. **Dashboard "Mark all complete" marks every todo done and hides itself** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation, so nothing to create or clean up.
+   - Postconditions: None (state resets on next navigation).
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The todo list shows 3 items with one already checked, the summary (`#todo-summary`) reads "1 of 3 tasks completed", and the "Mark all complete" button (`#mark-all-complete`) is visible
+     2. Step: Click the "Mark all complete" button
+        Expectation: All three todo checkboxes become checked and the summary reads "3 of 3 tasks completed"
+     3. Step: Observe the "Mark all complete" button after all todos are done
+        Expectation: The "Mark all complete" button is no longer present (it only shows while at least one todo is incomplete)
+30. **Dashboard "Clear completed" removes only completed todos and hides itself** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation, so nothing to create or clean up.
+   - Postconditions: None (state resets on next navigation).
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The list shows 3 items — "Deploy to staging" is checked (done); the "Clear completed" button (`#clear-completed`) is visible
+     2. Step: Click the "Clear completed" button
+        Expectation: The completed todo ("Deploy to staging") is removed, leaving the two incomplete todos ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
+     3. Step: Observe the "Clear completed" button after clearing
+        Expectation: The "Clear completed" button is no longer present (it only shows while at least one todo is completed)
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`
@@ -95,6 +125,16 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Only the "Name is required" error appears; the Email and Message fields show no error (they are still untouched), and no success toast appears (getByTestId('toast') has count 0)
      2. Step: Blur the still-empty Email field (e.g. focus the Message field) without submitting
         Expectation: The "Email is required" error now also appears (each field is validated on its own blur), while the still-untouched Message field shows no error and no success toast appears
+31. **Contact form message character counter updates live as the user types** — `tests/contact.spec.ts`
+   - Preconditions: None — `/contact` is a public route; the counter is client-side derived state (`values.message.length` rendered in `#message-char-count` in `Contact.js`). Nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /contact and read the message character counter (`#message-char-count`) with the Message field empty
+        Expectation: The counter reads "0 characters"
+     2. Step: Fill the Message field with a known value (e.g. "Hello world!", 12 characters)
+        Expectation: The counter updates live to "12 characters" (reflecting the exact field length)
+     3. Step: Clear the Message field
+        Expectation: The counter returns to "0 characters"
 
 ### FAQ
 8. **FAQ question expands to reveal its answer and collapses again** — `tests/faq.spec.ts`
@@ -272,3 +312,7 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The NotFound page renders — getByTestId('not-found-page') is visible with the "404" heading (level 1), the "Page Not Found" heading (level 2), and a "Back to Home" link
       2. Step: Click the "Back to Home" link
         Expectation: The URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (recovery to the landing page)
+
+<!-- Coverage note: the Contact message character counter is covered in tests/contact.spec.ts. -->
+<!-- Maintenance note: entries are numbered sequentially and appended over time; continue from the current maximum when adding new plan items. -->
+
