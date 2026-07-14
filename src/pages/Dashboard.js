@@ -52,6 +52,10 @@ function Dashboard() {
     setTodos(todos.filter(t => !t.done));
   };
 
+  const markAllComplete = () => {
+    setTodos(todos.map(t => ({ ...t, done: true })));
+  };
+
   const query = activityQuery.trim().toLowerCase();
   const filteredActivity = query
     ? activityData.filter((row) =>
@@ -91,6 +95,16 @@ function Dashboard() {
           />
           <button type="submit" className="btn btn-primary">Add</button>
         </form>
+        {todos.some(t => !t.done) && (
+          <button
+            type="button"
+            className="btn"
+            id="mark-all-complete"
+            onClick={markAllComplete}
+          >
+            Mark all complete
+          </button>
+        )}
         <ul className="todo-list" data-testid="todo-list">
           {todos.map(todo => (
             <li key={todo.id} className={todo.done ? 'done' : ''}>

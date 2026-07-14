@@ -110,6 +110,9 @@ function Contact() {
           {touched.message && errors.message && (
             <span className="field-error" role="alert">{errors.message}</span>
           )}
+          <p className="char-count" id="message-char-count">
+            {values.message.length} characters
+          </p>
         </div>
 
         <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
