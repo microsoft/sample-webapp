@@ -41,13 +41,23 @@ Sample Web App — a React application with React Router that provides routes su
    - Postconditions: None.
    - Step/Expectation Pairs:
      1. Step: Navigate to /dashboard and locate the "Search activity" searchbox (`#activity-search`) under the "Recent Activity" heading
-        Expectation: The searchbox is visible and the activity table (`#activity-table`) shows all three data rows (Alice, Bob, Charlie)
+       Expectation: The searchbox is visible and the activity table (`#activity-table`) shows all three data rows (Alice, Bob, Charlie); the results count `#activity-count` reads "Showing 3 of 3"
      2. Step: Type a query matching a single row (e.g. "Bob") into the searchbox
-        Expectation: The table body shows only the matching row ("Bob"); the non-matching rows ("Alice", "Charlie") are no longer present
+       Expectation: The table body shows only the matching row ("Bob"); the non-matching rows ("Alice", "Charlie") are no longer present, and `#activity-count` updates to "Showing 1 of 3"
      3. Step: Replace the query with one that matches nothing (e.g. "zzz")
-        Expectation: No activity data rows remain and the empty-state message `#activity-empty` "No matching activity found." is visible
+       Expectation: No activity data rows remain, the empty-state message `#activity-empty` "No matching activity found." is visible, and `#activity-count` reads "Showing 0 of 3"
      4. Step: Clear the searchbox
-        Expectation: All three data rows are restored and the empty-state message is no longer shown
+       Expectation: All three data rows are restored, the empty-state message is no longer shown, and `#activity-count` returns to "Showing 3 of 3"
+28. **Clear completed todos removes done tasks, updates the summary count, and hides the Clear-completed button** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — the todo list is client-side state seeded from three initial todos (one, "Deploy to staging", starts done); it resets on navigation, so nothing to create or clean up.
+   - Postconditions: None — todo state lives only in the page's in-memory React state and is discarded on navigation.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+       Expectation: The summary `#todo-summary` reads "1 of 3 tasks completed" (one initial todo is done) and the "Clear completed" button (`#clear-completed`) is visible (it renders only while at least one todo is done)
+     2. Step: Click the "Clear completed" button
+       Expectation: The done todo ("Deploy to staging") is removed from the list (`[data-testid="todo-list"]` now has 2 items — "Review pull requests" and "Write documentation"), the summary `#todo-summary` recalculates to "0 of 2 tasks completed", and the "Clear completed" button is no longer present (no done todos remain to clear)
+     3. Step: Check one of the remaining todos (e.g. toggle "Review pull requests" done)
+       Expectation: The summary updates to "1 of 2 tasks completed" and the "Clear completed" button re-appears (a done todo exists again), confirming the button's visibility is driven by the presence of completed todos
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`

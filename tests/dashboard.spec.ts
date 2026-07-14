@@ -103,20 +103,50 @@ test.describe('Dashboard page', () => {
     await expect(searchBox).toBeVisible();
 
     const dataRows = page.locator('#activity-table tbody tr');
+    const activityCount = page.locator('#activity-count');
     await expect(dataRows).toHaveCount(3);
+    await expect(activityCount).toHaveText('Showing 3 of 3');
 
     await searchBox.fill('Bob');
     await expect(dataRows).toHaveCount(1);
     await expect(dataRows).toContainText('Bob');
     await expect(page.locator('#activity-table tbody')).not.toContainText('Alice');
     await expect(page.locator('#activity-table tbody')).not.toContainText('Charlie');
+    await expect(activityCount).toHaveText('Showing 1 of 3');
 
     await searchBox.fill('zzz');
     await expect(dataRows).toHaveCount(0);
     await expect(page.locator('#activity-empty')).toHaveText('No matching activity found.');
+    await expect(activityCount).toHaveText('Showing 0 of 3');
 
     await searchBox.fill('');
     await expect(dataRows).toHaveCount(3);
     await expect(page.locator('#activity-empty')).toHaveCount(0);
+    await expect(activityCount).toHaveText('Showing 3 of 3');
+  });
+
+  test('should clear completed todos, update the summary count, and hide the Clear-completed button', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const todoList = page.getByTestId('todo-list');
+    const summary = page.locator('#todo-summary');
+    const clearCompleted = page.locator('#clear-completed');
+
+    await expect(summary).toHaveText('1 of 3 tasks completed');
+    await expect(clearCompleted).toBeVisible();
+
+    await clearCompleted.click();
+
+    await expect(todoList.getByRole('listitem')).toHaveCount(2);
+    await expect(todoList.getByText('Deploy to staging')).toHaveCount(0);
+    await expect(todoList.getByText('Review pull requests')).toBeVisible();
+    await expect(todoList.getByText('Write documentation')).toBeVisible();
+    await expect(summary).toHaveText('0 of 2 tasks completed');
+    await expect(clearCompleted).toHaveCount(0);
+
+    await page.getByRole('checkbox', { name: 'Toggle Review pull requests' }).check();
+
+    await expect(summary).toHaveText('1 of 2 tasks completed');
+    await expect(clearCompleted).toBeVisible();
   });
 });
