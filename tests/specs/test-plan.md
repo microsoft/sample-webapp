@@ -280,6 +280,20 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The success message (getByTestId('newsletter-success')) is visible
       2. Step: Without navigating away, fill the email field with the same email again and click Subscribe
          Expectation: The duplicate alert (getByTestId('newsletter-duplicate'), role="alert") is visible with text "You are already subscribed with this email.", and no success message (getByTestId('newsletter-success')) is present
+32. **Newsletter subscriber count increments on success only and pluralizes correctly** — `tests/newsletter.spec.ts`
+    - Preconditions: None — `/newsletter` is a public route; the subscriber count (`#newsletter-count` / getByTestId('newsletter-count')) is derived from the in-memory `subscribed` list in `Newsletter.js`, which resets on navigation. All submissions happen within a single page load (the count and duplicate guard rely on that in-memory list). Nothing to create or clean up.
+    - Postconditions: None — no server-side data is created; the list is discarded on navigation.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter and read the subscriber count (getByTestId('newsletter-count')) on a fresh load
+        Expectation: The count reads "0 subscribers" (plural wording at zero)
+      2. Step: Fill the email field (getByTestId('newsletter-email')) with a unique valid email and click Subscribe (getByTestId('newsletter-subscribe'))
+        Expectation: The success message appears and the count updates to "1 subscriber" (singular wording at one)
+      3. Step: Fill the email field with an invalid value (e.g. "not-an-email") and click Subscribe
+        Expectation: The error alert appears and the count still reads "1 subscriber" (a rejected submission must not increment the count)
+      4. Step: Fill the email field with the same email used in step 2 and click Subscribe
+        Expectation: The duplicate alert appears and the count still reads "1 subscriber" (a duplicate submission must not increment the count)
+      5. Step: Fill the email field with a second, different unique valid email and click Subscribe
+        Expectation: The success message appears and the count updates to "2 subscribers" (plural wording restored above one)
 
 ### Home
 23. **Home landing page renders the welcome heading and both call-to-action links** — `tests/home.spec.ts`
