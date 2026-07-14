@@ -10,6 +10,7 @@ function Home() {
       <div className="actions">
         <Link to="/login" className="btn btn-primary">Get Started</Link>
         <Link to="/dashboard" className="btn btn-secondary">View Dashboard</Link>
+        <Link to="/about" className="btn btn-secondary">Learn More</Link>
       </div>
       <section id="features">
         <h2>Features</h2>
