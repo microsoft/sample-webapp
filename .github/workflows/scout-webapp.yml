@@ -21,6 +21,7 @@ env:
 jobs:
   scout:
     runs-on: ubuntu-latest
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,21 +53,26 @@ jobs:
           npm i -g ./microsoft-app-testing-agent-*.tgz
           ata --version
 
-      - name: Start app locally
-        run: node server.js &
-
-      - name: Wait for app
-        run: npx wait-on http://localhost:3000 --timeout 60000
+      - name: Start app locally (real CRA dev server)
+        run: |
+          BROWSER=none PORT=3000 npm start > /tmp/cra.log 2>&1 &
+          npx wait-on http://localhost:3000 --timeout 120000
 
       - name: Run scout against the local app
-        run: ata scout --target http://localhost:3000 --create-pr --target-branch main --save-results
+        timeout-minutes: 60
+        run: ata scout --target http://localhost:3000 --create-pr --target-branch main --save-results --verbose
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+      - name: Show app log on failure
+        if: failure()
+        run: tail -n 100 /tmp/cra.log || true
 
   # Runs in parallel with the scout job (no `needs:` dependency).
   heal:
     runs-on: ubuntu-latest
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
@@ -98,14 +104,18 @@ jobs:
           npm i -g ./microsoft-app-testing-agent-*.tgz
           ata --version
 
-      - name: Start app locally
-        run: node server.js &
-
-      - name: Wait for app
-        run: npx wait-on http://localhost:3000 --timeout 60000
+      - name: Start app locally (real CRA dev server)
+        run: |
+          BROWSER=none PORT=3000 npm start > /tmp/cra.log 2>&1 &
+          npx wait-on http://localhost:3000 --timeout 120000
 
       - name: Heal failing tests
-        run: ata heal --target http://localhost:3000 --create-pr --target-branch main --save-results
+        timeout-minutes: 60
+        run: ata heal --target http://localhost:3000 --create-pr --target-branch main --save-results --verbose
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+      - name: Show app log on failure
+        if: failure()
+        run: tail -n 100 /tmp/cra.log || true
