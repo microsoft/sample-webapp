@@ -21,6 +21,9 @@ function Home() {
           <li>Responsive design</li>
         </ul>
       </section>
+      <p className="contact-hint" id="contact-hint">
+        Have questions? <Link to="/contact">Contact us</Link>.
+      </p>
     </div>
   );
 }

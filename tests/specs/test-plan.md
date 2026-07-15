@@ -305,14 +305,14 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The duplicate alert (getByTestId('newsletter-duplicate'), role="alert") is visible with text "You are already subscribed with this email.", and no success message (getByTestId('newsletter-success')) is present
 
 ### Home
-23. **Home landing page renders the welcome heading and both call-to-action links** — `tests/home.spec.ts`
+23. **Home landing page renders the welcome heading and all call-to-action links** — `tests/home.spec.ts`
     - Preconditions: None — `/` is the public landing route; renders from static component markup with no auth or seeded data. Nothing to create or clean up.
     - Postconditions: None.
     - Step/Expectation Pairs:
       1. Step: Navigate to /
         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
       2. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
-        Expectation: A "Get Started" link and a "View Dashboard" link are both visible within the main content
+        Expectation: A "Get Started" link, a "View Dashboard" link, and a "Learn More" link are all visible within the main content
 24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
     - Preconditions: None — public `/` route; nothing to create or clean up.
     - Postconditions: None.
@@ -325,6 +325,12 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and click the "View Dashboard" link within `<main>` (getByRole('main').getByRole('link', { name: 'View Dashboard' }))
         Expectation: The URL changes to /dashboard and the dashboard content (e.g. the "Dashboard" heading, level 1) is visible
+27. **Home "Learn More" call-to-action navigates to the About page** — `tests/home.spec.ts`
+    - Preconditions: None — public `/` route; the "Learn More" CTA links to the public `/about` route. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and click the "Learn More" link within `<main>` (getByRole('main').getByRole('link', { name: 'Learn More' }))
+        Expectation: The URL changes to /about and the "About Us" heading (level 1) is visible
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
