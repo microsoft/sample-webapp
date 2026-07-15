@@ -21,6 +21,7 @@ env:
 jobs:
   scout:
     runs-on: ubuntu-latest
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,7 +44,6 @@ jobs:
 
       - name: Install the pinned App Testing Agent CLI (from GitHub Release)
         env:
-          # Token with read access to the microsoft/app-testing-agent releases
           GH_TOKEN: ${{ secrets.ATA_DOWNLOAD_TOKEN }}
         run: |
           gh release download "$ATA_VERSION" \
@@ -53,20 +53,69 @@ jobs:
           npm i -g ./microsoft-app-testing-agent-*.tgz
           ata --version
 
-      - name: Start app locally
-        run: node server.js &
-
-      - name: Wait for app
-        run: npx wait-on http://localhost:3000 --timeout 60000
+      - name: Start app locally (real CRA dev server)
+        run: |
+          BROWSER=none PORT=3000 npm start > /tmp/cra.log 2>&1 &
+          npx wait-on http://localhost:3000 --timeout 120000
 
       - name: Run scout against the local app
-        run: ata scout --target http://localhost:3000 --create-pr --target-branch main --save-results
+        timeout-minutes: 60
+        run: ata scout --target http://localhost:3000 --create-pr --target-branch main --save-results --verbose
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
-      - name: Heal failing tests (runs after scout)
-        run: ata heal --target http://localhost:3000 --create-pr --target-branch main --save-results
+      - name: Show app log on failure
+        if: failure()
+        run: tail -n 100 /tmp/cra.log || true
+
+  # Runs in parallel with the scout job (no `needs:` dependency).
+  heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ vars.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}"}'
+
+      - name: Install app dependencies
+        run: npm install
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Install the pinned App Testing Agent CLI (from GitHub Release)
+        env:
+          GH_TOKEN: ${{ secrets.ATA_DOWNLOAD_TOKEN }}
+        run: |
+          gh release download "$ATA_VERSION" \
+            --repo microsoft/app-testing-agent \
+            -p '*.tgz' \
+            --clobber
+          npm i -g ./microsoft-app-testing-agent-*.tgz
+          ata --version
+
+      - name: Start app locally (real CRA dev server)
+        run: |
+          BROWSER=none PORT=3000 npm start > /tmp/cra.log 2>&1 &
+          npx wait-on http://localhost:3000 --timeout 120000
+
+      - name: Heal failing tests
+        timeout-minutes: 60
+        run: ata heal --target http://localhost:3000 --create-pr --target-branch main --save-results --verbose
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+      - name: Show app log on failure
+        if: failure()
+        run: tail -n 100 /tmp/cra.log || true
