@@ -33,6 +33,18 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The password input's type becomes "text" (value now visible), the button reads "Hide password", and its `aria-pressed` is "true"
      3. Step: Click the toggle button again
         Expectation: The password input's type returns to "password", the button reads "Show password" again, and its `aria-pressed` is "false"
+33. **Login "Remember me" checkbox toggles and does not disrupt sign-in** — `tests/login.spec.ts`
+   - Preconditions: TEST_USER_EMAIL and TEST_USER_PASSWORD env vars set. `/login` is a public route; the checkbox is client-side UI state (`rememberMe` in `Login.js`) with no persistence effect. Nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /login
+        Expectation: The "Remember me" checkbox (`getByRole('checkbox', { name: 'Remember me' })`) is visible and unchecked by default
+     2. Step: Click (check) the "Remember me" checkbox
+        Expectation: The checkbox becomes checked
+     3. Step: Click (uncheck) the "Remember me" checkbox again
+        Expectation: The checkbox returns to unchecked
+     4. Step: Check "Remember me", fill Username and Password with valid credentials, then click "Login"
+        Expectation: The success message banner (`role="status"`) appears and the URL redirects to /dashboard — confirming the checkbox does not interfere with sign-in
 
 ### Dashboard
 2. **Dashboard stat cards display correct values** — `tests/dashboard.spec.ts`

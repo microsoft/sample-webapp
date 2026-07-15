@@ -8,6 +8,7 @@ function Footer() {
   return (
     <footer className="app-footer">
       <nav className="footer-links" aria-label="Footer">
+        <Link to="/">Home</Link>
         <Link to="/about">About</Link>
         <Link to="/contact">Contact</Link>
         <Link to="/faq">FAQ</Link>

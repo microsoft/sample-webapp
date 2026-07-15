@@ -104,4 +104,35 @@ test.describe('Login page', () => {
     await expect(page.getByRole('textbox', { name: 'Password' })).toHaveAttribute('type', 'password');
     await expect(page.getByRole('button', { name: 'Show password' })).toHaveAttribute('aria-pressed', 'false');
   });
+
+  test('should toggle the "Remember me" checkbox without disrupting sign-in', async ({ page }) => {
+    const email = process.env.TEST_USER_EMAIL;
+    const password = process.env.TEST_USER_PASSWORD;
+    if (!email) throw new Error('TEST_USER_EMAIL is not set');
+    if (!password) throw new Error('TEST_USER_PASSWORD is not set');
+
+    await page.goto('/login');
+
+    const rememberMe = page.getByRole('checkbox', { name: 'Remember me' });
+    await expect(rememberMe).toBeVisible();
+    await expect(rememberMe).not.toBeChecked();
+
+    await rememberMe.check();
+    await expect(rememberMe).toBeChecked();
+
+    await rememberMe.uncheck();
+    await expect(rememberMe).not.toBeChecked();
+
+    // Signing in with "Remember me" selected must still succeed and redirect.
+    await rememberMe.check();
+    await page.getByRole('textbox', { name: 'Username' }).fill(email);
+    await page.getByRole('textbox', { name: 'Password' }).fill(password);
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    const message = page.getByRole('status');
+    await expect(message).toBeVisible();
+    await expect(message).toHaveClass(/success/);
+
+    await expect(page).toHaveURL(/.*dashboard/);
+  });
 });
