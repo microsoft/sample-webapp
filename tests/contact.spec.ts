@@ -150,4 +150,38 @@ test.describe('Contact page', () => {
     await message.fill('');
     await expect(charCount).toHaveText('0 characters');
   });
+
+  test('should clear filled fields, validation errors, and the character counter on Reset', async ({ page }) => {
+    await page.goto('/contact');
+
+    const form = contactForm(page);
+    const charCount = page.locator('#message-char-count');
+
+    // Fill with an invalid email and a too-short message, then submit to surface
+    // field-level validation errors (Reset must clear these too, not just the values).
+    await fillContactForm(form, {
+      name: 'Jane',
+      email: 'not-an-email',
+      message: 'short',
+    });
+    await form.getByRole('button', { name: 'Send Message' }).click();
+
+    await expect(form.getByText('Enter a valid email address')).toBeVisible();
+    await expect(form.getByText('Message must be at least 10 characters')).toBeVisible();
+    await expect(charCount).toHaveText('5 characters');
+    await expect(page.getByTestId('toast')).toHaveCount(0);
+
+    // Reset (type="button", wired to useForm's reset) clears the form without submitting.
+    await form.getByRole('button', { name: 'Reset' }).click();
+
+    await expect(form.getByRole('textbox', { name: 'Name' })).toHaveValue('');
+    await expect(form.getByRole('textbox', { name: 'Email' })).toHaveValue('');
+    await expect(form.getByRole('textbox', { name: 'Message' })).toHaveValue('');
+    await expect(form.getByRole('alert')).toHaveCount(0);
+    await expect(charCount).toHaveText('0 characters');
+
+    // Reset is not a submit: no success toast, and the page stays on /contact.
+    await expect(page.getByTestId('toast')).toHaveCount(0);
+    await expect(page).toHaveURL(/.*contact/);
+  });
 });

@@ -147,6 +147,16 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The counter updates live to "12 characters" (reflecting the exact field length)
      3. Step: Clear the Message field
         Expectation: The counter returns to "0 characters"
+34. **Contact form Reset button clears filled fields, validation errors, and the character counter without submitting** — `tests/contact.spec.ts`
+   - Preconditions: None — `/contact` is a public route; the form is client-only in-memory state (`useForm` in `Contact.js`) that resets on navigation. The Reset button (`#contact-reset`, `type="button"`, wired to `useForm`'s `reset`) added in commit 0b977e0 is the change under test. Nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /contact and, scoped to `#contact-page-form`, fill Name with "Jane", Email with an invalid value "not-an-email", and Message with a value under 10 characters (e.g. "short", 5 chars), then click "Send Message" to surface validation errors
+       Expectation: The email error "Enter a valid email address" and the message error "Message must be at least 10 characters" are visible, the character counter (`#message-char-count`) reflects the typed length ("5 characters"), and no success toast (getByTestId('toast')) appears
+     2. Step: Click the "Reset" button (`#contact-reset`, getByRole('button', { name: 'Reset' }))
+       Expectation: The Name, Email, and Message fields are all cleared to empty, every field-level validation error is removed (form.getByRole('alert') has count 0), and the character counter returns to "0 characters"
+     3. Step: Observe the page after Reset
+       Expectation: No success toast (getByTestId('toast') has count 0) and the URL stays on /contact — Reset clears the form without submitting it
 
 ### FAQ
 8. **FAQ question expands to reveal its answer and collapses again** — `tests/faq.spec.ts`
