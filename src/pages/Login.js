@@ -22,6 +22,7 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -80,6 +81,16 @@ function Login() {
           >
             {showPassword ? 'Hide password' : 'Show password'}
           </button>
+        </div>
+        <div className="form-group form-check">
+          <input
+            type="checkbox"
+            id="remember-me"
+            name="remember-me"
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+          />
+          <label htmlFor="remember-me">Remember me</label>
         </div>
         <button type="submit" className="btn btn-primary">Login</button>
       </form>
