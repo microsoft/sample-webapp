@@ -128,6 +128,36 @@ test.describe('Contact page', () => {
     await expect(page.getByTestId('toast')).toHaveCount(0);
   });
 
+  test('should clear filled fields, validation errors, and the character counter on Reset', async ({ page }) => {
+    // Navigate directly to /contact rather than clicking a "Contact" link: the navbar
+    // and footer both expose one, which collides under strict mode.
+    await page.goto('/contact');
+
+    const form = contactForm(page);
+    const charCount = page.locator('#message-char-count');
+
+    // Surface a validation error and fill the form with invalid input, so Reset has
+    // both field values and an error to clear.
+    await fillContactForm(form, { name: 'Jane Doe', email: 'not-an-email', message: VALID_INPUT.message });
+    await form.getByRole('button', { name: 'Send Message' }).click();
+
+    await expect(form.getByText('Enter a valid email address')).toBeVisible();
+    await expect(form.getByRole('textbox', { name: 'Name' })).toHaveValue('Jane Doe');
+    await expect(charCount).toHaveText(`${VALID_INPUT.message.length} characters`);
+
+    // Reset clears every field, removes all validation errors, and returns the counter to zero.
+    await form.getByRole('button', { name: 'Reset' }).click();
+
+    await expect(form.getByRole('textbox', { name: 'Name' })).toHaveValue('');
+    await expect(form.getByRole('textbox', { name: 'Email' })).toHaveValue('');
+    await expect(form.getByRole('textbox', { name: 'Message' })).toHaveValue('');
+    await expect(form.getByRole('alert')).toHaveCount(0);
+    await expect(charCount).toHaveText('0 characters');
+
+    // Reset does not submit the form, so no success toast appears.
+    await expect(page.getByTestId('toast')).toHaveCount(0);
+  });
+
   test('should update the message character counter live as the user types', async ({ page }) => {
     await page.goto('/contact');
 
