@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Home page', () => {
-  test('should render the welcome heading and both call-to-action links', async ({ page }) => {
+  test('should render the welcome heading and all call-to-action links', async ({ page }) => {
     await page.goto('/');
 
     await expect(
@@ -12,6 +12,7 @@ test.describe('Home page', () => {
     const main = page.getByRole('main');
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
+    await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
   });
 
   test('"Get Started" call-to-action navigates to the login page', async ({ page }) => {
@@ -30,5 +31,14 @@ test.describe('Home page', () => {
 
     await expect(page).toHaveURL(/.*dashboard/);
     await expect(page.getByRole('heading', { name: 'Dashboard', level: 1 })).toBeVisible();
+  });
+
+  test('"Learn More" call-to-action navigates to the About page', async ({ page }) => {
+    await page.goto('/');
+
+    await page.getByRole('main').getByRole('link', { name: 'Learn More' }).click();
+
+    await expect(page).toHaveURL(/.*about/);
+    await expect(page.getByRole('heading', { name: 'About Us', level: 1 })).toBeVisible();
   });
 });
