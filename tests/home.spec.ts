@@ -41,4 +41,17 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*about/);
     await expect(page.getByRole('heading', { name: 'About Us', level: 1 })).toBeVisible();
   });
+
+  test('"Contact us" hint navigates to the Contact page', async ({ page }) => {
+    await page.goto('/');
+
+    // The contact hint ("Have questions? Contact us.") lives in the main content,
+    // distinct from the navbar/footer "Contact" links.
+    const contactHint = page.getByRole('main').getByRole('link', { name: 'Contact us' });
+    await expect(contactHint).toBeVisible();
+    await contactHint.click();
+
+    await expect(page).toHaveURL(/.*contact/);
+    await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
+  });
 });
