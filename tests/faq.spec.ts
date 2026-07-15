@@ -21,7 +21,10 @@ test.describe('FAQ page', () => {
   test('should expand a question to reveal its answer and collapse it again', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByRole('link', { name: 'FAQ' }).click();
+    const navbar = page
+      .getByRole('navigation')
+      .filter({ has: page.getByRole('link', { name: 'SampleApp' }) });
+    await navbar.getByRole('link', { name: 'FAQ' }).click();
 
     await expect(page).toHaveURL(/.*faq/);
     await expect(

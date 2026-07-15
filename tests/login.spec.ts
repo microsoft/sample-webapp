@@ -4,7 +4,7 @@ test.describe('Login page', () => {
   test('should display login form with username and password fields', async ({ page }) => {
     await page.goto('/login');
 
-    await expect(page).toHaveTitle(/Login/);
+    await expect(page).toHaveTitle('Sample Web App');
     await expect(page.getByRole('heading', { name: 'Login', level: 1 })).toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Username' })).toBeVisible();
     await expect(page.getByRole('textbox', { name: 'Password' })).toBeVisible();

@@ -4,7 +4,10 @@ test.describe('About page', () => {
   test('should display content sections and keep an interactive contact form', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByRole('link', { name: 'About' }).click();
+    const navbar = page
+      .getByRole('navigation')
+      .filter({ has: page.getByRole('link', { name: 'SampleApp' }) });
+    await navbar.getByRole('link', { name: 'About' }).click();
 
     await expect(page).toHaveURL(/.*about/);
     await expect(page.getByRole('heading', { name: 'About Us', level: 1 })).toBeVisible();
