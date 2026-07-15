@@ -64,3 +64,9 @@ jobs:
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
           GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
+
+      - name: Heal failing tests (runs after scout)
+        run: ata heal --target http://localhost:3000 --create-pr --target-branch main --save-results
+        env:
+          COPILOT_TOKEN: ${{ secrets.COPILOT_PAT }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
