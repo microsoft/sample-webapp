@@ -118,6 +118,9 @@ function Contact() {
         <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
           {isSubmitting ? 'Sending...' : 'Send Message'}
         </button>
+        <button type="button" className="btn" id="contact-reset" onClick={reset} disabled={isSubmitting}>
+          Reset
+        </button>
       </form>
 
       {toast && (
