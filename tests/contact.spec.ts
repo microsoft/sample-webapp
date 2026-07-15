@@ -45,7 +45,7 @@ test.describe('Contact page', () => {
   test('should submit successfully and show a confirmation toast', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByRole('link', { name: 'Contact' }).click();
+    await page.getByRole('navigation').first().getByRole('link', { name: 'Contact', exact: true }).click();
 
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
