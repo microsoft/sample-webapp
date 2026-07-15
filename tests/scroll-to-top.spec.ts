@@ -10,6 +10,11 @@ import { test, expect } from '@playwright/test';
  * A short viewport is used so the tallest public page (/about) scrolls comfortably
  * past the 300px threshold; the button's presence is a faithful, web-first proxy
  * for scroll position, so no manual scroll-offset reads are needed.
+ *
+ * The global cookie-consent banner (fixed to the bottom of the viewport, above the
+ * scroll-to-top button) is dismissed first — the shared auth storageState only logs
+ * in and never accepts it, so a first-time-visitor banner would otherwise overlay
+ * the button and intercept the click.
  */
 
 test.use({ viewport: { width: 1280, height: 400 } });
@@ -17,6 +22,12 @@ test.use({ viewport: { width: 1280, height: 400 } });
 test.describe('Scroll-to-top button', () => {
   test('should appear after scrolling down and return the page to the top', async ({ page }) => {
     await page.goto('/about');
+
+    // Dismiss the consent banner so it doesn't overlay the bottom-anchored button.
+    await page
+      .getByRole('dialog', { name: 'Cookie consent' })
+      .getByRole('button', { name: 'Accept' })
+      .click();
 
     const scrollButton = page.getByTestId('scroll-to-top');
 

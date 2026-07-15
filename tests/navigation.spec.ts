@@ -4,8 +4,12 @@ test.describe('Navigation', () => {
   test('should navigate between pages using nav links', async ({ page }) => {
     await page.goto('/login');
 
+    const navbar = page
+      .getByRole('navigation')
+      .filter({ has: page.getByRole('link', { name: 'SampleApp' }) });
+
     await expect(page.getByRole('link', { name: 'SampleApp' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Home' })).toBeVisible();
+    await expect(navbar.getByRole('link', { name: 'Home' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
 
@@ -20,7 +24,10 @@ test.describe('Navigation', () => {
     await page.goto('/dashboard');
     await expect(page).toHaveURL(/.*dashboard/);
 
-    await page.getByRole('link', { name: 'Home' }).click();
+    const navbar = page
+      .getByRole('navigation')
+      .filter({ has: page.getByRole('link', { name: 'SampleApp' }) });
+    await navbar.getByRole('link', { name: 'Home' }).click();
     await expect(page).toHaveURL('/');
 
     await page.goto('/login');

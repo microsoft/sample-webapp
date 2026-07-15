@@ -4,12 +4,13 @@ import { test, expect } from '@playwright/test';
  * Site footer end-to-end coverage.
  *
  * Footer.js renders a global <footer className="app-footer"> (ARIA role
- * "contentinfo") containing "© {year} SampleApp. All rights reserved.", where
+ * "contentinfo") that includes "© {year} SampleApp. All rights reserved.", where
  * year = new Date().getFullYear() is computed at runtime. App.js renders it
  * outside <Routes>, so it appears on every route. We assert with the year
  * computed in-test so the expectation mirrors the component's own logic and does
- * not rot across calendar years, and target the footer by its semantic role
- * rather than the .app-footer class.
+ * not rot across calendar years. The footer also renders navigation links and a
+ * tagline alongside the copyright, so we target the copyright text node within
+ * the footer's semantic (contentinfo) landmark rather than the whole footer.
  */
 
 const currentYear = new Date().getFullYear();
@@ -24,7 +25,7 @@ test.describe('Site footer', () => {
       await page.goto(route);
       const footer = page.getByRole('contentinfo');
       await expect(footer).toBeVisible();
-      await expect(footer).toHaveText(copyright);
+      await expect(footer.getByText(copyright, { exact: true })).toBeVisible();
     });
   }
 
@@ -32,7 +33,7 @@ test.describe('Site footer', () => {
     await page.goto('/this-route-does-not-exist');
     const footer = page.getByRole('contentinfo');
     await expect(footer).toBeVisible();
-    await expect(footer).toHaveText(copyright);
+    await expect(footer.getByText(copyright, { exact: true })).toBeVisible();
   });
 
   test('exposes exactly one contentinfo landmark with the copyright symbol', async ({ page }) => {
