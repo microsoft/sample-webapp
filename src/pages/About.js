@@ -2,6 +2,8 @@ import React from 'react';
 import './About.css';
 
 function About() {
+  const year = new Date().getFullYear();
+
   return (
     <div className="about">
       <h1>About Us</h1>
@@ -10,6 +12,9 @@ function About() {
           Sample Web App is a modern React application designed to demonstrate
           best practices in front-end development and serve as a testing ground
           for Playwright end-to-end tests.
+        </p>
+        <p className="about-established" id="about-established">
+          Serving developers since 2024 &middot; &copy; {year} SampleApp
         </p>
       </section>
 
