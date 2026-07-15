@@ -313,6 +313,20 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The success message (getByTestId('newsletter-success')) is visible
       2. Step: Without navigating away, fill the email field with the same email again and click Subscribe
          Expectation: The duplicate alert (getByTestId('newsletter-duplicate'), role="alert") is visible with text "You are already subscribed with this email.", and no success message (getByTestId('newsletter-success')) is present
+22. **Newsletter subscriber count increments on success only and pluralizes correctly** — `tests/newsletter.spec.ts`
+    - Preconditions: None — public `/newsletter` route; the subscriber count (`#newsletter-count` / getByTestId('newsletter-count')) is derived from the in-memory subscribed list, which resets to empty on navigation, so a fresh load always reads "0 subscribers". Nothing to create or clean up.
+    - Postconditions: None — the subscribed list lives only in the page's in-memory state and is discarded on navigation.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter and read the subscriber count (getByTestId('newsletter-count'))
+         Expectation: The count reads "0 subscribers" (plural on zero) on a fresh load
+      2. Step: Subscribe a unique valid email (fill getByTestId('newsletter-email') + click getByTestId('newsletter-subscribe')) and re-read the count
+         Expectation: The count reads "1 subscriber" (singular) — it increments by one on a successful subscription
+      3. Step: Submit an invalid email (e.g. "not-an-email") and re-read the count
+         Expectation: The count still reads "1 subscriber" — a rejected (invalid) submission must not increment it
+      4. Step: Re-submit the first (already-subscribed) email and re-read the count
+         Expectation: The count still reads "1 subscriber" — a duplicate submission must not increment it
+      5. Step: Subscribe a second distinct unique valid email and re-read the count
+         Expectation: The count reads "2 subscribers" (plural) — it increments only on a successful, non-duplicate subscription
 
 ### Home
 23. **Home landing page renders the welcome heading and all call-to-action links** — `tests/home.spec.ts`
@@ -341,6 +355,12 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and click the "Learn More" link within `<main>` (getByRole('main').getByRole('link', { name: 'Learn More' }))
         Expectation: The URL changes to /about and the "About Us" heading (level 1) is visible
+28. **Home "Contact us" hint navigates to the Contact page** — `tests/home.spec.ts`
+    - Preconditions: None — public `/` route; the "Contact us" hint (`#contact-hint`) links to the public `/contact` route. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
+        Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
