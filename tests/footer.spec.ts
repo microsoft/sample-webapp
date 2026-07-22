@@ -65,4 +65,20 @@ test.describe('Site footer', () => {
       await expect(page.getByRole('heading', { name: heading, level: 1 })).toBeVisible();
     });
   }
+
+  // The "View source on GitHub" link opens github.com in a new tab. We assert the
+  // anchor's attributes rather than driving the real popup so the test stays
+  // deterministic and does not depend on github.com being reachable from CI.
+  test('exposes a "View source on GitHub" link that opens the repo safely in a new tab', async ({ page }) => {
+    await page.goto('/');
+
+    const sourceLink = page
+      .getByRole('contentinfo')
+      .getByRole('link', { name: 'View source on GitHub' });
+
+    await expect(sourceLink).toBeVisible();
+    await expect(sourceLink).toHaveAttribute('href', 'https://github.com/microsoft/sample-webapp');
+    await expect(sourceLink).toHaveAttribute('target', '_blank');
+    await expect(sourceLink).toHaveAttribute('rel', /(?=.*\bnoopener\b)(?=.*\bnoreferrer\b)/);
+  });
 });
