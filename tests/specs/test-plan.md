@@ -263,6 +263,15 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: `href` equals `https://github.com/microsoft/sample-webapp` (points at the project repository)
       3. Step: Read the link's `target` and `rel` attributes
         Expectation: `target` is `_blank` and `rel` contains both `noopener` and `noreferrer` (opens in a new tab safely, without leaking the opener). We assert the anchor attributes rather than driving the real popup so the test stays deterministic and does not depend on github.com being reachable.
+36. **Footer "Report an issue" link points to the repo's new-issue page and opens safely in a new tab** — `tests/footer.spec.ts`
+    - Preconditions: None — the footer is a global component (rendered outside `<Routes>` in `App.js`); the link is scoped to the `contentinfo` landmark so it does not collide with any navbar link. Nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and locate the "Report an issue" link within the footer (`getByRole('contentinfo').getByRole('link', { name: 'Report an issue' })`)
+        Expectation: The link is visible
+      2. Step: Read the link's `href` attribute
+        Expectation: `href` equals `https://github.com/microsoft/sample-webapp/issues/new` (points at the project repository's new-issue page)
+      3. Step: Read the link's `target` and `rel` attributes
+        Expectation: `target` is `_blank` and `rel` contains both `noopener` and `noreferrer` (opens in a new tab safely, without leaking the opener). We assert the anchor attributes rather than driving the real popup so the test stays deterministic and does not depend on github.com being reachable.
 
 
 ### Feedback
