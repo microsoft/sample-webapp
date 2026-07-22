@@ -49,3 +49,8 @@
   color: var(--color-nav-text);
   text-decoration: underline;
 }
+
+.footer-social-sep {
+  margin: 0 0.5rem;
+  color: var(--color-nav-text);
+}

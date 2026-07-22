@@ -23,6 +23,16 @@ function Footer() {
         >
           View source on GitHub
         </a>
+        <span className="footer-social-sep" aria-hidden="true">
+          &middot;
+        </span>
+        <a
+          href="https://github.com/microsoft/sample-webapp/issues/new"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Report an issue
+        </a>
       </p>
       <p>&copy; {year} SampleApp. All rights reserved.</p>
     </footer>
