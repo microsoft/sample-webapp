@@ -34,3 +34,23 @@
   color: var(--color-nav-text);
   text-decoration: underline;
 }
+
+.footer-social {
+  margin-top: 0.5rem;
+}
+
+.footer-social a {
+  color: var(--color-nav-link);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer-social a:hover {
+  color: var(--color-nav-text);
+  text-decoration: underline;
+}
+
+.footer-social-sep {
+  margin: 0 0.5rem;
+  color: var(--color-nav-text);
+}
