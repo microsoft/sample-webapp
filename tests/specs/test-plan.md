@@ -379,6 +379,22 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+37. **Home description paragraph renders the users/dev150 content variant copy** — `tests/home.spec.ts`
+    - Attribution: change — verifies the new user-visible copy PR #311 adds to the homepage `#description` paragraph; no existing test asserts this text.
+    - Preconditions: None — public `/` route; renders from static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+        Expectation: The homepage description paragraph (`#description`, within `<main>`) is visible with the exact text "A React web application built for Playwright testing. Feature branch users/dev150 adds a homepage content variant."
+38. **Home Features section lists the four highlighted capabilities** — `tests/home.spec.ts`
+    - Attribution: adjacent — pre-existing coverage gap on the homepage surface the change touches; the `#features` section is user-visible but untested.
+    - Preconditions: None — public `/` route; static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and inspect the Features section (`#features`)
+        Expectation: The "Features" heading (level 2) is visible
+      2. Step: Inspect the feature list items within `#features`
+        Expectation: The list shows exactly these four items, in order: "User authentication with form validation", "Interactive dashboard with stats", "Client-side routing with React Router", "Responsive design"
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
