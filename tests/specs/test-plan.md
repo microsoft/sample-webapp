@@ -379,6 +379,22 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+37. **Home landing page renders the description paragraph copy** — `tests/home.spec.ts` _(change: PR #217)_
+    - Preconditions: None — `/` is the public landing route; the description (`#description`) is static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+        Expectation: The description paragraph (`#description`, within `<main>`) is visible
+      2. Step: Inspect the description paragraph's text
+        Expectation: It contains the base sentence "A React web application built for Playwright testing." and the added variant sentence "Feature branch users/dev83 adds a homepage content variant." — asserting the updated copy PR #217 introduced
+38. **Home landing page renders the Features section and all feature items** — `tests/home.spec.ts` _(adjacent)_
+    - Preconditions: None — public `/` route; the features list (`#features`) is static component markup. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and locate the Features section (`#features`)
+        Expectation: The "Features" heading (level 2) is visible
+      2. Step: Inspect the feature list items within the Features section
+        Expectation: All four feature items are visible with their exact text — "User authentication with form validation", "Interactive dashboard with stats", "Client-side routing with React Router", and "Responsive design"
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
