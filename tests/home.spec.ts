@@ -13,6 +13,12 @@ test.describe('Home page', () => {
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
+
+    // The intro description paragraph renders the current homepage copy, including
+    // the content-variant sentence added on the users/dev152 feature branch.
+    await expect(main.locator('#description')).toContainText(
+      'Feature branch users/dev152 adds a homepage content variant.'
+    );
   });
 
   test('"Get Started" call-to-action navigates to the login page', async ({ page }) => {

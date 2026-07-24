@@ -355,6 +355,8 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
       2. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
         Expectation: A "Get Started" link, a "View Dashboard" link, and a "Learn More" link are all visible within the main content
+      3. Step: Read the intro description paragraph (`#description`)
+        Expectation: It renders the current homepage copy, including the "Feature branch users/dev152 adds a homepage content variant." sentence added by PR #313 (attribution: change)
 24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
     - Preconditions: None — public `/` route; nothing to create or clean up.
     - Postconditions: None.
@@ -391,5 +393,6 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (recovery to the landing page)
 
 <!-- Coverage note: the Contact message character counter is covered in tests/contact.spec.ts. -->
+<!-- Coverage note: Home test #23 now also asserts the #description paragraph copy (PR #313 homepage content variant); previously the description text was unasserted anywhere in the suite. -->
 <!-- Maintenance note: entries are numbered sequentially and appended over time; continue from the current maximum when adding new plan items. -->
 
