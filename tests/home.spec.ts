@@ -59,6 +59,20 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('renders the Features section with the heading and all feature items', async ({ page }) => {
+    await page.goto('/');
+
+    const features = page.locator('#features');
+    await expect(features.getByRole('heading', { name: 'Features', level: 2 })).toBeVisible();
+
+    await expect(features.getByRole('listitem')).toHaveText([
+      'User authentication with form validation',
+      'Interactive dashboard with stats',
+      'Client-side routing with React Router',
+      'Responsive design',
+    ]);
+  });
 });
 
 // lifecycle action update for PR #113

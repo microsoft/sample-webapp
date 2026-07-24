@@ -381,6 +381,14 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+43. **Home Features section renders the heading and all feature list items** — `tests/home.spec.ts`
+    - Preconditions: None — public `/` route; the Features section (`#features`) renders from static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and inspect the Features section (`#features`)
+        Expectation: The "Features" heading (level 2) is visible
+      2. Step: Read the four feature list items within the Features section
+        Expectation: The list contains exactly these items, in order — "User authentication with form validation", "Interactive dashboard with stats", "Client-side routing with React Router", "Responsive design"
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
