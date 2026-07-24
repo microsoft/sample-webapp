@@ -347,13 +347,15 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The count reads "2 subscribers" (plural) — it increments only on a successful, non-duplicate subscription
 
 ### Home
-23. **Home landing page renders the welcome heading and all call-to-action links** — `tests/home.spec.ts`
+23. **Home landing page renders the welcome heading, description paragraph, and all call-to-action links** — `tests/home.spec.ts`
     - Preconditions: None — `/` is the public landing route; renders from static component markup with no auth or seeded data. Nothing to create or clean up.
     - Postconditions: None.
     - Step/Expectation Pairs:
       1. Step: Navigate to /
         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
-      2. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
+      2. Step: Inspect the description paragraph (`#description`) beneath the heading
+        Expectation: The `#description` paragraph is visible and reads "A React web application built for Playwright testing. Feature branch users/dev9 adds a homepage content variant." (asserts the homepage messaging copy the users/dev9 change introduced — was previously uncovered)
+      3. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
         Expectation: A "Get Started" link, a "View Dashboard" link, and a "Learn More" link are all visible within the main content
 24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
     - Preconditions: None — public `/` route; nothing to create or clean up.
