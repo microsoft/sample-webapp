@@ -1,12 +1,20 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Home page', () => {
-  test('should render the welcome heading and all call-to-action links', async ({ page }) => {
+  test('should render the welcome heading, intro description, and all call-to-action links', async ({ page }) => {
     await page.goto('/');
 
     await expect(
       page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
     ).toBeVisible();
+
+    // The intro paragraph (#description) carries the homepage messaging, including
+    // the content-variant text added on this branch (PR #213).
+    const description = page.locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText(
+      'Feature branch users/dev79 adds a homepage content variant'
+    );
 
     // Scope the CTAs to <main> so they are distinct from the navbar links.
     const main = page.getByRole('main');
