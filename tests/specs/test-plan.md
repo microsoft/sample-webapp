@@ -355,6 +355,8 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
       2. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
         Expectation: A "Get Started" link, a "View Dashboard" link, and a "Learn More" link are all visible within the main content
+      3. Step: Read the homepage description paragraph (`#description`, the `<p>` beneath the welcome heading) — coverage for the users/dev3 homepage content variant (PR #85)
+        Expectation: The `#description` paragraph is visible and its text contains both the base blurb "A React web application built for Playwright testing." and the variant messaging "Feature branch users/dev3 adds a homepage content variant." (asserts the actual rendered copy, so a revert or wrong-copy regression fails)
 24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
     - Preconditions: None — public `/` route; nothing to create or clean up.
     - Postconditions: None.
