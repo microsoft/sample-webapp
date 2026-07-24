@@ -13,6 +13,17 @@ test.describe('Home page', () => {
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
+
+    // The homepage description paragraph carries the users/dev3 content variant (PR #85):
+    // assert the actual rendered copy so a revert or wrong-copy regression fails.
+    const description = page.locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText(
+      'A React web application built for Playwright testing.'
+    );
+    await expect(description).toContainText(
+      'Feature branch users/dev3 adds a homepage content variant.'
+    );
   });
 
   test('"Get Started" call-to-action navigates to the login page', async ({ page }) => {
@@ -55,3 +66,5 @@ test.describe('Home page', () => {
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
 });
+
+// lifecycle action update for PR #114
