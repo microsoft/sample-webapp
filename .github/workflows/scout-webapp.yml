@@ -9,14 +9,14 @@ on:
       ata_version:
         description: 'App Testing Agent release tag to install'
         required: true
-        default: 'v0.2.140-alpha.0'
+        default: 'latest'
 
 permissions:
   contents: write
   pull-requests: write
 
 env:
-  ATA_VERSION: ${{ github.event.inputs.ata_version || 'v0.2.140-alpha.0' }}
+  ATA_VERSION: ${{ github.event.inputs.ata_version || 'latest' }}
 
 jobs:
   scout:
