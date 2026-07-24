@@ -13,6 +13,15 @@ test.describe('Home page', () => {
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
+
+    // The description paragraph carries the homepage messaging, including the
+    // feature-branch content variant introduced on this branch.
+    await expect(page.locator('#description')).toContainText(
+      'A React web application built for Playwright testing.'
+    );
+    await expect(page.locator('#description')).toContainText(
+      'Feature branch users/dev4 adds a homepage content variant.'
+    );
   });
 
   test('"Get Started" call-to-action navigates to the login page', async ({ page }) => {
