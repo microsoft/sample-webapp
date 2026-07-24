@@ -60,6 +60,12 @@ const TESTING_AGENT_LAUNCH_EXTRAS = {
 
 export default defineConfig({
   ...baseConfig,
+  // Force full parallelism on ATA's runs (overrides the base config): tests within a
+  // file run concurrently too, not just across files — so the run surfaces within-file
+  // isolation/ordering defects instead of hiding them behind serial execution. Explicit
+  // `test.describe.serial()` / `test.describe.configure({ mode: 'serial' })` still take
+  // precedence for a suite that genuinely must run in order.
+  fullyParallel: true,
   use: {
     ...(baseConfig.use ?? {}),
     ...TESTING_AGENT_USE,
