@@ -163,4 +163,34 @@ test.describe('Dashboard page', () => {
     // Button only shows while at least one todo is completed.
     await expect(page.getByRole('button', { name: 'Clear completed' })).toHaveCount(0);
   });
+
+  test('should show a loading skeleton for the stat cards, then reveal the stat values', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const statsGrid = page.locator('.dashboard-grid');
+
+    // While loading: the grid is busy, chart skeletons are shown, and the stat
+    // value elements are not yet rendered.
+    await expect(statsGrid).toHaveAttribute('aria-busy', 'true');
+    await expect(page.getByRole('status', { name: 'Loading Users chart' })).toBeVisible();
+    await expect(page.getByRole('status', { name: 'Loading Revenue chart' })).toBeVisible();
+    await expect(page.getByRole('status', { name: 'Loading Orders chart' })).toBeVisible();
+    await expect(page.locator('#user-count')).toHaveCount(0);
+    await expect(page.locator('#revenue')).toHaveCount(0);
+    await expect(page.locator('#order-count')).toHaveCount(0);
+
+    // After loading finishes: the grid is no longer busy.
+    await expect(statsGrid).toHaveAttribute('aria-busy', 'false');
+
+    // The skeletons are gone and the stat value elements now render (assert the
+    // values appear and are non-empty rather than any specific number, to stay
+    // resilient to the exact stat data).
+    await expect(page.getByRole('status', { name: /Loading .* chart/ })).toHaveCount(0);
+    await expect(page.locator('#user-count')).toBeVisible();
+    await expect(page.locator('#user-count')).not.toBeEmpty();
+    await expect(page.locator('#revenue')).toBeVisible();
+    await expect(page.locator('#revenue')).not.toBeEmpty();
+    await expect(page.locator('#order-count')).toBeVisible();
+    await expect(page.locator('#order-count')).not.toBeEmpty();
+  });
 });

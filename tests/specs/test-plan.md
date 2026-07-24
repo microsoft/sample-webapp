@@ -90,6 +90,16 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The completed todo ("Deploy to staging") is removed, leaving the two incomplete todos ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
      3. Step: Observe the "Clear completed" button after clearing
         Expectation: The "Clear completed" button is no longer present (it only shows while at least one todo is completed)
+37. **Dashboard stat cards show a loading skeleton, then reveal the stat values** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — the stat cards are static client-side data (`stats` in `Dashboard.js`); the loading state is a fixed ~900ms `setTimeout` gate (`isChartsLoading`) that runs on every mount, so a fresh navigation always reproduces it. The ~900ms window is comfortably larger than a localhost navigate + first assertion, so observing the loading state is reliable. Nothing to create or clean up.
+   - Postconditions: None (state resets on next navigation).
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and, immediately after load, inspect the stats grid (`.dashboard-grid`)
+        Expectation: The grid has `aria-busy="true"`; all three chart skeletons (`role="status"` with accessible names "Loading Users chart", "Loading Revenue chart", "Loading Orders chart") are visible; and the stat value elements (`#user-count`, `#revenue`, `#order-count`) are not yet present (count 0) — the values are gated behind the loading state
+     2. Step: Wait for the loading state to finish
+        Expectation: The stats grid's `aria-busy` becomes "false"
+     3. Step: Inspect the stats grid after loading
+        Expectation: No "Loading … chart" skeleton (`role="status"`) remains (count 0), and the three stat value elements (`#user-count`, `#revenue`, `#order-count`) are now visible and non-empty — the skeletons have been replaced by the rendered stat values (asserts the rendered value elements appear, not any specific number, to stay resilient and independent of the exact stat data)
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`
