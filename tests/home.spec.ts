@@ -66,3 +66,5 @@ test.describe('Home page', () => {
     await expect(description).toContainText('A React web application built for Playwright testing');
   });
 });
+
+// repeat lifecycle prep for PR #124
