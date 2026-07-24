@@ -10,6 +10,13 @@ test.describe('Home page', () => {
 
     // Scope the CTAs to <main> so they are distinct from the navbar links.
     const main = page.getByRole('main');
+
+    // The description paragraph carries the homepage messaging copy (the
+    // users/dev90 content variant); assert the exact rendered text.
+    await expect(main.locator('#description')).toHaveText(
+      'A React web application built for Playwright testing. Feature branch users/dev90 adds a homepage content variant.'
+    );
+
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
