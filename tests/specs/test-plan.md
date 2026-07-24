@@ -100,6 +100,18 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The stats grid's `aria-busy` becomes "false"
      3. Step: Inspect the stats grid after loading
         Expectation: No "Loading … chart" skeleton (`role="status"`) remains (count 0), and the three stat value elements (`#user-count`, `#revenue`, `#order-count`) are now visible and non-empty — the skeletons have been replaced by the rendered stat values (asserts the rendered value elements appear, not any specific number, to stay resilient and independent of the exact stat data)
+38. **Theme toggle switches back to light and persists the light preference across reload** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). The theme toggle is a global navbar control (`ThemeToggle`, `[data-testid="theme-toggle"]`) backed by `ThemeContext`, which stores the choice in `localStorage['app_theme']` and sets `<html data-theme>`. The existing "toggle theme to dark mode and persist across reload" test covers only the light→dark direction; this one covers the reverse. To keep the test self-contained and parallel-safe, start from a known theme by clearing the stored preference in `localStorage` (`app_theme`) at the start so the app begins in light mode regardless of any prior state.
+   - Postconditions: Clear the `app_theme` localStorage key so no theme preference leaks to other tests.
+   - Step/Expectation Pairs:
+     1. Step: Ensure no stored theme preference, navigate to /dashboard, and locate the theme toggle button (`getByRole('button', { name: /Switch to .* mode/ })`)
+        Expectation: `<html>` has `data-theme="light"` and the toggle's accessible name is "Switch to dark mode"
+     2. Step: Click the theme toggle once (light → dark)
+        Expectation: `<html>` has `data-theme="dark"` and the toggle's accessible name becomes "Switch to light mode"
+     3. Step: Click the theme toggle again (dark → light)
+        Expectation: `<html>` returns to `data-theme="light"` and the toggle's accessible name returns to "Switch to dark mode"
+     4. Step: Reload the page
+        Expectation: `<html>` remains `data-theme="light"` and the toggle still reads "Switch to dark mode" — confirming the explicit light preference persists (not merely the default)
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`

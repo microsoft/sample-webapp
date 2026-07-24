@@ -193,4 +193,37 @@ test.describe('Dashboard page', () => {
     await expect(page.locator('#order-count')).toBeVisible();
     await expect(page.locator('#order-count')).not.toBeEmpty();
   });
+
+  test('should switch theme back to light and persist the light preference across reload', async ({ page }) => {
+    // Start from a known state: force light via prefers-color-scheme and clear any
+    // stored preference, so this test (the dark -> light direction) is self-contained
+    // regardless of prior state. The existing test covers only light -> dark.
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto('/dashboard');
+    await page.evaluate(() => localStorage.removeItem('app_theme'));
+    await page.reload();
+
+    const themeToggle = page.getByRole('button', { name: /Switch to .* mode/ });
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect(themeToggle).toHaveAccessibleName('Switch to dark mode');
+
+    // light -> dark
+    await themeToggle.click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(themeToggle).toHaveAccessibleName('Switch to light mode');
+
+    // dark -> light (the direction not otherwise covered)
+    await themeToggle.click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect(themeToggle).toHaveAccessibleName('Switch to dark mode');
+
+    // The explicit light preference persists across a reload (not merely the default).
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await expect(page.getByRole('button', { name: /Switch to .* mode/ }))
+      .toHaveAccessibleName('Switch to dark mode');
+
+    // Cleanup: remove the stored theme preference so nothing leaks.
+    await page.evaluate(() => localStorage.removeItem('app_theme'));
+  });
 });
