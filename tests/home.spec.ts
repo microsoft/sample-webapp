@@ -13,6 +13,11 @@ test.describe('Home page', () => {
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
+
+    // The #description intro paragraph carries the content variant this branch introduces.
+    await expect(page.locator('#description')).toHaveText(
+      'A React web application built for Playwright testing. Feature branch users/dev35 adds a homepage content variant.'
+    );
   });
 
   test('"Get Started" call-to-action navigates to the login page', async ({ page }) => {
@@ -53,5 +58,20 @@ test.describe('Home page', () => {
 
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
+  });
+
+  test('renders the Features section with its heading and all feature items', async ({ page }) => {
+    await page.goto('/');
+
+    const features = page.locator('#features');
+    await expect(features.getByRole('heading', { name: 'Features', level: 2 })).toBeVisible();
+
+    // Assert the real rendered list-item text and order, not just a count.
+    await expect(features.getByRole('listitem')).toHaveText([
+      'User authentication with form validation',
+      'Interactive dashboard with stats',
+      'Client-side routing with React Router',
+      'Responsive design',
+    ]);
   });
 });

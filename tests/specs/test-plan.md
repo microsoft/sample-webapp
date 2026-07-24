@@ -355,6 +355,8 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
       2. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
         Expectation: A "Get Started" link, a "View Dashboard" link, and a "Learn More" link are all visible within the main content
+      3. Step: Read the `#description` intro paragraph (origin: change — asserts the copy PR #144 introduces)
+        Expectation: The `#description` paragraph reads exactly "A React web application built for Playwright testing. Feature branch users/dev35 adds a homepage content variant."
 24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
     - Preconditions: None — public `/` route; nothing to create or clean up.
     - Postconditions: None.
@@ -379,6 +381,14 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+37. **Home landing page renders the Features section with its heading and all feature items** — `tests/home.spec.ts`
+    - Preconditions: None — `/` is the public landing route; the Features section (`#features`) renders from static component markup with no auth or seeded data. Nothing to create or clean up. (origin: adjacent — a pre-existing coverage gap on the Home surface PR #144 touches.)
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and locate the Features section (`#features`)
+        Expectation: The "Features" heading (level 2) is visible
+      2. Step: Read the feature list items within `#features`
+        Expectation: Exactly four items render, in order: "User authentication with form validation", "Interactive dashboard with stats", "Client-side routing with React Router", "Responsive design"
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
