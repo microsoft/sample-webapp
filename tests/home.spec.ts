@@ -8,6 +8,12 @@ test.describe('Home page', () => {
       page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
     ).toBeVisible();
 
+    // The landing description paragraph, including the feature-branch content variant
+    // sentence added by this change.
+    await expect(page.locator('#description')).toHaveText(
+      'A React web application built for Playwright testing. Feature branch users/dev96 adds a homepage content variant.'
+    );
+
     // Scope the CTAs to <main> so they are distinct from the navbar links.
     const main = page.getByRole('main');
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
