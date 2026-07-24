@@ -347,7 +347,8 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The count reads "2 subscribers" (plural) — it increments only on a successful, non-duplicate subscription
 
 ### Home
-23. **Home landing page renders the welcome heading and all call-to-action links** — `tests/home.spec.ts`
+23. **Home landing page renders the welcome heading, description, and all call-to-action links** — `tests/home.spec.ts`
+    - Attribution: change (the description assertion covers PR #89's new homepage copy); the heading/CTA assertions are pre-existing regression coverage.
     - Preconditions: None — `/` is the public landing route; renders from static component markup with no auth or seeded data. Nothing to create or clean up.
     - Postconditions: None.
     - Step/Expectation Pairs:
@@ -355,6 +356,8 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
       2. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
         Expectation: A "Get Started" link, a "View Dashboard" link, and a "Learn More" link are all visible within the main content
+      3. Step: Inspect the description paragraph (`#description`)
+        Expectation: The description paragraph is visible and its text contains the feature-branch content variant sentence — "Feature branch users/dev7 adds a homepage content variant." (the copy PR #89 added)
 24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
     - Preconditions: None — public `/` route; nothing to create or clean up.
     - Postconditions: None.
