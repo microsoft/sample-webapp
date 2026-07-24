@@ -13,6 +13,12 @@ test.describe('Home page', () => {
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
+
+    // The landing description paragraph carries this PR's homepage content variant.
+    // Assert the real rendered copy so a revert/regression of the variant is caught.
+    await expect(main.locator('#description')).toContainText(
+      'Feature branch users/dev33 adds a homepage content variant.'
+    );
   });
 
   test('"Get Started" call-to-action navigates to the login page', async ({ page }) => {
@@ -53,5 +59,20 @@ test.describe('Home page', () => {
 
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
+  });
+
+  test('Features section renders its heading and all four feature list items', async ({ page }) => {
+    await page.goto('/');
+
+    const features = page.locator('#features');
+    await expect(features.getByRole('heading', { name: 'Features', level: 2 })).toBeVisible();
+
+    const items = features.getByRole('listitem');
+    await expect(items).toHaveText([
+      'User authentication with form validation',
+      'Interactive dashboard with stats',
+      'Client-side routing with React Router',
+      'Responsive design',
+    ]);
   });
 });

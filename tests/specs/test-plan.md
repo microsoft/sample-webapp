@@ -355,6 +355,8 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
       2. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
         Expectation: A "Get Started" link, a "View Dashboard" link, and a "Learn More" link are all visible within the main content
+      3. Step: Read the landing description paragraph (`#description`) — attribution: change (covers this PR's homepage content variant)
+        Expectation: The `#description` paragraph contains the changed copy "Feature branch users/dev33 adds a homepage content variant." (asserting the real rendered text, so a revert/regression of the content variant is caught)
 24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
     - Preconditions: None — public `/` route; nothing to create or clean up.
     - Postconditions: None.
@@ -379,6 +381,14 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+37. **Home Features section renders its heading and all four feature list items** — `tests/home.spec.ts`
+    - Preconditions: None — `/` is the public landing route rendered from static component markup; no auth or seeded data. Nothing to create or clean up. Attribution: adjacent (pre-existing zero-coverage gap on the Home surface this PR touches; not the change's own behavior).
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and locate the Features section (`#features`)
+        Expectation: A "Features" heading (level 2) is visible within the section
+      2. Step: Read the feature list items (`#features li`)
+        Expectation: All four items render their real text — "User authentication with form validation", "Interactive dashboard with stats", "Client-side routing with React Router", and "Responsive design" are each visible
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
