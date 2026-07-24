@@ -8,6 +8,12 @@ test.describe('Home page', () => {
       page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
     ).toBeVisible();
 
+    // The intro description paragraph carries the users/dev41 content variant this PR
+    // added; assert the full copy so dropping or reverting the variant sentence fails.
+    await expect(page.locator('#description')).toHaveText(
+      'A React web application built for Playwright testing. Feature branch users/dev41 adds a homepage content variant.'
+    );
+
     // Scope the CTAs to <main> so they are distinct from the navbar links.
     const main = page.getByRole('main');
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
