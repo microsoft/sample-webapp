@@ -9,7 +9,7 @@ on:
       ata_version:
         description: 'App Testing Agent release tag to install'
         required: true
-        default: 'v0.2.136-alpha.0'
+        default: 'v0.2.138-alpha.0'
 
 permissions:
   contents: write
