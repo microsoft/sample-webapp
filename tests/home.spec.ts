@@ -66,3 +66,5 @@ test.describe('Home page', () => {
     await expect(description).toContainText('adds a homepage content variant');
   });
 });
+
+// lifecycle action update for PR #116
