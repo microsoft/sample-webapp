@@ -8,6 +8,12 @@ test.describe('Home page', () => {
       page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
     ).toBeVisible();
 
+    // The #description paragraph carries the homepage messaging copy (feature-variant
+    // messaging introduced for users/dev12); assert the real rendered text.
+    await expect(page.locator('#description')).toContainText(
+      'Feature branch users/dev12 adds a homepage content variant.'
+    );
+
     // Scope the CTAs to <main> so they are distinct from the navbar links.
     const main = page.getByRole('main');
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
@@ -55,3 +61,5 @@ test.describe('Home page', () => {
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
 });
+
+// lifecycle action update for PR #119
