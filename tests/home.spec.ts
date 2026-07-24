@@ -54,4 +54,17 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('landing page renders the description paragraph with the product description', async ({ page }) => {
+    await page.goto('/');
+
+    // Resilient substring on the stable product description — deliberately not
+    // asserting the full, volatile feature-branch marketing copy so a future copy
+    // tweak won't break the test.
+    const description = page.getByRole('main').locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText('A React web application built for Playwright testing');
+  });
 });
+
+// repeat lifecycle prep for PR #124
