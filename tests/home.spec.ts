@@ -8,6 +8,11 @@ test.describe('Home page', () => {
       page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
     ).toBeVisible();
 
+    // The intro description paragraph carries the users/dev46 content variant.
+    await expect(page.locator('#description')).toContainText(
+      'Feature branch users/dev46 adds a homepage content variant.'
+    );
+
     // Scope the CTAs to <main> so they are distinct from the navbar links.
     const main = page.getByRole('main');
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
