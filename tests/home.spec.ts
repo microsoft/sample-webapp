@@ -63,3 +63,5 @@ test.describe('Home page', () => {
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
 });
+
+// repeat lifecycle prep for PR #111
