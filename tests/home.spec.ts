@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Home page', () => {
-  test('should render the welcome heading and all call-to-action links', async ({ page }) => {
+  test('should render the welcome heading, description copy, and all call-to-action links', async ({ page }) => {
     await page.goto('/');
 
     await expect(
@@ -10,6 +10,12 @@ test.describe('Home page', () => {
 
     // Scope the CTAs to <main> so they are distinct from the navbar links.
     const main = page.getByRole('main');
+
+    // The homepage description carries the users/dev91 content variant copy.
+    await expect(main.locator('#description')).toHaveText(
+      'A React web application built for Playwright testing. Feature branch users/dev91 adds a homepage content variant.'
+    );
+
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
