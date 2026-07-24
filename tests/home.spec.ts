@@ -1,15 +1,23 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Home page', () => {
-  test('should render the welcome heading and all call-to-action links', async ({ page }) => {
+  test('should render the welcome heading, intro description, and all call-to-action links', async ({ page }) => {
     await page.goto('/');
 
     await expect(
       page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
     ).toBeVisible();
 
-    // Scope the CTAs to <main> so they are distinct from the navbar links.
+    // Scope everything to <main> so it's distinct from the navbar/footer.
     const main = page.getByRole('main');
+
+    // The intro description paragraph (#description) — the second sentence is the
+    // homepage content variant added on the users/dev143 feature branch.
+    await expect(main.locator('#description')).toHaveText(
+      'A React web application built for Playwright testing. Feature branch users/dev143 adds a homepage content variant.'
+    );
+
+    // Scope the CTAs to <main> so they are distinct from the navbar links.
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
