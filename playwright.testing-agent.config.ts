@@ -60,6 +60,7 @@ const TESTING_AGENT_LAUNCH_EXTRAS = {
 
 export default defineConfig({
   ...baseConfig,
+  fullyParallel: true,
   use: {
     ...(baseConfig.use ?? {}),
     ...TESTING_AGENT_USE,
