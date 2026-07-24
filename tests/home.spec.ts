@@ -13,6 +13,12 @@ test.describe('Home page', () => {
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
+
+    const description = page.locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toHaveText(
+      'A React web application built for Playwright testing. Feature branch users/dev81 adds a homepage content variant.'
+    );
   });
 
   test('"Get Started" call-to-action navigates to the login page', async ({ page }) => {
