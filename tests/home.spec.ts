@@ -54,4 +54,15 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('description paragraph reflects the content-variant copy', async ({ page }) => {
+    await page.goto('/');
+
+    // #description carries the content-variant copy introduced for users/dev149.
+    // Assert on the rendered text so a revert/removal of the variant sentence fails here.
+    const description = page.getByRole('main').locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText('A React web application built for Playwright testing.');
+    await expect(description).toContainText('homepage content variant');
+  });
 });
