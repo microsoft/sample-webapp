@@ -1,12 +1,19 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Home page', () => {
-  test('should render the welcome heading and all call-to-action links', async ({ page }) => {
+  test('should render the welcome heading, intro description, and all call-to-action links', async ({ page }) => {
     await page.goto('/');
 
     await expect(
       page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
     ).toBeVisible();
+
+    // The intro description paragraph (#description) is the element the homepage
+    // content variant modified — assert its rendered copy, base blurb plus the variant sentence.
+    const description = page.locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText('A React web application built for Playwright testing.');
+    await expect(description).toContainText('Feature branch users/dev132 adds a homepage content variant.');
 
     // Scope the CTAs to <main> so they are distinct from the navbar links.
     const main = page.getByRole('main');
