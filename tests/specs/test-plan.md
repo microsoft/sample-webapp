@@ -355,6 +355,8 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
       2. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
         Expectation: A "Get Started" link, a "View Dashboard" link, and a "Learn More" link are all visible within the main content
+      3. Step: Read the homepage description paragraph (`#description`)
+        Expectation: It renders the full description copy, including the "Feature branch users/dev34 adds a homepage content variant." sentence added by PR #143 (covers the change's new content, previously unasserted)
 24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
     - Preconditions: None — public `/` route; nothing to create or clean up.
     - Postconditions: None.
