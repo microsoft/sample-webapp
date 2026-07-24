@@ -77,6 +77,12 @@ export default defineConfig({
     },
     outputDir: OUTPUT_DIR,
   })),
+  // Force full parallelism on ATA's runs (overrides the base config): tests within a
+  // file run concurrently too, not just across files — so the before pass surfaces
+  // within-file isolation/ordering defects instead of hiding them behind serial
+  // execution. Explicit `test.describe.serial()` / `test.describe.configure({ mode: 'serial' })`
+  // still take precedence for a suite that genuinely must run in order.
+  fullyParallel: true,
   // Default runs (scout, run, heal verify) land in the `run/` subdir so they sit
   // as a SIBLING of heal's `before/` and `after/` dirs. Playwright cleans `outputDir`
   // at the start of every run; keeping each run under its own subdir means a bare
