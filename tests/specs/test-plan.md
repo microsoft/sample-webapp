@@ -379,6 +379,12 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+29. **Home landing page renders the description paragraph content** — `tests/home.spec.ts`
+    - Preconditions: None — public `/` route; the `#description` paragraph renders from static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and read the description paragraph (`#description`, scoped within `<main>`)
+        Expectation: The description paragraph is visible and its text includes the homepage content-variant messaging ("Feature branch users/dev16 adds a homepage content variant"), confirming the intro copy renders as intended
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`

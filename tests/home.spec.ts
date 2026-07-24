@@ -54,4 +54,14 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('renders the description paragraph with the homepage content-variant messaging', async ({ page }) => {
+    await page.goto('/');
+
+    const description = page.getByRole('main').locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText(
+      'Feature branch users/dev16 adds a homepage content variant'
+    );
+  });
 });
