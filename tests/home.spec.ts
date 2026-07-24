@@ -54,4 +54,17 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('landing page renders the updated content-variant description', async ({ page }) => {
+    await page.goto('/');
+
+    // The homepage description paragraph (#description) carries the content-variant
+    // messaging this change introduced. Assert the real rendered copy so this fails
+    // if the description regresses to the prior text.
+    const description = page.getByRole('main').locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText('adds a homepage content variant');
+  });
 });
+
+// lifecycle action update for PR #116
