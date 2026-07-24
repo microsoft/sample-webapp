@@ -42,6 +42,19 @@ test.describe('Home page', () => {
     await expect(page.getByRole('heading', { name: 'About Us', level: 1 })).toBeVisible();
   });
 
+  test('description paragraph renders the updated homepage content variant', async ({ page }) => {
+    await page.goto('/');
+
+    const description = page.locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText(
+      'A React web application built for Playwright testing.'
+    );
+    await expect(description).toContainText(
+      'Feature branch users/dev50 adds a homepage content variant.'
+    );
+  });
+
   test('"Contact us" hint navigates to the Contact page', async ({ page }) => {
     await page.goto('/');
 
