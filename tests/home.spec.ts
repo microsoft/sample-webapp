@@ -54,4 +54,15 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('description paragraph renders the full intro text including the content variant', async ({ page }) => {
+    await page.goto('/');
+
+    // The description paragraph (#description) is static copy in the main content.
+    // Assert its full rendered text so removing the content-variant sentence would fail.
+    const description = page.getByRole('main').locator('#description');
+    await expect(description).toHaveText(
+      'A React web application built for Playwright testing. Feature branch users/dev77 adds a homepage content variant.'
+    );
+  });
 });
