@@ -1,12 +1,18 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Home page', () => {
-  test('should render the welcome heading and all call-to-action links', async ({ page }) => {
+  test('should render the welcome heading, description, and all call-to-action links', async ({ page }) => {
     await page.goto('/');
 
     await expect(
       page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
     ).toBeVisible();
+
+    // The description paragraph carries the homepage messaging, including the
+    // feature-branch content variant.
+    const description = page.locator('#description');
+    await expect(description).toContainText('A React web application built for Playwright testing.');
+    await expect(description).toContainText('Feature branch users/dev86 adds a homepage content variant.');
 
     // Scope the CTAs to <main> so they are distinct from the navbar links.
     const main = page.getByRole('main');
@@ -55,3 +61,5 @@ test.describe('Home page', () => {
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
 });
+
+// review prep change for PR #245
