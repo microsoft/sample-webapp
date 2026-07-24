@@ -379,6 +379,22 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+37. **Home description paragraph shows the current homepage copy** — `tests/home.spec.ts`
+    - Attribution: change — PR #212 edited the text of this exact `<p id="description">` element and no existing test asserts its content.
+    - Preconditions: None — public `/` route; renders from static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and locate the homepage description paragraph (`#description`, scoped to `<main>`)
+        Expectation: The paragraph is visible and reads exactly "A React web application built for Playwright testing. Feature branch users/dev78 adds a homepage content variant." — so a future change to this copy is caught
+38. **Home Features section lists the app's four highlighted features** — `tests/home.spec.ts`
+    - Attribution: adjacent — a pre-existing user-visible gap on the same homepage surface the change touches; the `#features` section has no existing coverage.
+    - Preconditions: None — public `/` route; static component markup, no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and locate the Features section (the `<section id="features">` containing the "Features" heading, level 2)
+        Expectation: The "Features" heading (level 2) is visible
+      2. Step: Inspect the feature list items within the Features section
+        Expectation: Exactly four list items are present, reading "User authentication with form validation", "Interactive dashboard with stats", "Client-side routing with React Router", and "Responsive design"
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
