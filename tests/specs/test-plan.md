@@ -379,6 +379,20 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+37. **Home landing page renders the description paragraph content** — `tests/home.spec.ts` _(covers PR #102 change)_
+    - Preconditions: None — public `/` route; the `#description` paragraph renders from static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+        Expectation: The `#description` paragraph (`page.locator('#description')`) is visible and its text contains "A React web application built for Playwright testing." and the content variant sentence "Feature branch users/dev20 adds a homepage content variant." (asserting the actual rendered copy PR #102 introduced, so a revert of that content would fail the test)
+38. **Home landing page renders the Features section with all feature items** — `tests/home.spec.ts`
+    - Preconditions: None — public `/` route; the `#features` section renders from static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+        Expectation: The "Features" heading (level 2) within the `#features` section is visible
+      2. Step: Inspect the feature list items within the `#features` section
+        Expectation: All four feature list items are visible with their exact text — "User authentication with form validation", "Interactive dashboard with stats", "Client-side routing with React Router", and "Responsive design"
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
