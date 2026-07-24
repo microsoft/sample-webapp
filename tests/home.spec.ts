@@ -54,4 +54,15 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('landing page description paragraph renders the expected content', async ({ page }) => {
+    await page.goto('/');
+
+    const description = page.locator('#description');
+    await expect(description).toBeVisible();
+
+    // Assert the rendered copy so the check fails if the description content regresses.
+    await expect(description).toContainText('A React web application built for Playwright testing.');
+    await expect(description).toContainText('Feature branch users/dev148 adds a homepage content variant.');
+  });
 });
