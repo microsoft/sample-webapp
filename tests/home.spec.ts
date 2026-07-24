@@ -54,4 +54,27 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('renders the description paragraph with the expected content', async ({ page }) => {
+    await page.goto('/');
+
+    const description = page.locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText('A React web application built for Playwright testing.');
+    await expect(description).toContainText('Feature branch users/dev20 adds a homepage content variant.');
+  });
+
+  test('renders the Features section with all feature items', async ({ page }) => {
+    await page.goto('/');
+
+    const features = page.locator('#features');
+    await expect(features.getByRole('heading', { name: 'Features', level: 2 })).toBeVisible();
+
+    await expect(features.getByRole('listitem')).toHaveText([
+      'User authentication with form validation',
+      'Interactive dashboard with stats',
+      'Client-side routing with React Router',
+      'Responsive design',
+    ]);
+  });
 });
