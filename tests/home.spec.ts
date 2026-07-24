@@ -13,6 +13,11 @@ test.describe('Home page', () => {
     await expect(main.getByRole('link', { name: 'Get Started' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'View Dashboard' })).toBeVisible();
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
+
+    // Assert the current homepage messaging so an accidental copy change is caught.
+    await expect(main.locator('#description')).toHaveText(
+      'A React web application built for Playwright testing. Feature branch users/dev100 adds a homepage content variant.'
+    );
   });
 
   test('"Get Started" call-to-action navigates to the login page', async ({ page }) => {
