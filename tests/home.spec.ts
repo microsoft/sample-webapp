@@ -78,3 +78,5 @@ test.describe('Home page', () => {
     ]);
   });
 });
+
+// repeat lifecycle prep for PR #131
