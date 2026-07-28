@@ -296,6 +296,42 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The error alert (getByTestId('feedback-error')) is visible with the "Please select a rating between 1 and 5." message
       2. Step: Select a valid rating (e.g. getByTestId('feedback-rating-5')) and click "Send feedback" again
          Expectation: The error alert is no longer present (count 0) and the success message (getByTestId('feedback-success')) becomes visible with "Thanks for your feedback!"
+37. **Feedback comment character counter updates live as the user types** — `tests/feedback.spec.ts`
+    - Preconditions: A clean comment draft — the `feedback-comment-draft` localStorage key must be unset for the origin so the comment starts empty. Each test runs in a fresh browser context whose localStorage starts empty (the shared auth `storageState` never sets this key), so visiting `/feedback` yields an empty comment and a "0/300 characters" counter with no manual clearing.
+    - Postconditions: Clear the draft the test wrote — `page.evaluate(() => localStorage.removeItem('feedback-comment-draft'))` — so no comment bleeds into another test (belt-and-suspenders; the fresh context already isolates it).
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /feedback and read the counter (`#feedback-comment-count`)
+         Expectation: The counter reads "0/300 characters"
+      2. Step: Type a known string (e.g. "Great app" — 9 characters) into the comment field (getByTestId('feedback-comment'))
+         Expectation: The counter updates live to "9/300 characters" (the rendered count equals the typed length)
+38. **Feedback comment draft persists across a page reload** — `tests/feedback.spec.ts`
+    - Preconditions: A clean comment draft — `feedback-comment-draft` unset for the origin (fresh context guarantees this). Comment starts empty.
+    - Postconditions: Clear the draft the test wrote — `page.evaluate(() => localStorage.removeItem('feedback-comment-draft'))` — so the persisted comment does not bleed into another test.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /feedback and type a known string into the comment field (getByTestId('feedback-comment'))
+         Expectation: The comment field holds the typed text and the counter (`#feedback-comment-count`) reflects its length
+      2. Step: Reload the page (page.reload())
+         Expectation: The comment field is restored to the same typed text (persisted via the `feedback-comment-draft` localStorage key) and the counter again reflects that length — proving the draft survives a reload
+39. **Feedback "Clear comment" button empties the comment, counter, and saved draft** — `tests/feedback.spec.ts`
+    - Preconditions: A clean comment draft — `feedback-comment-draft` unset for the origin (fresh context guarantees this).
+    - Postconditions: None required — the test ends with the draft already removed; for safety it may still `page.evaluate(() => localStorage.removeItem('feedback-comment-draft'))`.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /feedback and type text into the comment field (getByTestId('feedback-comment'))
+         Expectation: The comment holds the text and the counter (`#feedback-comment-count`) reflects its length
+      2. Step: Click the "Clear comment" button (getByRole('button', { name: 'Clear comment' }))
+         Expectation: The comment field is empty and the counter reads "0/300 characters"
+      3. Step: Reload the page (page.reload())
+         Expectation: The comment field is still empty — confirming the saved draft was removed, not merely cleared on screen
+40. **Feedback successful submit clears the comment and its saved draft** — `tests/feedback.spec.ts`
+    - Preconditions: A clean comment draft — `feedback-comment-draft` unset for the origin (fresh context guarantees this).
+    - Postconditions: None required — a successful submit removes the draft; for safety it may still `page.evaluate(() => localStorage.removeItem('feedback-comment-draft'))`.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /feedback, select a rating (e.g. getByTestId('feedback-rating-4')) and type text into the comment field (getByTestId('feedback-comment'))
+         Expectation: The rating is checked and the comment holds the typed text
+      2. Step: Click "Send feedback" (getByTestId('feedback-submit'))
+         Expectation: The success message (getByTestId('feedback-success')) is visible with "Thanks for your feedback!" and the comment field is now empty
+      3. Step: Reload the page (page.reload())
+         Expectation: The comment field is still empty — confirming the saved draft was cleared on submit, not just the on-screen field
 
 ### Cookie Consent
 19. **Cookie consent banner is shown to a first-time visitor and stays dismissed after Accept** — `tests/cookie-consent.spec.ts`
