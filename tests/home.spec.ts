@@ -5,7 +5,7 @@ test.describe('Home page', () => {
     await page.goto('/');
 
     await expect(
-      page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
+      page.getByRole('heading', { name: 'Welcome to SampleApp -- Built for Developers', level: 1 })
     ).toBeVisible();
 
     // Scope the CTAs to <main> so they are distinct from the navbar links.
@@ -53,5 +53,22 @@ test.describe('Home page', () => {
 
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
+  });
+
+  test('renders its product description and the Features list', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.locator('#description')).toHaveText(
+      'A React web application built for Playwright testing.'
+    );
+
+    const features = page.locator('#features');
+    await expect(features.getByRole('heading', { name: 'Features', level: 2 })).toBeVisible();
+    await expect(features.getByRole('listitem')).toHaveText([
+      'User authentication with form validation',
+      'Interactive dashboard with stats',
+      'Client-side routing with React Router',
+      'Responsive design',
+    ]);
   });
 });
