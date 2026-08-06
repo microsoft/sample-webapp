@@ -28,6 +28,13 @@ test.describe('Dashboard page', () => {
     await expect(page.locator('#order-count')).toHaveText('340');
   });
 
+  test('should display the Active Sessions stat card with its value', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    await expect(page.getByRole('heading', { name: 'Active Sessions', level: 3 })).toBeVisible();
+    await expect(page.locator('#active-sessions')).toHaveText('47');
+  });
+
   test('should display Recent Activity table with data', async ({ page }) => {
     await page.goto('/dashboard');
 
