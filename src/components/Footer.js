@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import './Footer.css';
 
@@ -13,6 +13,8 @@ function Footer() {
         <Link to="/contact">Contact</Link>
         <Link to="/faq">FAQ</Link>
         <Link to="/newsletter">Newsletter</Link>
+        <Link to="/privacy">Privacy Policy</Link>
+        <Link to="/terms">Terms of Service</Link>
       </nav>
       <p className="footer-tagline">Built with React &amp; tested with Playwright.</p>
       <p className="footer-social">
