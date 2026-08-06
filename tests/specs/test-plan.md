@@ -214,6 +214,14 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The question is aria-expanded="true" and its answer region (role="region", named by the question) is visible
       4. Step: Click the "Clear" button
          Expectation: The search box value is empty, the results count is no longer present, all five question buttons are visible again, the previously-open answer region is no longer visible (the click resets the query AND collapses the open answer via setOpenIndex(null)), and the "Clear" button itself is no longer present (it renders only while a query is set)
+401. **FAQ "Contact us" hint note navigates to the Contact page** — `tests/faq.spec.ts` _(attribution: change — covers PR #357's new contact-hint note)_
+    - Preconditions: None — public `/faq` route; the contact-hint note (`.faq-notice`, role="note") renders unconditionally on load with a "Contact us" link to the public `/contact` route. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /faq
+         Expectation: The contact-hint note (getByRole('note')) is visible and contains the text "Cannot find your answer?", and its "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' })) is visible with href "/contact"
+      2. Step: Click the "Contact us" link within `<main>`
+         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible (real navigation to the Contact page, mirroring plan entry 28's Home-hint pattern)
 
 ### Scroll Progress
 20. **Scroll progress bar reflects scroll position from top (0%) to bottom (100%)** — `tests/scroll-progress.spec.ts`
