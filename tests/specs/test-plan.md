@@ -296,22 +296,11 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The error alert (getByTestId('feedback-error')) is visible with the "Please select a rating between 1 and 5." message
       2. Step: Select a valid rating (e.g. getByTestId('feedback-rating-5')) and click "Send feedback" again
          Expectation: The error alert is no longer present (count 0) and the success message (getByTestId('feedback-success')) becomes visible with "Thanks for your feedback!"
-37. **Feedback comment character counter reflects length and enforces the 300-character limit** — `tests/feedback.spec.ts` (change)
-    - Preconditions: None — public `/feedback` route; the form is in-memory component state that resets on navigation. Nothing to create or clean up.
-    - Step/Expectation Pairs:
-      1. Step: Navigate to /feedback
-         Expectation: The character counter (the `p[aria-live="polite"]` region below the comment textarea) reads "0/300 characters"
-      2. Step: Type a short comment (e.g. "Great experience!") into getByTestId('feedback-comment')
-         Expectation: The counter updates to match the typed length exactly (e.g. "17/300 characters")
-      3. Step: Fill the comment field with a string longer than 300 characters (e.g. 305 'a' characters)
-         Expectation: The textarea value is capped at 300 characters (value length === 300, enforced by maxLength) and the counter reads "300/300 characters"
-38. **Feedback Clear button resets rating, comment, counter, and the success message** — `tests/feedback.spec.ts` (change)
-    - Preconditions: None — public `/feedback` route; nothing to create or clean up.
-    - Step/Expectation Pairs:
-      1. Step: Navigate to /feedback, select a rating (getByTestId('feedback-rating-4')), type a comment into getByTestId('feedback-comment'), and click "Send feedback"
-         Expectation: The success message (getByTestId('feedback-success')) is visible with "Thanks for your feedback!"
-      2. Step: Click the "Clear" button (getByRole('button', { name: 'Clear' }))
-         Expectation: The success message is removed (count 0), the comment field is empty, the counter resets to "0/300 characters", and the rating radio (getByTestId('feedback-rating-4')) is no longer checked
+37. **Feedback comment character counter reflects length and enforces the 300-character limit** — `tests/feedback.spec.ts` (removed)
+    - Removed by heal: the Feedback page has no comment character counter and no `maxLength` cap on the comment textarea (Feedback.js renders only the rating radiogroup and an optional, uncapped comment). This behavior was never implemented or intended — the test was added by scout run #339, which never touched Feedback.js, so it asserted a phantom feature rather than catching a regression. Verified against source, the file's own doc comment, and the live app.
+38. **Feedback Clear button resets rating, comment, counter, and the success message** — `tests/feedback.spec.ts` (removed)
+    - Removed by heal: the Feedback page has no "Clear" button (the only controls are the rating radios and the "Send feedback" submit). Like entry 37, this was a phantom feature introduced by scout run #339 without any source change, so the test asserted behavior that never existed. Verified against source and the live app.
+
 
 ### Cookie Consent
 19. **Cookie consent banner is shown to a first-time visitor and stays dismissed after Accept** — `tests/cookie-consent.spec.ts`
