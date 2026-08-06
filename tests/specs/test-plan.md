@@ -406,6 +406,18 @@ Sample Web App — a React application with React Router that provides routes su
       2. Step: Click the "Back to Home" link
         Expectation: The URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (recovery to the landing page)
 
+### About
+39. **About page "Our Team" section lists every team member, including the Alex Martinez QA Engineer card** — `tests/about.spec.ts`
+    - Preconditions: None — `/about` is a public route (no auth or seeded data); the team cards are static content rendered in `About.js`. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / then click the "About" navbar link (scoped to the header nav containing the SampleApp logo)
+        Expectation: URL changes to /about and the "About Us" heading (level 1) is visible
+      2. Step: Within the "Our Team" section, read the member cards
+        Expectation: The three team-member headings (level 3) are all visible — "Kashish Gupta", "Alex Martinez", and "Copilot" — confirming no existing card was lost when the new one was added
+      3. Step: Verify the Alex Martinez card's role (the new card added in PR #349)
+        Expectation: The "Alex Martinez" card shows the role text "QA Engineer" (the real rendered role value, so the assertion fails if the card is dropped, renamed, or given the wrong role)
+
 <!-- Coverage note: the Contact message character counter is covered in tests/contact.spec.ts. -->
 <!-- Maintenance note: entries are numbered sequentially and appended over time; continue from the current maximum when adding new plan items. -->
 

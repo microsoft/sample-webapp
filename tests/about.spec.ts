@@ -14,7 +14,13 @@ test.describe('About page', () => {
 
     await expect(page.getByRole('heading', { name: 'Our Team', level: 2 })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Kashish Gupta', level: 3 })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Alex Martinez', level: 3 })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Copilot', level: 3 })).toBeVisible();
+
+    const alexCard = page
+      .locator('.team-card')
+      .filter({ has: page.getByRole('heading', { name: 'Alex Martinez', level: 3 }) });
+    await expect(alexCard).toContainText('QA Engineer');
 
     await expect(page.getByRole('heading', { name: 'Tech Stack', level: 2 })).toBeVisible();
     const techStack = page.getByRole('list');
