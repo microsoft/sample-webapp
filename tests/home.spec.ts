@@ -54,4 +54,16 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('stats banner displays the users, orders, and uptime figures', async ({ page }) => {
+    await page.goto('/');
+
+    // The stats banner lives in the main content, distinct from any navbar/footer text.
+    const banner = page.getByRole('main').locator('#stats-banner');
+    await expect(banner).toBeVisible();
+
+    await expect(banner.getByText('1,024 Users')).toBeVisible();
+    await expect(banner.getByText('5,230 Orders')).toBeVisible();
+    await expect(banner.getByText('99.9% Uptime')).toBeVisible();
+  });
 });

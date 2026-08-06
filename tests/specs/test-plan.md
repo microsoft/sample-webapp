@@ -395,6 +395,14 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+39. **Home stats banner displays the users, orders, and uptime figures** — `tests/home.spec.ts` _(change)_
+    - Preconditions: None — `/` is the public landing route; the stats banner (`#stats-banner`) renders from static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+       Expectation: The stats banner region (`#stats-banner`, scoped within `<main>`) is visible
+      2. Step: Inspect the three stat figures inside the banner
+       Expectation: The banner shows the exact texts "1,024 Users", "5,230 Orders", and "99.9% Uptime" — each visible within the banner
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
