@@ -103,6 +103,29 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Login page loads
      4. Step: Click "SampleApp" logo link
         Expectation: URL changes to /
+39. **Newsletter navbar link navigates to the Newsletter page** — `tests/navigation.spec.ts`
+   - Preconditions: None (runs in the default authenticated `chromium` project; no data setup needed)
+   - Postconditions: None (read-only navigation; no data created)
+   - Step/Expectation Pairs:
+     1. Step: Navigate to / (Home)
+        Expectation: Home page loads
+     2. Step: In the header navbar (the `nav` containing the "SampleApp" logo link), click the "Newsletter" link
+        Expectation: URL changes to /newsletter
+     3. Step: Observe the page heading
+        Expectation: The Newsletter page renders — heading "Newsletter" (h1) is visible
+
+### About
+40. **About page content and interactive contact form** — `tests/about.spec.ts`
+   - Note: Documents existing coverage (this spec already exists); no new generation required.
+   - Preconditions: None (runs in the default authenticated `chromium` project)
+   - Postconditions: None (the About contact form is a no-op `preventDefault`; no data created)
+   - Step/Expectation Pairs:
+     1. Step: Navigate to / then click the "About" navbar link
+        Expectation: URL changes to /about; "About Us" (h1) is visible
+     2. Step: Observe the Our Team and Tech Stack sections
+        Expectation: Team members (Kashish Gupta, Copilot) and tech badges (React 18, React Router v6, Playwright, CSS3) are visible
+     3. Step: Fill Name, Email, Message and click "Send Message"
+        Expectation: The form submit is inert (preventDefault) — the page stays on /about with "About Us" still visible
 
 ### Contact
 4. **Contact form submits successfully and shows a confirmation toast** — `tests/contact.spec.ts`
