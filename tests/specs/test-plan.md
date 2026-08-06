@@ -272,6 +272,14 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: `href` equals `https://github.com/microsoft/sample-webapp/issues/new` (points at the project repository's new-issue page)
       3. Step: Read the link's `target` and `rel` attributes
         Expectation: `target` is `_blank` and `rel` contains both `noopener` and `noreferrer` (opens in a new tab safely, without leaking the opener). We assert the anchor attributes rather than driving the real popup so the test stays deterministic and does not depend on github.com being reachable.
+39. **Footer exposes Privacy Policy and Terms of Service links pointing at `/privacy` and `/terms`** — `tests/footer.spec.ts` _(change: covers PR #353's new footer links)_
+    - Preconditions: None — the footer `<nav aria-label="Footer">` is a global component rendered on every route; nothing to create or clean up. Links are scoped to the `contentinfo` landmark. We assert each link's presence and `href` rather than clicking through, because the target routes are not currently defined in `App.js` (they fall through to the NotFound page) — asserting the anchor keeps the test on the change's real, intended new behavior (the links were added correctly) without encoding the 404 destination, which is reported separately as an app defect.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and, within the footer nav (`getByRole('contentinfo').getByRole('navigation', { name: 'Footer' })`), locate the "Privacy Policy" link
+        Expectation: The link is visible and its `href` resolves to `/privacy`
+      2. Step: Within the same footer nav, locate the "Terms of Service" link
+        Expectation: The link is visible and its `href` resolves to `/terms`
+    - Postconditions: None — nothing created.
 
 
 ### Feedback
