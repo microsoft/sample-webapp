@@ -75,9 +75,9 @@ Sample Web App — a React application with React Router that provides routes su
    - Postconditions: None (state resets on next navigation).
    - Step/Expectation Pairs:
      1. Step: Navigate to /dashboard and inspect the Todo List section
-        Expectation: The todo list shows 3 items with one already checked, the summary (`#todo-summary`) reads "1 of 3 tasks completed", and the "Mark all complete" button (`#mark-all-complete`) is visible
+        Expectation: The todo list shows 4 items with one already checked, the summary (`#todo-summary`) reads "1 of 4 tasks completed", and the "Mark all complete" button (`#mark-all-complete`) is visible
      2. Step: Click the "Mark all complete" button
-        Expectation: All three todo checkboxes become checked and the summary reads "3 of 3 tasks completed"
+        Expectation: All four todo checkboxes become checked and the summary reads "4 of 4 tasks completed"
      3. Step: Observe the "Mark all complete" button after all todos are done
         Expectation: The "Mark all complete" button is no longer present (it only shows while at least one todo is incomplete)
 30. **Dashboard "Clear completed" removes only completed todos and hides itself** — `tests/dashboard.spec.ts`
@@ -85,9 +85,9 @@ Sample Web App — a React application with React Router that provides routes su
    - Postconditions: None (state resets on next navigation).
    - Step/Expectation Pairs:
      1. Step: Navigate to /dashboard and inspect the Todo List section
-        Expectation: The list shows 3 items — "Deploy to staging" is checked (done); the "Clear completed" button (`#clear-completed`) is visible
+        Expectation: The list shows 4 items — "Deploy to staging" is checked (done); the "Clear completed" button (`#clear-completed`) is visible
      2. Step: Click the "Clear completed" button
-        Expectation: The completed todo ("Deploy to staging") is removed, leaving the two incomplete todos ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
+        Expectation: The completed todo ("Deploy to staging") is removed, leaving the three incomplete todos ("Review pull requests", "Update release notes", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 3 tasks completed"
      3. Step: Observe the "Clear completed" button after clearing
         Expectation: The "Clear completed" button is no longer present (it only shows while at least one todo is completed)
 
