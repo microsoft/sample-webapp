@@ -177,4 +177,48 @@ test.describe('FAQ page', () => {
     ).toHaveCount(0);
     await expect(clearButton).toHaveCount(0);
   });
+
+  test('Accessibility and API FAQ items render, expand to their answers, and are searchable', async ({
+    page,
+  }) => {
+    await page.goto('/faq');
+
+    const accessibilityQuestion = page.getByRole('button', { name: 'Is the app accessible?' });
+    const apiQuestion = page.getByRole('button', { name: 'Does the app expose an API?' });
+
+    // Both new questions render and start collapsed.
+    await expect(accessibilityQuestion).toBeVisible();
+    await expect(accessibilityQuestion).toHaveAttribute('aria-expanded', 'false');
+    await expect(apiQuestion).toBeVisible();
+    await expect(apiQuestion).toHaveAttribute('aria-expanded', 'false');
+
+    // Opening the accessibility question reveals its answer region with the real answer text.
+    await accessibilityQuestion.click();
+    await expect(accessibilityQuestion).toHaveAttribute('aria-expanded', 'true');
+    const accessibilityAnswer = page.getByRole('region', { name: 'Is the app accessible?' });
+    await expect(accessibilityAnswer).toBeVisible();
+    await expect(accessibilityAnswer).toContainText('WCAG 2.1 AA guidelines');
+
+    // Opening the API question reveals its answer and collapses the accessibility one
+    // (single-open accordion — exactly one region open at a time).
+    await apiQuestion.click();
+    await expect(apiQuestion).toHaveAttribute('aria-expanded', 'true');
+    const apiAnswer = page.getByRole('region', { name: 'Does the app expose an API?' });
+    await expect(apiAnswer).toBeVisible();
+    await expect(apiAnswer).toContainText('REST API');
+    await expect(accessibilityQuestion).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByRole('region')).toHaveCount(1);
+
+    // "WCAG" appears only in the new accessibility answer — searching it isolates that item.
+    const search = page.getByRole('searchbox', { name: 'Search questions' });
+    const questions = page.getByRole('button').filter({ hasText: '?' });
+    await search.fill('WCAG');
+    await expect(questions).toHaveCount(1);
+    await expect(page.getByRole('button', { name: 'Is the app accessible?' })).toBeVisible();
+
+    // "REST" appears only in the new API answer — searching it isolates that item.
+    await search.fill('REST');
+    await expect(questions).toHaveCount(1);
+    await expect(page.getByRole('button', { name: 'Does the app expose an API?' })).toBeVisible();
+  });
 });

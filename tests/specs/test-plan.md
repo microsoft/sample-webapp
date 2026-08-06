@@ -214,6 +214,20 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The question is aria-expanded="true" and its answer region (role="region", named by the question) is visible
       4. Step: Click the "Clear" button
          Expectation: The search box value is empty, the results count is no longer present, all seven question buttons are visible again, the previously-open answer region is no longer visible (the click resets the query AND collapses the open answer via setOpenIndex(null)), and the "Clear" button itself is no longer present (it renders only while a query is set)
+39. **New Accessibility and API FAQ items render, expand to their answers, and are searchable** — `tests/faq.spec.ts` _(change: PR #345)_
+    - Preconditions: None — `/faq` is a public route with hard-coded content; the two new entries ("Is the app accessible?" and "Does the app expose an API?") live in the `faqs` array in `FAQ.js`. Nothing to create or clean up.
+    - Postconditions: None — the search box and open-answer state are in-memory component state that resets on navigation.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /faq
+         Expectation: Both new question buttons are present — getByRole('button', { name: 'Is the app accessible?' }) and getByRole('button', { name: 'Does the app expose an API?' }) are visible, each collapsed (aria-expanded="false")
+      2. Step: Click the "Is the app accessible?" question button
+         Expectation: That button becomes aria-expanded="true" and its answer region (getByRole('region', { name: 'Is the app accessible?' })) is visible and contains the text "WCAG 2.1 AA guidelines"
+      3. Step: Click the "Does the app expose an API?" question button
+         Expectation: Its answer region (getByRole('region', { name: 'Does the app expose an API?' })) is visible and contains "REST API"; the accessibility answer collapses (single-open accordion — only one region present)
+      4. Step: Type a term that appears only in the new accessibility answer — "WCAG" — into the search box (getByRole('searchbox', { name: 'Search questions' }))
+         Expectation: The list narrows to exactly the "Is the app accessible?" question (matched via answer content); no other question button is present
+      5. Step: Replace the query with "REST" (a term unique to the new API answer)
+         Expectation: The list narrows to exactly the "Does the app expose an API?" question; no other question button is present
 
 ### Scroll Progress
 20. **Scroll progress bar reflects scroll position from top (0%) to bottom (100%)** — `tests/scroll-progress.spec.ts`
