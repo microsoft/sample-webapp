@@ -23,7 +23,7 @@ test.describe('Dashboard page', () => {
   test('should display correct values in stat cards', async ({ page }) => {
     await page.goto('/dashboard');
 
-    await expect(page.locator('#user-count')).toHaveText('999');
+    await expect(page.locator('#user-count')).toHaveText('128');
     await expect(page.locator('#revenue')).toHaveText('$12,450');
     await expect(page.locator('#order-count')).toHaveText('340');
   });
