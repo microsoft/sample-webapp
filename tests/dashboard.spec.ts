@@ -23,7 +23,7 @@ test.describe('Dashboard page', () => {
   test('should display correct values in stat cards', async ({ page }) => {
     await page.goto('/dashboard');
 
-    await expect(page.locator('#user-count')).toHaveText('999');
+    await expect(page.locator('#user-count')).toHaveText('128');
     await expect(page.locator('#revenue')).toHaveText('$12,450');
     await expect(page.locator('#order-count')).toHaveText('340');
   });
@@ -48,12 +48,12 @@ test.describe('Dashboard page', () => {
     await page.goto('/dashboard');
 
     const todoList = page.getByTestId('todo-list');
-    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(todoList.getByRole('listitem')).toHaveCount(4);
 
     await page.getByPlaceholder('Add a new task...').fill('Buy groceries');
     await page.getByRole('button', { name: 'Add' }).click();
 
-    await expect(todoList.getByRole('listitem')).toHaveCount(4);
+    await expect(todoList.getByRole('listitem')).toHaveCount(5);
     await expect(todoList.getByText('Buy groceries')).toBeVisible();
 
     const toggleCheckbox = page.getByRole('checkbox', { name: 'Toggle Buy groceries' });
@@ -62,7 +62,7 @@ test.describe('Dashboard page', () => {
     await expect(toggleCheckbox).toBeChecked();
 
     await page.getByRole('button', { name: 'Delete Buy groceries' }).click();
-    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(todoList.getByRole('listitem')).toHaveCount(4);
     await expect(todoList.getByText('Buy groceries')).not.toBeVisible();
   });
 
@@ -87,14 +87,14 @@ test.describe('Dashboard page', () => {
     await page.goto('/dashboard');
 
     const todoList = page.getByTestId('todo-list');
-    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(todoList.getByRole('listitem')).toHaveCount(4);
 
     await page.getByRole('button', { name: 'Add' }).click();
-    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(todoList.getByRole('listitem')).toHaveCount(4);
 
     await page.getByPlaceholder('Add a new task...').fill('   ');
     await page.getByRole('button', { name: 'Add' }).click();
-    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(todoList.getByRole('listitem')).toHaveCount(4);
   });
 
   test('should filter Recent Activity by search query and show an empty state for no matches', async ({ page }) => {
@@ -125,19 +125,19 @@ test.describe('Dashboard page', () => {
     await page.goto('/dashboard');
 
     const todoList = page.getByTestId('todo-list');
-    await expect(todoList.getByRole('listitem')).toHaveCount(3);
-    await expect(page.locator('#todo-summary')).toHaveText('1 of 3 tasks completed');
+    await expect(todoList.getByRole('listitem')).toHaveCount(4);
+    await expect(page.locator('#todo-summary')).toHaveText('1 of 4 tasks completed');
 
     const markAll = page.getByRole('button', { name: 'Mark all complete' });
     await expect(markAll).toBeVisible();
     await markAll.click();
 
     const checkboxes = todoList.getByRole('checkbox');
-    await expect(checkboxes).toHaveCount(3);
-    for (let i = 0; i < 3; i++) {
+    await expect(checkboxes).toHaveCount(4);
+    for (let i = 0; i < 4; i++) {
       await expect(checkboxes.nth(i)).toBeChecked();
     }
-    await expect(page.locator('#todo-summary')).toHaveText('3 of 3 tasks completed');
+    await expect(page.locator('#todo-summary')).toHaveText('4 of 4 tasks completed');
 
     // Button only shows while at least one todo is incomplete.
     await expect(page.getByRole('button', { name: 'Mark all complete' })).toHaveCount(0);
@@ -147,18 +147,19 @@ test.describe('Dashboard page', () => {
     await page.goto('/dashboard');
 
     const todoList = page.getByTestId('todo-list');
-    await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(todoList.getByRole('listitem')).toHaveCount(4);
     await expect(page.getByRole('checkbox', { name: 'Toggle Deploy to staging' })).toBeChecked();
 
     const clearCompleted = page.getByRole('button', { name: 'Clear completed' });
     await expect(clearCompleted).toBeVisible();
     await clearCompleted.click();
 
-    await expect(todoList.getByRole('listitem')).toHaveCount(2);
+    await expect(todoList.getByRole('listitem')).toHaveCount(3);
     await expect(todoList.getByText('Deploy to staging')).not.toBeVisible();
     await expect(todoList.getByText('Review pull requests')).toBeVisible();
+    await expect(todoList.getByText('Update release notes')).toBeVisible();
     await expect(todoList.getByText('Write documentation')).toBeVisible();
-    await expect(page.locator('#todo-summary')).toHaveText('0 of 2 tasks completed');
+    await expect(page.locator('#todo-summary')).toHaveText('0 of 3 tasks completed');
 
     // Button only shows while at least one todo is completed.
     await expect(page.getByRole('button', { name: 'Clear completed' })).toHaveCount(0);
