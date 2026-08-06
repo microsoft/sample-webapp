@@ -36,4 +36,16 @@ test.describe('Navigation', () => {
     await page.getByRole('link', { name: 'SampleApp' }).click();
     await expect(page).toHaveURL('/');
   });
+
+  test('navbar exposes a Help link pointing to /help', async ({ page }) => {
+    await page.goto('/');
+
+    const navbar = page
+      .getByRole('navigation')
+      .filter({ has: page.getByRole('link', { name: 'SampleApp' }) });
+
+    const helpLink = navbar.getByRole('link', { name: 'Help' });
+    await expect(helpLink).toBeVisible();
+    await expect(helpLink).toHaveAttribute('href', '/help');
+  });
 });

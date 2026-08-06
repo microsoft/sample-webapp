@@ -103,6 +103,15 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: Login page loads
      4. Step: Click "SampleApp" logo link
         Expectation: URL changes to /
+39. **Navbar exposes a Help link pointing to /help** — `tests/navigation.spec.ts` _(attribution: change)_
+   - Preconditions: None — the Navbar renders on every route; no auth or seeded data required. Nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to / and scope to the header navbar (the navigation containing the "SampleApp" logo link, since the footer nav also lists links)
+       Expectation: The header navbar renders a "Help" link (`getByRole('link', { name: 'Help' })`) that is visible
+     2. Step: Inspect the Help link's target
+       Expectation: The Help link has `href="/help"` — confirming PR #352 adds the Help entry pointing at the intended path
+   - Note: Coverage is deliberately limited to the link rendering + its target. Clicking it currently lands on the 404 NotFound page because no `/help` route/page exists (see the app defect in this run's scout report); asserting navigation to a working Help page is impossible until that route is added, and asserting the 404 here would encode broken behavior as intended (the generic 404 is already covered by `tests/not-found.spec.ts`).
 
 ### Contact
 4. **Contact form submits successfully and shows a confirmation toast** — `tests/contact.spec.ts`
