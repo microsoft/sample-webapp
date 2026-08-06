@@ -66,6 +66,32 @@ test.describe('Site footer', () => {
     });
   }
 
+  // Privacy Policy / Terms of Service links (added to the footer nav). We assert
+  // each link's presence and href rather than clicking through, because the app
+  // currently defines no /privacy or /terms route in App.js — following the links
+  // lands on the NotFound page. Asserting the anchor keeps this test on the change's
+  // real, intended new behavior (the links were added, pointing at the right paths)
+  // without encoding the 404 destination. Scoped to the footer nav landmark so the
+  // accessible names don't collide with any navbar link.
+  const legalLinks = [
+    { name: 'Privacy Policy', path: '/privacy' },
+    { name: 'Terms of Service', path: '/terms' },
+  ];
+
+  for (const { name, path } of legalLinks) {
+    test(`footer exposes a "${name}" link pointing at ${path}`, async ({ page }) => {
+      await page.goto('/');
+
+      const footerNav = page
+        .getByRole('contentinfo')
+        .getByRole('navigation', { name: 'Footer' });
+      const link = footerNav.getByRole('link', { name });
+
+      await expect(link).toBeVisible();
+      await expect(link).toHaveAttribute('href', path);
+    });
+  }
+
   // The "View source on GitHub" link opens github.com in a new tab. We assert the
   // anchor's attributes rather than driving the real popup so the test stays
   // deterministic and does not depend on github.com being reachable from CI.
