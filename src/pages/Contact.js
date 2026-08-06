@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useForm } from '../hooks/useForm';
 import Toast from '../components/Toast';
 import './Contact.css';
 
 const initialValues = { name: '', email: '', message: '' };
+// Field placeholder hints
+const fieldHints = { name: 'e.g. Jane Smith', email: 'e.g. jane@example.com', message: 'How can we help you? (min. 10 chars)' };
 
 const validate = (values) => {
   const errors = {};
