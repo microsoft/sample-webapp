@@ -90,6 +90,36 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The completed todo ("Deploy to staging") is removed, leaving the two incomplete todos ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
      3. Step: Observe the "Clear completed" button after clearing
         Expectation: The "Clear completed" button is no longer present (it only shows while at least one todo is completed)
+39. **Dashboard "Add" appends a new incomplete todo, updates the summary total, and clears the input** — `tests/dashboard.spec.ts`
+    - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation, so a fresh load always shows the same 3 items; nothing to create or clean up.
+    - Postconditions: None (state resets on next navigation).
+    - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The list (`getByTestId('todo-list')`) shows 3 items and the summary (`#todo-summary`) reads "1 of 3 tasks completed"
+     2. Step: Fill the "Add a new task..." input (`#new-todo`) with a unique value (e.g. "Ship release notes") and click the "Add" button (`getByRole('button', { name: 'Add' })`)
+        Expectation: A new list item with the exact text "Ship release notes" is appended as the last todo (unchecked/incomplete), the list now shows 4 items, the summary (`#todo-summary`) reads "1 of 4 tasks completed" (denominator incremented, completed count unchanged), and the input (`#new-todo`) is cleared to empty
+     3. Step: With the input empty (or containing only whitespace, e.g. "   "), click the "Add" button again
+        Expectation: No new item is added — the list still shows 4 items and the summary still reads "1 of 4 tasks completed" (the `!newTodo.trim()` guard makes an empty/whitespace submission a no-op)
+40. **Dashboard toggling a todo checkbox flips its done state and updates the completed-count summary** — `tests/dashboard.spec.ts`
+    - Preconditions: Authenticated (storageState from auth.setup.ts). Todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation; nothing to create or clean up.
+    - Postconditions: None (state resets on next navigation).
+    - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The summary (`#todo-summary`) reads "1 of 3 tasks completed"; the checkbox for an initially-incomplete todo (`getByRole('checkbox', { name: 'Toggle Review pull requests' })`) is unchecked
+     2. Step: Check the "Toggle Review pull requests" checkbox
+        Expectation: That checkbox becomes checked and the summary (`#todo-summary`) reads "2 of 3 tasks completed" (completed count incremented)
+     3. Step: Uncheck the same checkbox
+        Expectation: The checkbox returns to unchecked and the summary (`#todo-summary`) returns to "1 of 3 tasks completed"
+41. **Dashboard deleting a single todo removes it from the list and updates the summary** — `tests/dashboard.spec.ts`
+    - Preconditions: Authenticated (storageState from auth.setup.ts). Todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation; nothing to create or clean up.
+    - Postconditions: None (state resets on next navigation).
+    - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The list (`getByTestId('todo-list')`) shows 3 items including "Deploy to staging" (which is done); the summary (`#todo-summary`) reads "1 of 3 tasks completed"
+     2. Step: Click the delete button for the completed todo (`getByRole('button', { name: 'Delete Deploy to staging' })`)
+        Expectation: The "Deploy to staging" item is removed (its text and its "Toggle Deploy to staging" checkbox are no longer present), the list now shows 2 items ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
+     3. Step: Delete an incomplete todo (`getByRole('button', { name: 'Delete Review pull requests' })`)
+        Expectation: The "Review pull requests" item is removed, the list shows 1 item ("Write documentation"), and the summary (`#todo-summary`) reads "0 of 1 tasks completed"
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`
@@ -406,6 +436,30 @@ Sample Web App — a React application with React Router that provides routes su
       2. Step: Click the "Back to Home" link
         Expectation: The URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (recovery to the landing page)
 
+### Theme
+42. **Theme toggle switches between light and dark, updating the document theme, icon, and accessible label** — `tests/dashboard.spec.ts`
+    - Preconditions: None — the theme toggle (`getByTestId('theme-toggle')`) is a global navbar component rendered on every route, so the public `/` landing route suffices. With no stored `app_theme` preference and Playwright's default color scheme (light), the app starts in light mode. Nothing to create or clean up (theme state lives only in the test's own browser-context localStorage, discarded when the context closes).
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and inspect the theme toggle button (`getByTestId('theme-toggle')`)
+         Expectation: The document root (`<html>`) has `data-theme="light"`, and the toggle button's accessible name is "Switch to dark mode" (`getByRole('button', { name: 'Switch to dark mode' })` is visible)
+      2. Step: Click the theme toggle button
+         Expectation: The document root's `data-theme` becomes "dark" and the toggle button's accessible name changes to "Switch to light mode" (`getByRole('button', { name: 'Switch to light mode' })` is visible)
+      3. Step: Click the theme toggle button again
+         Expectation: The document root's `data-theme` returns to "light" and the toggle button's accessible name returns to "Switch to dark mode" (the toggle round-trips)
+43. **Selected theme persists across a page reload via localStorage** — `tests/dashboard.spec.ts`
+    - Preconditions: None — public `/` route; the theme toggle is global. App starts in light mode (no stored preference). The persisted value lives only in the test's own browser-context localStorage (`app_theme`), discarded when the context closes; nothing to clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and confirm the starting state
+         Expectation: The document root has `data-theme="light"` and the toggle button's accessible name is "Switch to dark mode"
+      2. Step: Click the theme toggle button to switch to dark mode
+         Expectation: The document root has `data-theme="dark"` and the toggle button's accessible name is "Switch to light mode"
+      3. Step: Reload the page (same browser context)
+         Expectation: After reload the document root still has `data-theme="dark"` and the toggle's accessible name is still "Switch to light mode" — the chosen theme persists across reloads (read back from the `app_theme` localStorage key), so a returning visitor keeps their preference
+
+<!-- Coverage note: entries 39–41 (todo add/toggle/delete) are delivered together by the `should add, toggle, and delete a todo item` test in tests/dashboard.spec.ts (strengthened with #todo-summary count assertions), with the empty/whitespace no-op guard covered by `should not add a todo for empty or whitespace-only input`. -->
+<!-- Coverage note: entries 42–43 (theme toggle + persistence) are delivered by `should toggle theme to dark mode and persist across reload` in tests/dashboard.spec.ts (the global navbar toggle is exercised from /dashboard); no separate theme.spec.ts is needed. -->
 <!-- Coverage note: the Contact message character counter is covered in tests/contact.spec.ts. -->
 <!-- Maintenance note: entries are numbered sequentially and appended over time; continue from the current maximum when adding new plan items. -->
 
