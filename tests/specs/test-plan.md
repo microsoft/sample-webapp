@@ -163,7 +163,7 @@ Sample Web App — a React application with React Router that provides routes su
    - Preconditions: None — `/faq` is a public route with hard-coded content; nothing to create or clean up.
    - Step/Expectation Pairs:
      1. Step: Navigate to / then click the "FAQ" navbar link
-        Expectation: URL changes to /faq and the "Frequently Asked Questions" heading (level 1) is visible; all five question buttons are collapsed (aria-expanded="false") and no answer region is shown
+        Expectation: URL changes to /faq and the "Frequently Asked Questions" heading (level 1) is visible; all seven question buttons are collapsed (aria-expanded="false") and no answer region is shown
      2. Step: Click the first question button ("What is Sample Web App?")
         Expectation: That button becomes aria-expanded="true" and its answer region (role="region", named by the question) becomes visible with the answer text
      3. Step: Click the same question button again
@@ -179,9 +179,9 @@ Sample Web App — a React application with React Router that provides routes su
     - Preconditions: None — `/faq` is a public route with hard-coded content and the search box is in-memory component state that resets on navigation; nothing to create or clean up.
     - Step/Expectation Pairs:
       1. Step: Navigate to /faq and type a term that appears only in answer text, not in any question — e.g. "playwright" — into the search box (getByRole('searchbox', { name: 'Search questions' }))
-         Expectation: The list narrows to exactly the two questions whose answers contain the term — "What is Sample Web App?" and "Which technologies are used?" (matched via answer content, not question text) — and the other three question buttons are no longer present
+         Expectation: The list narrows to exactly the two questions whose answers contain the term — "What is Sample Web App?" and "Which technologies are used?" (matched via answer content, not question text) — and the other five question buttons are no longer present
       2. Step: Clear the search box (fill with an empty string)
-         Expectation: All five question buttons are visible again (the empty query restores the full list)
+         Expectation: All seven question buttons are visible again (the empty query restores the full list)
 17. **FAQ search with no matches shows the empty-state message** — `tests/faq.spec.ts`
     - Preconditions: None — `/faq` is a public route with hard-coded content; the search box is in-memory state that resets on navigation. Nothing to create or clean up.
     - Step/Expectation Pairs:
@@ -192,28 +192,28 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to /faq without typing anything
          Expectation: No results-count text (`Showing N of M questions`, `.faq-results-count`) is present — the count only appears once a query is entered
-      2. Step: Type a term that matches a subset of FAQs (e.g. "playwright", which matches two of five)
-         Expectation: The results count is visible and reads `Showing 2 of 5 questions`
+      2. Step: Type a term that matches a subset of FAQs (e.g. "playwright", which matches two of seven)
+         Expectation: The results count is visible and reads `Showing 2 of 7 questions`
       3. Step: Clear the search box (fill with an empty string)
          Expectation: The results-count text is no longer present (the count is hidden when there is no active query)
 19. **FAQ search clears when the Escape key is pressed** — `tests/faq.spec.ts`
     - Preconditions: None — `/faq` is a public route with hard-coded content; the search box is in-memory state that resets on navigation. Nothing to create or clean up.
     - Step/Expectation Pairs:
       1. Step: Navigate to /faq and type a filtering term (e.g. "dark") into the search box (getByRole('searchbox', { name: 'Search questions' }))
-         Expectation: The list is filtered — the search box holds the typed value and the results count (`Showing 1 of 5 questions`) is visible
+         Expectation: The list is filtered — the search box holds the typed value and the results count (`Showing 1 of 7 questions`) is visible
       2. Step: Press the Escape key while focus is in the search box
-         Expectation: The search box is cleared (value is empty), the results count is no longer present, and all five question buttons are visible again (the Escape handler resets the query and the list)
+         Expectation: The search box is cleared (value is empty), the results count is no longer present, and all seven question buttons are visible again (the Escape handler resets the query and the list)
 32. **FAQ Clear button resets the search and collapses any open answer** — `tests/faq.spec.ts`
     - Preconditions: None — `/faq` is a public route with hard-coded content; the search box and open-answer state are in-memory component state that resets on navigation. Nothing to create or clean up.
     - Step/Expectation Pairs:
       1. Step: Navigate to /faq
          Expectation: No "Clear" button is present — it only renders once the query is non-empty
       2. Step: Type a filtering term into the search box (getByRole('searchbox', { name: 'Search questions' })) that matches a single FAQ (e.g. "dark")
-         Expectation: A "Clear" button (getByRole('button', { name: 'Clear' })) is now visible, the list is narrowed to the one matching question ("Does the app support dark mode?"), and the results count reads `Showing 1 of 5 questions`
+         Expectation: A "Clear" button (getByRole('button', { name: 'Clear' })) is now visible, the list is narrowed to the one matching question ("Does the app support dark mode?"), and the results count reads `Showing 1 of 7 questions`
       3. Step: Click the matching question to expand its answer
          Expectation: The question is aria-expanded="true" and its answer region (role="region", named by the question) is visible
       4. Step: Click the "Clear" button
-         Expectation: The search box value is empty, the results count is no longer present, all five question buttons are visible again, the previously-open answer region is no longer visible (the click resets the query AND collapses the open answer via setOpenIndex(null)), and the "Clear" button itself is no longer present (it renders only while a query is set)
+         Expectation: The search box value is empty, the results count is no longer present, all seven question buttons are visible again, the previously-open answer region is no longer visible (the click resets the query AND collapses the open answer via setOpenIndex(null)), and the "Clear" button itself is no longer present (it renders only while a query is set)
 
 ### Scroll Progress
 20. **Scroll progress bar reflects scroll position from top (0%) to bottom (100%)** — `tests/scroll-progress.spec.ts`
