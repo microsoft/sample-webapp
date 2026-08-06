@@ -177,4 +177,28 @@ test.describe('FAQ page', () => {
     ).toHaveCount(0);
     await expect(clearButton).toHaveCount(0);
   });
+
+  test('contact-hint note links to the Contact page', async ({ page }) => {
+    await page.goto('/faq');
+
+    // The contact-hint note renders above the FAQ intro, directing users who
+    // cannot find an answer to the Contact page.
+    const note = page.getByRole('note');
+    await expect(note).toBeVisible();
+    await expect(note).toContainText('Cannot find your answer?');
+
+    // The "Contact us" link lives inside the note within <main>, scoped to
+    // disambiguate it from the navbar's Contact link.
+    const contactLink = page
+      .getByRole('main')
+      .getByRole('link', { name: 'Contact us' });
+    await expect(contactLink).toHaveAttribute('href', '/contact');
+
+    // Clicking it navigates to the Contact page.
+    await contactLink.click();
+    await expect(page).toHaveURL(/.*contact/);
+    await expect(
+      page.getByRole('heading', { name: 'Contact Us', level: 1 })
+    ).toBeVisible();
+  });
 });
