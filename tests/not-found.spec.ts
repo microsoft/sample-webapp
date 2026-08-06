@@ -16,7 +16,7 @@ test.describe('Not Found page', () => {
 
     await expect(page).toHaveURL('/');
     await expect(
-      page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
+      page.getByRole('heading', { name: 'Welcome to SampleApp -- Built for Developers', level: 1 })
     ).toBeVisible();
   });
 });

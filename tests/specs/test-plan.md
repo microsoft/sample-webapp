@@ -368,7 +368,7 @@ Sample Web App — a React application with React Router that provides routes su
     - Postconditions: None.
     - Step/Expectation Pairs:
       1. Step: Navigate to /
-        Expectation: The "Welcome to Sample Web App" heading (level 1) is visible
+        Expectation: The "Welcome to SampleApp -- Built for Developers" heading (level 1) is visible
       2. Step: Inspect the on-page call-to-action links (scoped to `<main>` so they are distinct from the navbar links)
         Expectation: A "Get Started" link, a "View Dashboard" link, and a "Learn More" link are all visible within the main content
 24. **Home "Get Started" call-to-action navigates to the login page** — `tests/home.spec.ts`
@@ -404,7 +404,7 @@ Sample Web App — a React application with React Router that provides routes su
       1. Step: Navigate to an unknown route (e.g. /this-route-does-not-exist)
         Expectation: The NotFound page renders — getByTestId('not-found-page') is visible with the "404" heading (level 1), the "Page Not Found" heading (level 2), and a "Back to Home" link
       2. Step: Click the "Back to Home" link
-        Expectation: The URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (recovery to the landing page)
+        Expectation: The URL changes to / and the "Welcome to SampleApp -- Built for Developers" heading (level 1) is visible (recovery to the landing page)
 
 <!-- Coverage note: the Contact message character counter is covered in tests/contact.spec.ts. -->
 <!-- Maintenance note: entries are numbered sequentially and appended over time; continue from the current maximum when adding new plan items. -->

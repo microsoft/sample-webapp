@@ -5,7 +5,7 @@ test.describe('Home page', () => {
     await page.goto('/');
 
     await expect(
-      page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
+      page.getByRole('heading', { name: 'Welcome to SampleApp -- Built for Developers', level: 1 })
     ).toBeVisible();
 
     // Scope the CTAs to <main> so they are distinct from the navbar links.
