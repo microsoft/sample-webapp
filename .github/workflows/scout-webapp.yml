@@ -9,14 +9,14 @@ on:
       ata_version:
         description: 'App Testing Agent release tag to install'
         required: true
-        default: 'v0.2.150-alpha.0'
+        default: 'v0.2.151'
 
 permissions:
   contents: write
   pull-requests: write
 
 env:
-  ATA_VERSION: ${{ github.event.inputs.ata_version || 'v0.2.150-alpha.0' }}
+  ATA_VERSION: ${{ github.event.inputs.ata_version || 'v0.2.151' }}
 
 jobs:
   scout:
@@ -46,11 +46,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.ATA_DOWNLOAD_TOKEN }}
         run: |
-          gh release download v0.2.150-alpha.0 \
+          gh release download "$ATA_VERSION" \
             --repo microsoft/app-testing-agent \
             -p '*.tgz' \
             --clobber
-          npm i -g ./microsoft-app-testing-agent-0.2.150-alpha.0.tgz
+          npm i -g ./microsoft-app-testing-agent-"${ATA_VERSION#v}".tgz
           ata --version
 
       - name: Start app locally (real CRA dev server)
@@ -97,11 +97,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.ATA_DOWNLOAD_TOKEN }}
         run: |
-          gh release download v0.2.150-alpha.0 \
+          gh release download "$ATA_VERSION" \
             --repo microsoft/app-testing-agent \
             -p '*.tgz' \
             --clobber
-          npm i -g ./microsoft-app-testing-agent-0.2.150-alpha.0.tgz
+          npm i -g ./microsoft-app-testing-agent-"${ATA_VERSION#v}".tgz
           ata --version
 
       - name: Start app locally (real CRA dev server)
