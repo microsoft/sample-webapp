@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import './Navbar.css';
@@ -16,6 +16,7 @@ function Navbar() {
         <Link to="/feedback">Feedback</Link>
         <Link to="/login">Login</Link>
         <Link to="/dashboard">Dashboard</Link>
+        <Link to="/help">Help</Link>
         <ThemeToggle />
       </div>
     </nav>
