@@ -22,6 +22,8 @@ test.describe('About page', () => {
     await expect(techStack.getByRole('listitem').filter({ hasText: 'React Router v6' })).toBeVisible();
     await expect(techStack.getByRole('listitem').filter({ hasText: 'Playwright' })).toBeVisible();
     await expect(techStack.getByRole('listitem').filter({ hasText: 'CSS3' })).toBeVisible();
+    await expect(techStack.getByRole('listitem').filter({ hasText: 'Node.js' })).toBeVisible();
+    await expect(techStack.getByRole('listitem').filter({ hasText: 'TypeScript' })).toBeVisible();
 
     await page.getByRole('textbox', { name: 'Name' }).fill('Test User');
     await page.getByRole('textbox', { name: 'Email' }).fill('test.user@example.com');

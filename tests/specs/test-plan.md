@@ -406,6 +406,20 @@ Sample Web App — a React application with React Router that provides routes su
       2. Step: Click the "Back to Home" link
         Expectation: The URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (recovery to the landing page)
 
+### About
+39. **About page renders content sections, the full Tech Stack, and keeps an interactive contact form** — `tests/about.spec.ts`
+    - Preconditions: None — `/about` is a public route rendered from static content in `About.js`; no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and, within the primary navbar, click the "About" link
+        Expectation: The URL changes to /about and the "About Us" heading (level 1) is visible
+      2. Step: Observe the Our Team section
+        Expectation: The "Our Team" heading (level 2) and the team member headings "Kashish Gupta" and "Copilot" (level 3) are visible
+      3. Step: Observe the Tech Stack section (the page's single `<ul>`, `getByRole('list')`)
+        Expectation: The "Tech Stack" heading (level 2) is visible and the list contains a visible badge listitem for each technology — React 18, React Router v6, Playwright, CSS3, **Node.js** (adjacent), and **TypeScript** (change, added by PR #348)
+      4. Step: Fill the contact form Name, Email, and Message fields and click "Send Message"
+        Expectation: The form stays on /about with the "About Us" heading (level 1) still visible (the submit is a no-op preventDefault; confirms the form is interactive without navigating away)
+
 <!-- Coverage note: the Contact message character counter is covered in tests/contact.spec.ts. -->
 <!-- Maintenance note: entries are numbered sequentially and appended over time; continue from the current maximum when adding new plan items. -->
 
