@@ -1,11 +1,11 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
 function Home() {
   return (
     <div className="home">
-      <h1>Welcome to Sample Web App</h1>
+      <h1>Welcome to SampleApp -- Built for Developers</h1>
       <p id="description">A React web application built for Playwright testing.</p>
       <div className="actions">
         <Link to="/login" className="btn btn-primary">Get Started</Link>
