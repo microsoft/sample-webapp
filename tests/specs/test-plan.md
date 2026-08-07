@@ -90,6 +90,14 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The completed todo ("Deploy to staging") is removed, leaving the two incomplete todos ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
      3. Step: Observe the "Clear completed" button after clearing
         Expectation: The "Clear completed" button is no longer present (it only shows while at least one todo is completed)
+39. **Dashboard stat cards show a loading skeleton, then resolve to their values** — `tests/dashboard.spec.ts`
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — the stat cards render a client-side loading skeleton for ~900 ms (`isChartsLoading` timer in `Dashboard.js`) before showing static values; nothing to create or clean up.
+   - Postconditions: None (state resets on next navigation).
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and, before the loading timer elapses, inspect the stat-card grid (`.dashboard-grid`)
+        Expectation: The grid has `aria-busy="true"` and each stat card shows a loading skeleton exposed as `role="status"` with the accessible names "Loading Users chart", "Loading Revenue chart", and "Loading Orders chart"; the resolved stat values (`#user-count`, `#revenue`, `#order-count`) are not yet present
+     2. Step: Wait for the loading state to resolve (web-first assertion, no fixed wait)
+        Expectation: The grid's `aria-busy` becomes "false", no `role="status"` "Loading … chart" skeletons remain, and the three stat cards now display their real values — `#user-count` "128", `#revenue` "$12,450", and `#order-count` "340"
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`

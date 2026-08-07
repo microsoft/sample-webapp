@@ -28,6 +28,25 @@ test.describe('Dashboard page', () => {
     await expect(page.locator('#order-count')).toHaveText('340');
   });
 
+  test('should show a loading skeleton for the stat cards, then resolve to their values', async ({ page }) => {
+    await page.goto('/dashboard');
+
+    const grid = page.locator('.dashboard-grid');
+    await expect(grid).toHaveAttribute('aria-busy', 'true');
+    await expect(page.getByRole('status', { name: 'Loading Users chart' })).toBeVisible();
+    await expect(page.getByRole('status', { name: 'Loading Revenue chart' })).toBeVisible();
+    await expect(page.getByRole('status', { name: 'Loading Orders chart' })).toBeVisible();
+    await expect(page.locator('#user-count')).toHaveCount(0);
+    await expect(page.locator('#revenue')).toHaveCount(0);
+    await expect(page.locator('#order-count')).toHaveCount(0);
+
+    await expect(grid).toHaveAttribute('aria-busy', 'false');
+    await expect(page.getByRole('status', { name: /Loading .* chart/ })).toHaveCount(0);
+    await expect(page.locator('#user-count')).toHaveText('128');
+    await expect(page.locator('#revenue')).toHaveText('$12,450');
+    await expect(page.locator('#order-count')).toHaveText('340');
+  });
+
   test('should display Recent Activity table with data', async ({ page }) => {
     await page.goto('/dashboard');
 
