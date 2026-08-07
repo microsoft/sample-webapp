@@ -396,6 +396,22 @@ Sample Web App — a React application with React Router that provides routes su
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
 
+### About
+39. **About page displays content sections, the mission statement, and keeps an interactive contact form** — `tests/about.spec.ts` (change)
+    - Preconditions: None — `/about` is a public route rendered from static component markup; no auth or seeded data. Nothing to create or clean up. Reached by clicking the navbar "About" link from `/`.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and click the "About" link in the primary navbar (the `<nav>` containing the "SampleApp" brand link)
+        Expectation: The URL changes to /about and the "About Us" heading (level 1) is visible
+      2. Step: Inspect the mission-statement paragraph added by PR #373 (renders directly under the "About Us" heading, above the intro section)
+        Expectation: The paragraph is visible with its exact copy — "Our mission is to make end-to-end testing effortless for every developer." (asserting the real rendered text, not merely that the element exists)
+      3. Step: Inspect the "Our Team" section
+        Expectation: The "Our Team" heading (level 2) and the "Kashish Gupta" and "Copilot" team-member headings (level 3) are visible
+      4. Step: Inspect the "Tech Stack" section
+        Expectation: The "Tech Stack" heading (level 2) is visible and the tech list contains "React 18", "React Router v6", "Playwright", and "CSS3"
+      5. Step: Fill the Contact form (Name, Email, Message) and click "Send Message"
+        Expectation: The form submission is inert (preventDefault) — the URL stays on /about and the "About Us" heading (level 1) remains visible, confirming the interactive form does not navigate away
+
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
     - Preconditions: None — any unmatched route renders the catch-all NotFound page (`path="*"` in `App.js`); public, no auth or seeded data. Nothing to create or clean up.

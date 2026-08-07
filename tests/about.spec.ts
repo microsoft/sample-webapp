@@ -12,6 +12,10 @@ test.describe('About page', () => {
     await expect(page).toHaveURL(/.*about/);
     await expect(page.getByRole('heading', { name: 'About Us', level: 1 })).toBeVisible();
 
+    await expect(page.locator('#about-mission')).toHaveText(
+      'Our mission is to make end-to-end testing effortless for every developer.'
+    );
+
     await expect(page.getByRole('heading', { name: 'Our Team', level: 2 })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Kashish Gupta', level: 3 })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Copilot', level: 3 })).toBeVisible();
