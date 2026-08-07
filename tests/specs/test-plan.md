@@ -426,6 +426,14 @@ Sample Web App — a React application with React Router that provides routes su
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
 
+### About
+39. **About page shows the runtime-computed established/copyright year line** — `tests/about.spec.ts`
+    - Preconditions: None — public `/about` route. The established line (`#about-established`) renders `Serving developers since 2024 · © {year} SampleApp` where `year = new Date().getFullYear()` (computed at runtime in `About.js`), so the assertion uses the runtime year and does not rot across calendar years. Nothing to create or clean up. Extends the existing About content test, preserving all its prior assertions.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /about (as part of the existing content test, after the heading/team/tech-stack/contact-form assertions)
+        Expectation: The established paragraph `#about-established` is visible with the exact text `Serving developers since 2024 · © ${new Date().getFullYear()} SampleApp` (real rendered copy with the current year, not a proxy or a hardcoded year)
+
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
     - Preconditions: None — any unmatched route renders the catch-all NotFound page (`path="*"` in `App.js`); public, no auth or seeded data. Nothing to create or clean up.
