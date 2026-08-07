@@ -19,7 +19,7 @@ function About() {
       </section>
 
       <section className="about-team">
-        <h2>Our Team</h2>
+        <h2>Meet the Team</h2>
         <div className="team-grid">
           <div className="team-card">
             <div className="avatar">KG</div>
