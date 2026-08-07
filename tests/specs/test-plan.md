@@ -45,6 +45,16 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The checkbox returns to unchecked
      4. Step: Check "Remember me", fill Username and Password with valid credentials, then click "Login"
         Expectation: The success message banner (`role="status"`) appears and the URL redirects to /dashboard — confirming the checkbox does not interfere with sign-in
+39. **Login shows the required-fields error and blocks submission when a field is left empty** — `tests/login.spec.ts`
+   - Preconditions: None — `/login` is a public route; the required-fields guard is client-side (`!username.trim() || !password.trim()` in `Login.js`), so no auth or seeded data is needed. Nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /login, fill Username with a non-empty value (e.g. "tester"), leave Password empty, then click "Login"
+       Expectation: The message banner (`#message`, `role="alert"`, class contains "error") is visible with the exact text "Username and password are required"
+     2. Step: Observe the page after submission
+       Expectation: The URL stays on /login (no redirect to /dashboard occurs), confirming the guard blocks submission
+     3. Step: Reload /login, leave Username empty, fill Password with a value (e.g. "secret123"), then click "Login"
+       Expectation: The same required-fields error ("Username and password are required") is shown and the URL stays on /login — confirming either empty field triggers the guard
 
 ### Dashboard
 2. **Dashboard stat cards display correct values** — `tests/dashboard.spec.ts`
