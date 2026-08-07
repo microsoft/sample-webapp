@@ -1,11 +1,17 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Home page', () => {
-  test('should render the welcome heading and all call-to-action links', async ({ page }) => {
+  test('should render the welcome heading, tagline, and all call-to-action links', async ({ page }) => {
     await page.goto('/');
 
     await expect(
       page.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
+    ).toBeVisible();
+
+    // PR #374 adds this tagline directly below the welcome heading. Assert the real
+    // rendered copy so a removed or reworded tagline is caught.
+    await expect(
+      page.getByRole('main').getByText('Trusted by over 10,000 developers worldwide.')
     ).toBeVisible();
 
     // Scope the CTAs to <main> so they are distinct from the navbar links.
