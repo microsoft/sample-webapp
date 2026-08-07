@@ -401,6 +401,14 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The count still reads "1 subscriber" — a duplicate submission must not increment it
       5. Step: Subscribe a second distinct unique valid email and re-read the count
          Expectation: The count reads "2 subscribers" (plural) — it increments only on a successful, non-duplicate subscription
+29. **Newsletter duplicate guard is case-insensitive (a case-variant of a subscribed email is rejected)** — `tests/newsletter.spec.ts`
+    - Preconditions: None — public `/newsletter` route. The duplicate guard relies on the in-memory subscribed list (normalized to lowercase both when stored and when checked), so both submissions must happen within a single page load with no navigation/reload between them. Nothing to create or clean up.
+    - Postconditions: None — the subscribed list lives only in the page's in-memory state and is discarded on navigation.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter and subscribe a unique valid email whose local part contains mixed case (e.g. `Scout-Case-<unique>@Example.com`) by filling getByTestId('newsletter-email') and clicking getByTestId('newsletter-subscribe')
+         Expectation: The success message (getByTestId('newsletter-success')) is visible and the subscriber count (getByTestId('newsletter-count')) reads "1 subscriber"
+      2. Step: Without navigating away, fill the email field with the all-lowercase variant of the same address (e.g. `scout-case-<unique>@example.com`) and click Subscribe
+         Expectation: The duplicate alert (getByTestId('newsletter-duplicate'), role="alert") is visible with text "You are already subscribed with this email.", the success message (getByTestId('newsletter-success')) is NOT present, and the subscriber count still reads "1 subscriber" — proving the guard normalizes case rather than treating the variant as a new subscription
 
 ### Home
 23. **Home landing page renders the welcome heading and all call-to-action links** — `tests/home.spec.ts`
