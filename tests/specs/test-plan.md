@@ -214,6 +214,16 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The question is aria-expanded="true" and its answer region (role="region", named by the question) is visible
       4. Step: Click the "Clear" button
          Expectation: The search box value is empty, the results count is no longer present, all five question buttons are visible again, the previously-open answer region is no longer visible (the click resets the query AND collapses the open answer via setOpenIndex(null)), and the "Clear" button itself is no longer present (it renders only while a query is set)
+39. **New "Is my data secure?" FAQ expands to its answer and is discoverable by answer-text search** — `tests/faq.spec.ts` _(scout: change — covers the new FAQ item added by PR #387)_
+    - Preconditions: None — `/faq` is a public route with hard-coded content; the accordion open-state and search box are in-memory component state that resets on navigation. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /faq
+         Expectation: The "Is my data secure?" question button is present (`getByRole('button', { name: 'Is my data secure?' })`), collapsed (aria-expanded="false"), and no answer region is shown for it
+      2. Step: Click the "Is my data secure?" question button
+         Expectation: The button becomes aria-expanded="true" and its answer region (role="region", named by the question) is visible and contains the exact answer text `This is a demo application that uses mock services, so no real personal data is stored or transmitted.`
+      3. Step: Type an answer-only term that appears only in this new item's answer and in no question — `mock services` — into the search box (getByRole('searchbox', { name: 'Search questions' }))
+         Expectation: The list narrows to exactly the one question "Is my data secure?" (matched via answer content, since the phrase appears in no question and no other answer), the other question buttons are no longer present, and the results count reads `Showing 1 of 6 questions` (the new item raises the total to 6)
 
 ### Scroll Progress
 20. **Scroll progress bar reflects scroll position from top (0%) to bottom (100%)** — `tests/scroll-progress.spec.ts`

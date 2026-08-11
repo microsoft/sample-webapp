@@ -177,4 +177,35 @@ test.describe('FAQ page', () => {
     ).toHaveCount(0);
     await expect(clearButton).toHaveCount(0);
   });
+
+  test('new "Is my data secure?" FAQ expands to its answer and is found by answer-text search', async ({ page }) => {
+    await page.goto('/faq');
+
+    const dataQuestion = page.getByRole('button', { name: 'Is my data secure?' });
+    const dataAnswer =
+      'This is a demo application that uses mock services, so no real personal data is stored or transmitted.';
+
+    // The new FAQ item is present and starts collapsed with no answer region.
+    await expect(dataQuestion).toBeVisible();
+    await expect(dataQuestion).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByRole('region', { name: 'Is my data secure?' })).toHaveCount(0);
+
+    // Opening it reveals its answer region with the exact answer text.
+    await dataQuestion.click();
+    await expect(dataQuestion).toHaveAttribute('aria-expanded', 'true');
+    const answer = page.getByRole('region', { name: 'Is my data secure?' });
+    await expect(answer).toBeVisible();
+    await expect(answer).toHaveText(dataAnswer);
+
+    // "mock services" appears only in this item's answer — in no question and no
+    // other answer — so filtering by it proves the new item is discoverable via
+    // answer-text search and raises the total to six questions.
+    const search = page.getByRole('searchbox', { name: 'Search questions' });
+    await search.fill('mock services');
+
+    const questions = page.getByRole('button').filter({ hasText: '?' });
+    await expect(questions).toHaveCount(1);
+    await expect(dataQuestion).toBeVisible();
+    await expect(page.getByText('Showing 1 of 6 questions')).toBeVisible();
+  });
 });
