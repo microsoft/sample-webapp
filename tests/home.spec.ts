@@ -54,4 +54,18 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('hero renders the tagline with its exact text', async ({ page }) => {
+    await page.goto('/');
+
+    const main = page.getByRole('main');
+    // The hero heading anchors the section the tagline was added to.
+    await expect(
+      main.getByRole('heading', { name: 'Welcome to Sample Web App', level: 1 })
+    ).toBeVisible();
+
+    const tagline = main.locator('#tagline');
+    await expect(tagline).toBeVisible();
+    await expect(tagline).toHaveText('Build, test, and ship with confidence.');
+  });
 });
