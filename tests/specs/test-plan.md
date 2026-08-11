@@ -395,6 +395,14 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+39. **Home hero renders the tagline with its exact text** — `tests/home.spec.ts`
+    - Preconditions: None — `/` is the public landing route; the tagline (`#tagline`, added in `Home.js`) is static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+        Expectation: The tagline paragraph (`#tagline`, class `home-tagline`) within `<main>` is visible with the exact text "Build, test, and ship with confidence."
+      2. Step: Observe the tagline relative to the existing hero content
+        Expectation: The tagline is present alongside the "Welcome to Sample Web App" heading (level 1) in the hero, confirming the new copy renders as part of the landing page
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
