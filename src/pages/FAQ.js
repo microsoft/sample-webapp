@@ -27,6 +27,11 @@ const faqs = [
     answer:
       'Visit the Contact page and fill out the form. We would love to hear your questions and feedback.',
   },
+  {
+    question: 'Is my data secure?',
+    answer:
+      'This is a demo application that uses mock services, so no real personal data is stored or transmitted.',
+  },
 ];
 
 function FAQ() {
