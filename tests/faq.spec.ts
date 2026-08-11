@@ -10,7 +10,7 @@ import { test, expect } from '@playwright/test';
  *
  * A search box (role="searchbox", accessible name "Search questions") filters the
  * list by question OR answer text (case-insensitive, trimmed). An empty query
- * shows all five FAQs; a query with no match replaces the accordion with a
+ * shows all six FAQs; a query with no match replaces the accordion with a
  * role="status" empty-state message that echoes the trimmed query.
  */
 
@@ -78,7 +78,7 @@ test.describe('FAQ page', () => {
     const search = page.getByRole('searchbox', { name: 'Search questions' });
     const questions = page.getByRole('button').filter({ hasText: '?' });
 
-    // All five questions are shown before filtering.
+    // All six questions are shown before filtering.
     await expect(page.getByRole('button', { name: Q1 })).toBeVisible();
 
     // "playwright" appears only in answer text (never in a question), so a match
@@ -92,7 +92,7 @@ test.describe('FAQ page', () => {
 
     // Clearing the box restores the full list.
     await search.fill('');
-    await expect(questions).toHaveCount(5);
+    await expect(questions).toHaveCount(6);
   });
 
   test('search shows a results count while filtering and hides it when cleared', async ({ page }) => {
@@ -103,9 +103,9 @@ test.describe('FAQ page', () => {
     // No results count is shown before any query is entered.
     await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
 
-    // "playwright" matches two of the five FAQs by answer text.
+    // "playwright" matches two of the six FAQs by answer text.
     await search.fill('playwright');
-    await expect(page.getByText('Showing 2 of 5 questions')).toBeVisible();
+    await expect(page.getByText('Showing 2 of 6 questions')).toBeVisible();
 
     // Clearing the query removes the results count again.
     await search.fill('');
@@ -134,13 +134,13 @@ test.describe('FAQ page', () => {
     // Typing a term filters the list and shows the results count.
     await search.fill('dark');
     await expect(search).toHaveValue('dark');
-    await expect(page.getByText('Showing 1 of 5 questions')).toBeVisible();
+    await expect(page.getByText('Showing 1 of 6 questions')).toBeVisible();
 
     // Pressing Escape in the search box clears the query and restores the full list.
     await search.press('Escape');
     await expect(search).toHaveValue('');
     await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
-    await expect(questions).toHaveCount(5);
+    await expect(questions).toHaveCount(6);
   });
 
   test('Clear button resets the search and collapses any open answer', async ({ page }) => {
@@ -159,7 +159,7 @@ test.describe('FAQ page', () => {
     const darkQuestion = page.getByRole('button', { name: 'Does the app support dark mode?' });
     await expect(darkQuestion).toBeVisible();
     await expect(questions).toHaveCount(1);
-    await expect(page.getByText('Showing 1 of 5 questions')).toBeVisible();
+    await expect(page.getByText('Showing 1 of 6 questions')).toBeVisible();
 
     // Expand the matching answer so we can prove Clear also collapses it.
     await darkQuestion.click();
@@ -171,10 +171,41 @@ test.describe('FAQ page', () => {
     await clearButton.click();
     await expect(search).toHaveValue('');
     await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
-    await expect(questions).toHaveCount(5);
+    await expect(questions).toHaveCount(6);
     await expect(
       page.getByRole('region', { name: 'Does the app support dark mode?' })
     ).toHaveCount(0);
     await expect(clearButton).toHaveCount(0);
+  });
+
+  test('new "Is my data secure?" FAQ expands to its answer and is found by answer-text search', async ({ page }) => {
+    await page.goto('/faq');
+
+    const dataQuestion = page.getByRole('button', { name: 'Is my data secure?' });
+    const dataAnswer =
+      'This is a demo application that uses mock services, so no real personal data is stored or transmitted.';
+
+    // The new FAQ item is present and starts collapsed with no answer region.
+    await expect(dataQuestion).toBeVisible();
+    await expect(dataQuestion).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByRole('region', { name: 'Is my data secure?' })).toHaveCount(0);
+
+    // Opening it reveals its answer region with the exact answer text.
+    await dataQuestion.click();
+    await expect(dataQuestion).toHaveAttribute('aria-expanded', 'true');
+    const answer = page.getByRole('region', { name: 'Is my data secure?' });
+    await expect(answer).toBeVisible();
+    await expect(answer).toHaveText(dataAnswer);
+
+    // "mock services" appears only in this item's answer — in no question and no
+    // other answer — so filtering by it proves the new item is discoverable via
+    // answer-text search and raises the total to six questions.
+    const search = page.getByRole('searchbox', { name: 'Search questions' });
+    await search.fill('mock services');
+
+    const questions = page.getByRole('button').filter({ hasText: '?' });
+    await expect(questions).toHaveCount(1);
+    await expect(dataQuestion).toBeVisible();
+    await expect(page.getByText('Showing 1 of 6 questions')).toBeVisible();
   });
 });
