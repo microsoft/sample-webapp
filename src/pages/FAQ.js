@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import './FAQ.css';
 
 const faqs = [
@@ -49,6 +49,7 @@ function FAQ() {
   return (
     <div className="faq">
       <h1>Frequently Asked Questions</h1>
+      <p className="faq-notice" role="note">Cannot find your answer? <a href="/contact">Contact us</a>.</p>
       <p className="faq-intro">
         Find answers to the most common questions about Sample Web App.
       </p>
