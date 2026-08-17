@@ -23,7 +23,7 @@ test.describe('Dashboard page', () => {
   test('should display correct values in stat cards', async ({ page }) => {
     await page.goto('/dashboard');
 
-    await expect(page.locator('#user-count')).toHaveText('999');
+    await expect(page.locator('#user-count')).toHaveText('128');
     await expect(page.locator('#revenue')).toHaveText('$12,450');
     await expect(page.locator('#order-count')).toHaveText('340');
   });
@@ -48,22 +48,33 @@ test.describe('Dashboard page', () => {
     await page.goto('/dashboard');
 
     const todoList = page.getByTestId('todo-list');
+    const summary = page.locator('#todo-summary');
+    const newTodoInput = page.getByPlaceholder('Add a new task...');
     await expect(todoList.getByRole('listitem')).toHaveCount(3);
+    await expect(summary).toHaveText('1 of 3 tasks completed');
 
-    await page.getByPlaceholder('Add a new task...').fill('Buy groceries');
+    await newTodoInput.fill('Buy groceries');
     await page.getByRole('button', { name: 'Add' }).click();
 
+    // The new todo is appended as incomplete: item count and the summary denominator
+    // both grow while the completed count stays the same, and the input is cleared.
     await expect(todoList.getByRole('listitem')).toHaveCount(4);
     await expect(todoList.getByText('Buy groceries')).toBeVisible();
+    await expect(summary).toHaveText('1 of 4 tasks completed');
+    await expect(newTodoInput).toHaveValue('');
 
     const toggleCheckbox = page.getByRole('checkbox', { name: 'Toggle Buy groceries' });
     await expect(toggleCheckbox).not.toBeChecked();
     await toggleCheckbox.check();
     await expect(toggleCheckbox).toBeChecked();
+    // Marking it done bumps the completed count in the summary.
+    await expect(summary).toHaveText('2 of 4 tasks completed');
 
     await page.getByRole('button', { name: 'Delete Buy groceries' }).click();
     await expect(todoList.getByRole('listitem')).toHaveCount(3);
     await expect(todoList.getByText('Buy groceries')).not.toBeVisible();
+    // Removing it restores the original counts.
+    await expect(summary).toHaveText('1 of 3 tasks completed');
   });
 
   test('should toggle theme to dark mode and persist across reload', async ({ page }) => {

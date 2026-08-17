@@ -12,6 +12,14 @@ test.describe('About page', () => {
     await expect(page).toHaveURL(/.*about/);
     await expect(page.getByRole('heading', { name: 'About Us', level: 1 })).toBeVisible();
 
+    // Established/copyright line renders with the runtime-computed current year
+    // (year = new Date().getFullYear() in About.js), so assert against the runtime
+    // year rather than a hardcoded value to avoid rot across calendar years.
+    const currentYear = new Date().getFullYear();
+    await expect(page.locator('#about-established')).toHaveText(
+      `Serving developers since 2024 · © ${currentYear} SampleApp`
+    );
+
     await expect(page.getByRole('heading', { name: 'Our Team', level: 2 })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Kashish Gupta', level: 3 })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Copilot', level: 3 })).toBeVisible();
