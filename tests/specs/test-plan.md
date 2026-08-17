@@ -395,6 +395,14 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+29. **Home Testimonials section renders the heading and both user quotes** — `tests/home.spec.ts` _(attribution: change)_
+    - Preconditions: None — `/` is the public landing route; the Testimonials section (`#testimonials`) is static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and locate the Testimonials section (`#testimonials`)
+       Expectation: The "What Our Users Say" heading (level 2) is visible within the section
+      2. Step: Inspect the quotes rendered inside the Testimonials section
+       Expectation: Both testimonials are visible with their exact text — "This app made testing a breeze! -- Alice" and "Clean UI and easy to navigate. -- Bob" — and exactly two quotes are present
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
