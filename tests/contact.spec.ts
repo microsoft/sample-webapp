@@ -184,4 +184,18 @@ test.describe('Contact page', () => {
     await expect(page.getByTestId('toast')).toHaveCount(0);
     await expect(page).toHaveURL(/.*contact/);
   });
+
+  test('should display the support hours line on the Contact page', async ({ page }) => {
+    await page.goto('/contact');
+
+    await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
+
+    // The support-hours line (#contact-hours) is a static <p> added above the intro;
+    // assert the exact rendered copy so removing, moving, or rewording it would fail.
+    const supportHours = page.locator('#contact-hours');
+    await expect(supportHours).toBeVisible();
+    await expect(supportHours).toHaveText(
+      'Our support team is available Monday to Friday, 9am to 5pm PST.'
+    );
+  });
 });
