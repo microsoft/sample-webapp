@@ -49,6 +49,7 @@ function Contact() {
   return (
     <div className="contact">
       <h1>Contact Us</h1>
+      <p id="contact-hours" className="contact-hours">Our support team is available Monday to Friday, 9am to 5pm PST.</p>
       <p className="contact-intro">
         Have a question or feedback? Fill out the form below and we&apos;ll get back to you.
       </p>

@@ -157,6 +157,14 @@ Sample Web App — a React application with React Router that provides routes su
        Expectation: The Name, Email, and Message fields are all cleared to empty, every field-level validation error is removed (form.getByRole('alert') has count 0), and the character counter returns to "0 characters"
      3. Step: Observe the page after Reset
        Expectation: No success toast (getByTestId('toast') has count 0) and the URL stays on /contact — Reset clears the form without submitting it
+39. **Contact page displays the support-hours line** — `tests/contact.spec.ts`
+   - Preconditions: None — `/contact` is a public route (no auth or seeded data required); the support-hours line (`#contact-hours`, class `contact-hours`, added in commit bd35341 — the change under test) is a static `<p>`, so there is nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /contact
+       Expectation: The "Contact Us" heading (level 1) is visible
+     2. Step: Read the support-hours line (`#contact-hours`)
+       Expectation: The element is visible and its text is exactly "Our support team is available Monday to Friday, 9am to 5pm PST." (real rendered copy, not a proxy)
 
 ### FAQ
 8. **FAQ question expands to reveal its answer and collapses again** — `tests/faq.spec.ts`
