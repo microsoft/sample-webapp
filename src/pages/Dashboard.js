@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import './Dashboard.css';
 
 const initialTodos = [
   { id: 1, text: 'Review pull requests', done: false },
+  { id: 4, text: 'Update release notes', done: false },
   { id: 2, text: 'Deploy to staging', done: true },
   { id: 3, text: 'Write documentation', done: false },
 ];
