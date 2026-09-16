@@ -15,6 +15,16 @@ test.describe('Home page', () => {
     await expect(main.getByRole('link', { name: 'Learn More' })).toBeVisible();
   });
 
+  test('intro description paragraph renders the content-variant text', async ({ page }) => {
+    await page.goto('/');
+
+    const description = page.locator('#description');
+    await expect(description).toBeVisible();
+    await expect(description).toContainText(
+      'Feature branch users/dev128 adds a homepage content variant.'
+    );
+  });
+
   test('"Get Started" call-to-action navigates to the login page', async ({ page }) => {
     await page.goto('/');
 
@@ -55,3 +65,5 @@ test.describe('Home page', () => {
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
 });
+
+// review prep change for PR #317
