@@ -68,47 +68,4 @@ test.describe('Feedback page', () => {
     await expect(success).toBeVisible();
     await expect(success).toContainText('Thanks for your feedback!');
   });
-
-  test('should reflect the comment length in the counter and cap input at 300 characters', async ({ page }) => {
-    await page.goto('/feedback');
-
-    const comment = page.getByTestId('feedback-comment');
-    const counter = page.getByText(/\d+\/300 characters/);
-
-    await expect(counter).toHaveText('0/300 characters');
-
-    const shortComment = 'Great experience!';
-    await comment.fill(shortComment);
-    await expect(comment).toHaveValue(shortComment);
-    await expect(counter).toHaveText(`${shortComment.length}/300 characters`);
-
-    const overLimit = 'a'.repeat(305);
-    await comment.fill(overLimit);
-    await expect(comment).toHaveValue('a'.repeat(300));
-    await expect(counter).toHaveText('300/300 characters');
-  });
-
-  test('should reset rating, comment, counter, and success message when Clear is clicked', async ({ page }) => {
-    await page.goto('/feedback');
-
-    const rating = page.getByTestId('feedback-rating-4');
-    await rating.check();
-    await expect(rating).toBeChecked();
-
-    const comment = page.getByTestId('feedback-comment');
-    await comment.fill('Some feedback to be cleared');
-
-    await page.getByTestId('feedback-submit').click();
-
-    const success = page.getByTestId('feedback-success');
-    await expect(success).toBeVisible();
-    await expect(success).toContainText('Thanks for your feedback!');
-
-    await page.getByRole('button', { name: 'Clear' }).click();
-
-    await expect(page.getByTestId('feedback-success')).toHaveCount(0);
-    await expect(comment).toHaveValue('');
-    await expect(page.getByText(/\d+\/300 characters/)).toHaveText('0/300 characters');
-    await expect(rating).not.toBeChecked();
-  });
 });

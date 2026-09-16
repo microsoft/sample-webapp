@@ -296,22 +296,7 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The error alert (getByTestId('feedback-error')) is visible with the "Please select a rating between 1 and 5." message
       2. Step: Select a valid rating (e.g. getByTestId('feedback-rating-5')) and click "Send feedback" again
          Expectation: The error alert is no longer present (count 0) and the success message (getByTestId('feedback-success')) becomes visible with "Thanks for your feedback!"
-37. **Feedback comment character counter reflects length and enforces the 300-character limit** — `tests/feedback.spec.ts` (change)
-    - Preconditions: None — public `/feedback` route; the form is in-memory component state that resets on navigation. Nothing to create or clean up.
-    - Step/Expectation Pairs:
-      1. Step: Navigate to /feedback
-         Expectation: The character counter (the `p[aria-live="polite"]` region below the comment textarea) reads "0/300 characters"
-      2. Step: Type a short comment (e.g. "Great experience!") into getByTestId('feedback-comment')
-         Expectation: The counter updates to match the typed length exactly (e.g. "17/300 characters")
-      3. Step: Fill the comment field with a string longer than 300 characters (e.g. 305 'a' characters)
-         Expectation: The textarea value is capped at 300 characters (value length === 300, enforced by maxLength) and the counter reads "300/300 characters"
-38. **Feedback Clear button resets rating, comment, counter, and the success message** — `tests/feedback.spec.ts` (change)
-    - Preconditions: None — public `/feedback` route; nothing to create or clean up.
-    - Step/Expectation Pairs:
-      1. Step: Navigate to /feedback, select a rating (getByTestId('feedback-rating-4')), type a comment into getByTestId('feedback-comment'), and click "Send feedback"
-         Expectation: The success message (getByTestId('feedback-success')) is visible with "Thanks for your feedback!"
-      2. Step: Click the "Clear" button (getByRole('button', { name: 'Clear' }))
-         Expectation: The success message is removed (count 0), the comment field is empty, the counter resets to "0/300 characters", and the rating radio (getByTestId('feedback-rating-4')) is no longer checked
+_Removed (2026-08-06): entries 37 (comment character counter / 300-char limit) and 38 (Clear button reset). These described a Feedback comment-counter/Clear feature that `Feedback.js` has never implemented (no counter text, no `maxLength`, no Clear button — confirmed in source history and against the live app). The tests were authored by a prior scout run (#339) against a non-existent feature; both were removed as stale._
 
 ### Cookie Consent
 19. **Cookie consent banner is shown to a first-time visitor and stays dismissed after Accept** — `tests/cookie-consent.spec.ts`
@@ -395,6 +380,14 @@ Sample Web App — a React application with React Router that provides routes su
     - Step/Expectation Pairs:
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
+39. **Home stats banner displays the users, orders, and uptime figures** — `tests/home.spec.ts` _(change)_
+    - Preconditions: None — `/` is the public landing route; the stats banner (`#stats-banner`) renders from static component markup with no auth or seeded data. Nothing to create or clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /
+       Expectation: The stats banner region (`#stats-banner`, scoped within `<main>`) is visible
+      2. Step: Inspect the three stat figures inside the banner
+       Expectation: The banner shows the exact texts "1,024 Users", "5,230 Orders", and "99.9% Uptime" — each visible within the banner
 
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
