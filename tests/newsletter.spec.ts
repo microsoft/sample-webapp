@@ -73,6 +73,38 @@ test.describe('Newsletter page', () => {
     await expect(page.getByTestId('newsletter-success')).toHaveCount(0);
   });
 
+  test('should treat a case-variant of a subscribed email as a duplicate (case-insensitive guard)', async ({ page }) => {
+    await page.goto('/newsletter');
+
+    const emailField = page.getByTestId('newsletter-email');
+    const subscribe = page.getByTestId('newsletter-subscribe');
+    const count = page.getByTestId('newsletter-count');
+
+    // A unique address with mixed case in the local part; its lowercase variant is
+    // a different string but the same address once normalized.
+    const mixedCase = `Scout-Case-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@Example.com`;
+    const lowerCase = mixedCase.toLowerCase();
+
+    // First subscription with the mixed-case address succeeds and counts as one.
+    await emailField.fill(mixedCase);
+    await subscribe.click();
+    await expect(page.getByTestId('newsletter-success')).toBeVisible();
+    await expect(count).toHaveText('1 subscriber');
+
+    // Submitting the all-lowercase variant of the same address is flagged as a
+    // duplicate — the guard normalizes case rather than treating it as new.
+    await emailField.fill(lowerCase);
+    await subscribe.click();
+
+    const duplicate = page.getByTestId('newsletter-duplicate');
+    await expect(duplicate).toBeVisible();
+    await expect(duplicate).toContainText('You are already subscribed with this email.');
+    await expect(page.getByTestId('newsletter-success')).toHaveCount(0);
+
+    // The duplicate is not admitted: the subscriber count stays at one.
+    await expect(count).toHaveText('1 subscriber');
+  });
+
   test('should increment the subscriber count on success only and pluralize it correctly', async ({ page }) => {
     await page.goto('/newsletter');
 

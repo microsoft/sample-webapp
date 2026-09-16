@@ -45,6 +45,16 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The checkbox returns to unchecked
      4. Step: Check "Remember me", fill Username and Password with valid credentials, then click "Login"
         Expectation: The success message banner (`role="status"`) appears and the URL redirects to /dashboard — confirming the checkbox does not interfere with sign-in
+39. **Login shows the required-fields error and blocks submission when a field is left empty** — `tests/login.spec.ts`
+   - Preconditions: None — `/login` is a public route; the required-fields guard is client-side (`!username.trim() || !password.trim()` in `Login.js`), so no auth or seeded data is needed. Nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /login, fill Username with a non-empty value (e.g. "tester"), leave Password empty, then click "Login"
+       Expectation: The message banner (`#message`, `role="alert"`, class contains "error") is visible with the exact text "Username and password are required"
+     2. Step: Observe the page after submission
+       Expectation: The URL stays on /login (no redirect to /dashboard occurs), confirming the guard blocks submission
+     3. Step: Reload /login, leave Username empty, fill Password with a value (e.g. "secret123"), then click "Login"
+       Expectation: The same required-fields error ("Username and password are required") is shown and the URL stays on /login — confirming either empty field triggers the guard
 
 ### Dashboard
 2. **Dashboard stat cards display correct values** — `tests/dashboard.spec.ts`
@@ -90,6 +100,36 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The completed todo ("Deploy to staging") is removed, leaving the two incomplete todos ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
      3. Step: Observe the "Clear completed" button after clearing
         Expectation: The "Clear completed" button is no longer present (it only shows while at least one todo is completed)
+39. **Dashboard "Add" appends a new incomplete todo, updates the summary total, and clears the input** — `tests/dashboard.spec.ts`
+    - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation, so a fresh load always shows the same 3 items; nothing to create or clean up.
+    - Postconditions: None (state resets on next navigation).
+    - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The list (`getByTestId('todo-list')`) shows 3 items and the summary (`#todo-summary`) reads "1 of 3 tasks completed"
+     2. Step: Fill the "Add a new task..." input (`#new-todo`) with a unique value (e.g. "Ship release notes") and click the "Add" button (`getByRole('button', { name: 'Add' })`)
+        Expectation: A new list item with the exact text "Ship release notes" is appended as the last todo (unchecked/incomplete), the list now shows 4 items, the summary (`#todo-summary`) reads "1 of 4 tasks completed" (denominator incremented, completed count unchanged), and the input (`#new-todo`) is cleared to empty
+     3. Step: With the input empty (or containing only whitespace, e.g. "   "), click the "Add" button again
+        Expectation: No new item is added — the list still shows 4 items and the summary still reads "1 of 4 tasks completed" (the `!newTodo.trim()` guard makes an empty/whitespace submission a no-op)
+40. **Dashboard toggling a todo checkbox flips its done state and updates the completed-count summary** — `tests/dashboard.spec.ts`
+    - Preconditions: Authenticated (storageState from auth.setup.ts). Todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation; nothing to create or clean up.
+    - Postconditions: None (state resets on next navigation).
+    - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The summary (`#todo-summary`) reads "1 of 3 tasks completed"; the checkbox for an initially-incomplete todo (`getByRole('checkbox', { name: 'Toggle Review pull requests' })`) is unchecked
+     2. Step: Check the "Toggle Review pull requests" checkbox
+        Expectation: That checkbox becomes checked and the summary (`#todo-summary`) reads "2 of 3 tasks completed" (completed count incremented)
+     3. Step: Uncheck the same checkbox
+        Expectation: The checkbox returns to unchecked and the summary (`#todo-summary`) returns to "1 of 3 tasks completed"
+41. **Dashboard deleting a single todo removes it from the list and updates the summary** — `tests/dashboard.spec.ts`
+    - Preconditions: Authenticated (storageState from auth.setup.ts). Todos are seeded client-side (`initialTodos` in `Dashboard.js`) and reset on navigation; nothing to create or clean up.
+    - Postconditions: None (state resets on next navigation).
+    - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and inspect the Todo List section
+        Expectation: The list (`getByTestId('todo-list')`) shows 3 items including "Deploy to staging" (which is done); the summary (`#todo-summary`) reads "1 of 3 tasks completed"
+     2. Step: Click the delete button for the completed todo (`getByRole('button', { name: 'Delete Deploy to staging' })`)
+        Expectation: The "Deploy to staging" item is removed (its text and its "Toggle Deploy to staging" checkbox are no longer present), the list now shows 2 items ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
+     3. Step: Delete an incomplete todo (`getByRole('button', { name: 'Delete Review pull requests' })`)
+        Expectation: The "Review pull requests" item is removed, the list shows 1 item ("Write documentation"), and the summary (`#todo-summary`) reads "0 of 1 tasks completed"
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`
@@ -296,22 +336,8 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The error alert (getByTestId('feedback-error')) is visible with the "Please select a rating between 1 and 5." message
       2. Step: Select a valid rating (e.g. getByTestId('feedback-rating-5')) and click "Send feedback" again
          Expectation: The error alert is no longer present (count 0) and the success message (getByTestId('feedback-success')) becomes visible with "Thanks for your feedback!"
-37. **Feedback comment character counter reflects length and enforces the 300-character limit** — `tests/feedback.spec.ts` (change)
-    - Preconditions: None — public `/feedback` route; the form is in-memory component state that resets on navigation. Nothing to create or clean up.
-    - Step/Expectation Pairs:
-      1. Step: Navigate to /feedback
-         Expectation: The character counter (the `p[aria-live="polite"]` region below the comment textarea) reads "0/300 characters"
-      2. Step: Type a short comment (e.g. "Great experience!") into getByTestId('feedback-comment')
-         Expectation: The counter updates to match the typed length exactly (e.g. "17/300 characters")
-      3. Step: Fill the comment field with a string longer than 300 characters (e.g. 305 'a' characters)
-         Expectation: The textarea value is capped at 300 characters (value length === 300, enforced by maxLength) and the counter reads "300/300 characters"
-38. **Feedback Clear button resets rating, comment, counter, and the success message** — `tests/feedback.spec.ts` (change)
-    - Preconditions: None — public `/feedback` route; nothing to create or clean up.
-    - Step/Expectation Pairs:
-      1. Step: Navigate to /feedback, select a rating (getByTestId('feedback-rating-4')), type a comment into getByTestId('feedback-comment'), and click "Send feedback"
-         Expectation: The success message (getByTestId('feedback-success')) is visible with "Thanks for your feedback!"
-      2. Step: Click the "Clear" button (getByRole('button', { name: 'Clear' }))
-         Expectation: The success message is removed (count 0), the comment field is empty, the counter resets to "0/300 characters", and the rating radio (getByTestId('feedback-rating-4')) is no longer checked
+
+<!-- Removed (heal): entries 37 "Feedback comment character counter … 300-character limit" and 38 "Feedback Clear button resets …" asserted a character counter, a 300-char maxLength cap, and a Clear button on /feedback. Feedback.js has never had any of these (created in #45, never modified; features cross-generated from Contact/FAQ in #339). Confirmed absent live and in source; the two specs were removed to keep the plan and suite in sync. -->
 
 ### Cookie Consent
 19. **Cookie consent banner is shown to a first-time visitor and stays dismissed after Accept** — `tests/cookie-consent.spec.ts`
@@ -361,6 +387,14 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The count still reads "1 subscriber" — a duplicate submission must not increment it
       5. Step: Subscribe a second distinct unique valid email and re-read the count
          Expectation: The count reads "2 subscribers" (plural) — it increments only on a successful, non-duplicate subscription
+29. **Newsletter duplicate guard is case-insensitive (a case-variant of a subscribed email is rejected)** — `tests/newsletter.spec.ts`
+    - Preconditions: None — public `/newsletter` route. The duplicate guard relies on the in-memory subscribed list (normalized to lowercase both when stored and when checked), so both submissions must happen within a single page load with no navigation/reload between them. Nothing to create or clean up.
+    - Postconditions: None — the subscribed list lives only in the page's in-memory state and is discarded on navigation.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /newsletter and subscribe a unique valid email whose local part contains mixed case (e.g. `Scout-Case-<unique>@Example.com`) by filling getByTestId('newsletter-email') and clicking getByTestId('newsletter-subscribe')
+         Expectation: The success message (getByTestId('newsletter-success')) is visible and the subscriber count (getByTestId('newsletter-count')) reads "1 subscriber"
+      2. Step: Without navigating away, fill the email field with the all-lowercase variant of the same address (e.g. `scout-case-<unique>@example.com`) and click Subscribe
+         Expectation: The duplicate alert (getByTestId('newsletter-duplicate'), role="alert") is visible with text "You are already subscribed with this email.", the success message (getByTestId('newsletter-success')) is NOT present, and the subscriber count still reads "1 subscriber" — proving the guard normalizes case rather than treating the variant as a new subscription
 
 ### Home
 23. **Home landing page renders the welcome heading and all call-to-action links** — `tests/home.spec.ts`
@@ -396,6 +430,14 @@ Sample Web App — a React application with React Router that provides routes su
       1. Step: Navigate to / and confirm the contact hint renders, then click the "Contact us" link within `<main>` (getByRole('main').getByRole('link', { name: 'Contact us' }))
         Expectation: The URL changes to /contact and the "Contact Us" heading (level 1) is visible
 
+### About
+39. **About page shows the runtime-computed established/copyright year line** — `tests/about.spec.ts`
+    - Preconditions: None — public `/about` route. The established line (`#about-established`) renders `Serving developers since 2024 · © {year} SampleApp` where `year = new Date().getFullYear()` (computed at runtime in `About.js`), so the assertion uses the runtime year and does not rot across calendar years. Nothing to create or clean up. Extends the existing About content test, preserving all its prior assertions.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /about (as part of the existing content test, after the heading/team/tech-stack/contact-form assertions)
+        Expectation: The established paragraph `#about-established` is visible with the exact text `Serving developers since 2024 · © ${new Date().getFullYear()} SampleApp` (real rendered copy with the current year, not a proxy or a hardcoded year)
+
 ### Not Found
 26. **Unknown route renders the 404 page and "Back to Home" recovers to the landing page** — `tests/not-found.spec.ts`
     - Preconditions: None — any unmatched route renders the catch-all NotFound page (`path="*"` in `App.js`); public, no auth or seeded data. Nothing to create or clean up.
@@ -406,6 +448,30 @@ Sample Web App — a React application with React Router that provides routes su
       2. Step: Click the "Back to Home" link
         Expectation: The URL changes to / and the "Welcome to Sample Web App" heading (level 1) is visible (recovery to the landing page)
 
+### Theme
+42. **Theme toggle switches between light and dark, updating the document theme, icon, and accessible label** — `tests/dashboard.spec.ts`
+    - Preconditions: None — the theme toggle (`getByTestId('theme-toggle')`) is a global navbar component rendered on every route, so the public `/` landing route suffices. With no stored `app_theme` preference and Playwright's default color scheme (light), the app starts in light mode. Nothing to create or clean up (theme state lives only in the test's own browser-context localStorage, discarded when the context closes).
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and inspect the theme toggle button (`getByTestId('theme-toggle')`)
+         Expectation: The document root (`<html>`) has `data-theme="light"`, and the toggle button's accessible name is "Switch to dark mode" (`getByRole('button', { name: 'Switch to dark mode' })` is visible)
+      2. Step: Click the theme toggle button
+         Expectation: The document root's `data-theme` becomes "dark" and the toggle button's accessible name changes to "Switch to light mode" (`getByRole('button', { name: 'Switch to light mode' })` is visible)
+      3. Step: Click the theme toggle button again
+         Expectation: The document root's `data-theme` returns to "light" and the toggle button's accessible name returns to "Switch to dark mode" (the toggle round-trips)
+43. **Selected theme persists across a page reload via localStorage** — `tests/dashboard.spec.ts`
+    - Preconditions: None — public `/` route; the theme toggle is global. App starts in light mode (no stored preference). The persisted value lives only in the test's own browser-context localStorage (`app_theme`), discarded when the context closes; nothing to clean up.
+    - Postconditions: None.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to / and confirm the starting state
+         Expectation: The document root has `data-theme="light"` and the toggle button's accessible name is "Switch to dark mode"
+      2. Step: Click the theme toggle button to switch to dark mode
+         Expectation: The document root has `data-theme="dark"` and the toggle button's accessible name is "Switch to light mode"
+      3. Step: Reload the page (same browser context)
+         Expectation: After reload the document root still has `data-theme="dark"` and the toggle's accessible name is still "Switch to light mode" — the chosen theme persists across reloads (read back from the `app_theme` localStorage key), so a returning visitor keeps their preference
+
+<!-- Coverage note: entries 39–41 (todo add/toggle/delete) are delivered together by the `should add, toggle, and delete a todo item` test in tests/dashboard.spec.ts (strengthened with #todo-summary count assertions), with the empty/whitespace no-op guard covered by `should not add a todo for empty or whitespace-only input`. -->
+<!-- Coverage note: entries 42–43 (theme toggle + persistence) are delivered by `should toggle theme to dark mode and persist across reload` in tests/dashboard.spec.ts (the global navbar toggle is exercised from /dashboard); no separate theme.spec.ts is needed. -->
 <!-- Coverage note: the Contact message character counter is covered in tests/contact.spec.ts. -->
 <!-- Maintenance note: entries are numbered sequentially and appended over time; continue from the current maximum when adding new plan items. -->
 
