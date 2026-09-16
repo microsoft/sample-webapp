@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import './About.css';
 
 function About() {
@@ -42,6 +42,7 @@ function About() {
           <li><span className="tech-badge">Playwright</span></li>
           <li><span className="tech-badge">CSS3</span></li>
           <li><span className="tech-badge">Node.js</span></li>
+          <li><span className="tech-badge">TypeScript</span></li>
         </ul>
       </section>
 
