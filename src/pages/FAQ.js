@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import './FAQ.css';
 
 const faqs = [
@@ -21,6 +21,14 @@ const faqs = [
     question: 'Which technologies are used?',
     answer:
       'The app is built with React 18, React Router v6, and plain CSS3. End-to-end tests are written with Playwright.',
+  },
+  {
+    question: 'Is the app accessible?',
+    answer: 'Yes! The app follows WCAG 2.1 AA guidelines including keyboard navigation and ARIA labels.',
+  },
+  {
+    question: 'Does the app expose an API?',
+    answer: 'A REST API is available for integration. Check the documentation for endpoint details.',
   },
   {
     question: 'How can I get in touch?',
