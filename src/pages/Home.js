@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
@@ -21,6 +21,7 @@ function Home() {
           <li>Responsive design</li>
         </ul>
       </section>
+      <section id="testimonials"><h2>What Our Users Say</h2><blockquote>This app made testing a breeze! -- Alice</blockquote><blockquote>Clean UI and easy to navigate. -- Bob</blockquote></section>
       <p className="contact-hint" id="contact-hint">
         Have questions? <Link to="/contact">Contact us</Link>.
       </p>
