@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 
 /**
  * Feedback page. Self-contained, testable feature: a rating (1-5) plus an
@@ -6,6 +6,7 @@ import React, { useState } from 'react';
  */
 function Feedback() {
   const [rating, setRating] = useState(0);
+  const ratingLabels = { 1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Very Good', 5: 'Excellent' };
   const [comment, setComment] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
