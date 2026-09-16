@@ -214,6 +214,13 @@ Sample Web App — a React application with React Router that provides routes su
          Expectation: The question is aria-expanded="true" and its answer region (role="region", named by the question) is visible
       4. Step: Click the "Clear" button
          Expectation: The search box value is empty, the results count is no longer present, all five question buttons are visible again, the previously-open answer region is no longer visible (the click resets the query AND collapses the open answer via setOpenIndex(null)), and the "Clear" button itself is no longer present (it renders only while a query is set)
+39. **FAQ support-contact intro note renders and stays visible as a search fallback** — `tests/faq.spec.ts` _(coverage: change)_
+    - Preconditions: None — `/faq` is a public route with hard-coded content; the note (`<p id="faq-intro">`) is static markup and the search box is in-memory state that resets on navigation. Nothing to create or clean up.
+    - Step/Expectation Pairs:
+      1. Step: Navigate to /faq
+         Expectation: The support-contact intro note (`#faq-intro`, the first paragraph directly under the "Frequently Asked Questions" heading) is visible and its text contains the support address `support@sampleapp.dev` and the response-time promise `within 24 hours`. It is a distinct element from the pre-existing informational intro ("Find answers to the most common questions…") — both share the `faq-intro` class, so target the note by its unique `#faq-intro` id rather than the class.
+      2. Step: Type a query that matches no question or answer (e.g. "zzzznomatch") into the search box (getByRole('searchbox', { name: 'Search questions' }))
+         Expectation: The accordion collapses to the empty-state (no question buttons; the `role="status"` "No questions match…" message is shown), and the `#faq-intro` support-contact note is STILL visible — it is a static fallback outside the accordion, so filtering never removes it (this is exactly the "cannot find an answer" path it exists to serve)
 
 ### Scroll Progress
 20. **Scroll progress bar reflects scroll position from top (0%) to bottom (100%)** — `tests/scroll-progress.spec.ts`
