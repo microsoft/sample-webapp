@@ -82,6 +82,12 @@ export default defineConfig({
   // at the start of every run; keeping each run under its own subdir means a bare
   // (no `--output`) run can never wipe heal's `before/`/`after/` recordings.
   outputDir: OUTPUT_DIR,
+  // Force full parallelism on ATA's runs (overrides the base config): tests within a
+  // file run concurrently too, not just across files — so the before pass surfaces
+  // within-file isolation/ordering defects instead of hiding them behind serial
+  // execution. Explicit `test.describe.serial()` / `test.describe.configure({ mode: 'serial' })`
+  // still take precedence for a suite that genuinely must run in order.
+  fullyParallel: true,
   // Per-test timeout. We raise the floor (slowMo + cloud-mode latency push real
   // E2E flows well past Playwright's 30s default), but never reduce the user's
   // own setting — long-running tests (file uploads, multi-step flows) keep theirs.
