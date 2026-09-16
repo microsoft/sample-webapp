@@ -7,6 +7,7 @@ function Home() {
     <div className="home">
       <h1>Welcome to Sample Web App</h1>
       <p id="description">A React web application built for Playwright testing.</p>
+      <p id="tagline" className="home-tagline">Build, test, and ship with confidence.</p>
       <div className="actions">
         <Link to="/login" className="btn btn-primary">Get Started</Link>
         <Link to="/dashboard" className="btn btn-secondary">View Dashboard</Link>
