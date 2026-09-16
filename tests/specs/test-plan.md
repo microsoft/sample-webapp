@@ -90,6 +90,14 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The completed todo ("Deploy to staging") is removed, leaving the two incomplete todos ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
      3. Step: Observe the "Clear completed" button after clearing
         Expectation: The "Clear completed" button is no longer present (it only shows while at least one todo is completed)
+39. **Dashboard displays the Active Sessions stat card with its value** — `tests/dashboard.spec.ts` _(scout: change)_
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — the stat values are client-side static data (`stats` in `Dashboard.js`), so nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and locate the stat-card grid
+        Expectation: A stat card with the heading "Active Sessions" (h3) is visible
+     2. Step: Inspect the Active Sessions stat value element (`#active-sessions`)
+        Expectation: It displays the value "47"
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`
