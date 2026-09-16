@@ -7,6 +7,7 @@ function About() {
   return (
     <div className="about">
       <h1>About Us</h1>
+      <p id="about-mission" className="about-mission">Our mission is to make end-to-end testing effortless for every developer.</p>
       <section className="about-intro">
         <p>
           Sample Web App is a modern React application designed to demonstrate
