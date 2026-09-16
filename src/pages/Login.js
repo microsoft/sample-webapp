@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
@@ -24,6 +24,8 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [message, setMessage] = useState(null);
+  // Placeholder for future password-reset flow
+  const handleForgotPassword = (e) => { e.preventDefault(); };
   const [error, setError] = useState(false);
   const navigate = useNavigate();
 
