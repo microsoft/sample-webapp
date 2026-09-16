@@ -8,22 +8,24 @@ test.describe('Dashboard page', () => {
     await expect(page.getByRole('heading', { name: 'Dashboard', level: 1 })).toBeVisible();
   });
 
-  test('should display stat cards for Users, Revenue, and Orders', async ({ page }) => {
+  test('should display stat cards for Users, Revenue, Orders, and Conversion Rate', async ({ page }) => {
     await page.goto('/dashboard');
 
     await expect(page.getByRole('heading', { name: 'Users', level: 3 })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Revenue', level: 3 })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Orders', level: 3 })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Conversion Rate', level: 3 })).toBeVisible();
 
     await expect(page.locator('#user-count')).not.toBeEmpty();
     await expect(page.locator('#revenue')).not.toBeEmpty();
     await expect(page.locator('#order-count')).not.toBeEmpty();
+    await expect(page.locator('#conversion-rate')).toHaveText('3.2%');
   });
 
   test('should display correct values in stat cards', async ({ page }) => {
     await page.goto('/dashboard');
 
-    await expect(page.locator('#user-count')).toHaveText('999');
+    await expect(page.locator('#user-count')).toHaveText('128');
     await expect(page.locator('#revenue')).toHaveText('$12,450');
     await expect(page.locator('#order-count')).toHaveText('340');
   });
