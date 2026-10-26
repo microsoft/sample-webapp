@@ -15,6 +15,10 @@
 
 Playwright `@playwright/test` ^1.48.0 with `dotenv` for env loading. Config: `playwright.config.ts` (baseURL `http://localhost:3000`, three projects: `setup`, `chromium`, `login-tests`). Tests live in `tests/` with `*.spec.ts` naming. A shared `auth.setup.ts` signs in once and saves `storageState` to `.testing-agent/auth/storageState.json`; the `chromium` project depends on it while `login-tests` runs without cached state. No page objects or custom fixtures yet.
 
+## Agent & Testing Guidance
+
+- `.github/agents/app-testing-agent-custom.agent.md` — the repo's custom App Testing Agent definition: routes user intent to the right `ata` subcommand (plan / generate / run / heal / scout), and sets hard safety rails (never hand-author `*.spec.ts`; never pass `--create-pr` / `--save-results` / `--browser-mode cloud` unless explicitly warranted; never edit this instructions file on the user's behalf). Later phases should read and follow it.
+
 ## Test Plans
 
 In-repo, at `tests/specs/test-plan.md`. Markdown format: a top-level `# Test Plan`, an `## Application` blurb, then `## Suites` containing one `### <Suite>` heading per feature area (Login, Dashboard, …). Each test is a numbered entry `**<name>** — \`tests/<file>.spec.ts\`` with `Preconditions:`, `Postconditions:`, and ordered Step/Expectation pairs. Later `plan` / `scout` runs should extend this file in place following the same convention rather than creating a new plan location.
