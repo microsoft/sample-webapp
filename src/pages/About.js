@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import './About.css';
 
 function About() {
@@ -25,6 +25,11 @@ function About() {
             <div className="avatar">KG</div>
             <h3>Kashish Gupta</h3>
             <p>Lead Developer</p>
+          </div>
+          <div className="team-card">
+            <div className="avatar">AM</div>
+            <h3>Alex Martinez</h3>
+            <p>QA Engineer</p>
           </div>
           <div className="team-card">
             <div className="avatar">AI</div>
