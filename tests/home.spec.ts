@@ -54,4 +54,19 @@ test.describe('Home page', () => {
     await expect(page).toHaveURL(/.*contact/);
     await expect(page.getByRole('heading', { name: 'Contact Us', level: 1 })).toBeVisible();
   });
+
+  test('Testimonials section renders the heading and both user quotes', async ({ page }) => {
+    await page.goto('/');
+
+    const testimonials = page.locator('#testimonials');
+    await expect(
+      testimonials.getByRole('heading', { name: 'What Our Users Say', level: 2 })
+    ).toBeVisible();
+
+    const quotes = testimonials.locator('blockquote');
+    await expect(quotes).toHaveText([
+      'This app made testing a breeze! -- Alice',
+      'Clean UI and easy to navigate. -- Bob',
+    ]);
+  });
 });
