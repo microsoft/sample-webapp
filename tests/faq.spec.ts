@@ -10,7 +10,7 @@ import { test, expect } from '@playwright/test';
  *
  * A search box (role="searchbox", accessible name "Search questions") filters the
  * list by question OR answer text (case-insensitive, trimmed). An empty query
- * shows all five FAQs; a query with no match replaces the accordion with a
+ * shows all seven FAQs; a query with no match replaces the accordion with a
  * role="status" empty-state message that echoes the trimmed query.
  */
 
@@ -78,7 +78,7 @@ test.describe('FAQ page', () => {
     const search = page.getByRole('searchbox', { name: 'Search questions' });
     const questions = page.getByRole('button').filter({ hasText: '?' });
 
-    // All five questions are shown before filtering.
+    // All seven questions are shown before filtering.
     await expect(page.getByRole('button', { name: Q1 })).toBeVisible();
 
     // "playwright" appears only in answer text (never in a question), so a match
@@ -92,7 +92,7 @@ test.describe('FAQ page', () => {
 
     // Clearing the box restores the full list.
     await search.fill('');
-    await expect(questions).toHaveCount(5);
+    await expect(questions).toHaveCount(7);
   });
 
   test('search shows a results count while filtering and hides it when cleared', async ({ page }) => {
@@ -103,9 +103,9 @@ test.describe('FAQ page', () => {
     // No results count is shown before any query is entered.
     await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
 
-    // "playwright" matches two of the five FAQs by answer text.
+    // "playwright" matches two of the seven FAQs by answer text.
     await search.fill('playwright');
-    await expect(page.getByText('Showing 2 of 5 questions')).toBeVisible();
+    await expect(page.getByText('Showing 2 of 7 questions')).toBeVisible();
 
     // Clearing the query removes the results count again.
     await search.fill('');
@@ -134,13 +134,13 @@ test.describe('FAQ page', () => {
     // Typing a term filters the list and shows the results count.
     await search.fill('dark');
     await expect(search).toHaveValue('dark');
-    await expect(page.getByText('Showing 1 of 5 questions')).toBeVisible();
+    await expect(page.getByText('Showing 1 of 7 questions')).toBeVisible();
 
     // Pressing Escape in the search box clears the query and restores the full list.
     await search.press('Escape');
     await expect(search).toHaveValue('');
     await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
-    await expect(questions).toHaveCount(5);
+    await expect(questions).toHaveCount(7);
   });
 
   test('Clear button resets the search and collapses any open answer', async ({ page }) => {
@@ -159,7 +159,7 @@ test.describe('FAQ page', () => {
     const darkQuestion = page.getByRole('button', { name: 'Does the app support dark mode?' });
     await expect(darkQuestion).toBeVisible();
     await expect(questions).toHaveCount(1);
-    await expect(page.getByText('Showing 1 of 5 questions')).toBeVisible();
+    await expect(page.getByText('Showing 1 of 7 questions')).toBeVisible();
 
     // Expand the matching answer so we can prove Clear also collapses it.
     await darkQuestion.click();
@@ -171,10 +171,54 @@ test.describe('FAQ page', () => {
     await clearButton.click();
     await expect(search).toHaveValue('');
     await expect(page.getByText(/Showing \d+ of \d+ questions/)).toHaveCount(0);
-    await expect(questions).toHaveCount(5);
+    await expect(questions).toHaveCount(7);
     await expect(
       page.getByRole('region', { name: 'Does the app support dark mode?' })
     ).toHaveCount(0);
     await expect(clearButton).toHaveCount(0);
+  });
+
+  test('Accessibility and API FAQ items render, expand to their answers, and are searchable', async ({
+    page,
+  }) => {
+    await page.goto('/faq');
+
+    const accessibilityQuestion = page.getByRole('button', { name: 'Is the app accessible?' });
+    const apiQuestion = page.getByRole('button', { name: 'Does the app expose an API?' });
+
+    // Both new questions render and start collapsed.
+    await expect(accessibilityQuestion).toBeVisible();
+    await expect(accessibilityQuestion).toHaveAttribute('aria-expanded', 'false');
+    await expect(apiQuestion).toBeVisible();
+    await expect(apiQuestion).toHaveAttribute('aria-expanded', 'false');
+
+    // Opening the accessibility question reveals its answer region with the real answer text.
+    await accessibilityQuestion.click();
+    await expect(accessibilityQuestion).toHaveAttribute('aria-expanded', 'true');
+    const accessibilityAnswer = page.getByRole('region', { name: 'Is the app accessible?' });
+    await expect(accessibilityAnswer).toBeVisible();
+    await expect(accessibilityAnswer).toContainText('WCAG 2.1 AA guidelines');
+
+    // Opening the API question reveals its answer and collapses the accessibility one
+    // (single-open accordion — exactly one region open at a time).
+    await apiQuestion.click();
+    await expect(apiQuestion).toHaveAttribute('aria-expanded', 'true');
+    const apiAnswer = page.getByRole('region', { name: 'Does the app expose an API?' });
+    await expect(apiAnswer).toBeVisible();
+    await expect(apiAnswer).toContainText('REST API');
+    await expect(accessibilityQuestion).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.getByRole('region')).toHaveCount(1);
+
+    // "WCAG" appears only in the new accessibility answer — searching it isolates that item.
+    const search = page.getByRole('searchbox', { name: 'Search questions' });
+    const questions = page.getByRole('button').filter({ hasText: '?' });
+    await search.fill('WCAG');
+    await expect(questions).toHaveCount(1);
+    await expect(page.getByRole('button', { name: 'Is the app accessible?' })).toBeVisible();
+
+    // "REST" appears only in the new API answer — searching it isolates that item.
+    await search.fill('REST');
+    await expect(questions).toHaveCount(1);
+    await expect(page.getByRole('button', { name: 'Does the app expose an API?' })).toBeVisible();
   });
 });
