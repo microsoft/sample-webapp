@@ -49,6 +49,7 @@ function FAQ() {
   return (
     <div className="faq">
       <h1>Frequently Asked Questions</h1>
+      <p id="faq-intro" className="faq-intro">Cannot find an answer? Email support@sampleapp.dev and we respond within 24 hours.</p>
       <p className="faq-intro">
         Find answers to the most common questions about Sample Web App.
       </p>

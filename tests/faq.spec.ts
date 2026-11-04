@@ -177,4 +177,34 @@ test.describe('FAQ page', () => {
     ).toHaveCount(0);
     await expect(clearButton).toHaveCount(0);
   });
+
+  test('support-contact intro note renders and stays visible when a search matches nothing', async ({ page }) => {
+    await page.goto('/faq');
+
+    // The support-contact intro note is a static fallback: the first paragraph
+    // directly under the heading, targeted by its unique #faq-intro id (the
+    // pre-existing informational intro shares the .faq-intro class, so the class
+    // alone is not a unique handle).
+    const introNote = page.locator('#faq-intro');
+    await expect(introNote).toBeVisible();
+    await expect(introNote).toContainText('support@sampleapp.dev');
+    await expect(introNote).toContainText('within 24 hours');
+
+    // It is a distinct element from the pre-existing informational intro
+    // ("Find answers to the most common questions…"), which does not mention support.
+    await expect(introNote).not.toContainText('Find answers to the most common questions');
+    await expect(page.locator('.faq-intro')).toHaveCount(2);
+
+    // Filtering the accordion down to no matches shows the empty-state...
+    const search = page.getByRole('searchbox', { name: 'Search questions' });
+    await search.fill('zzzznomatch');
+    await expect(page.getByRole('button').filter({ hasText: '?' })).toHaveCount(0);
+    await expect(page.getByRole('status')).toHaveText('No questions match "zzzznomatch".');
+
+    // ...but the support-contact note remains visible — it lives outside the
+    // accordion, so it is exactly the "cannot find an answer?" fallback a user
+    // sees when their search returns nothing.
+    await expect(introNote).toBeVisible();
+    await expect(introNote).toContainText('support@sampleapp.dev');
+  });
 });
