@@ -135,4 +135,30 @@ test.describe('Login page', () => {
 
     await expect(page).toHaveURL(/.*dashboard/);
   });
+
+  test('should show the required-fields error and block submission when a field is left empty', async ({ page }) => {
+    await page.goto('/login');
+
+    // Username filled, password left empty: the required-fields guard fires.
+    await page.getByRole('textbox', { name: 'Username' }).fill('tester');
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    const message = page.getByRole('alert');
+    await expect(message).toBeVisible();
+    await expect(message).toHaveClass(/error/);
+    await expect(message).toHaveText('Username and password are required');
+
+    // The guard blocks submission: no redirect to the dashboard occurs.
+    await expect(page).toHaveURL(/.*login/);
+
+    // The symmetric case: password filled, username left empty triggers the same guard.
+    await page.goto('/login');
+    await page.getByRole('textbox', { name: 'Password' }).fill('secret123');
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    const message2 = page.getByRole('alert');
+    await expect(message2).toBeVisible();
+    await expect(message2).toHaveText('Username and password are required');
+    await expect(page).toHaveURL(/.*login/);
+  });
 });
