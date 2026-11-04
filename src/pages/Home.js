@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
@@ -12,6 +12,7 @@ function Home() {
         <Link to="/dashboard" className="btn btn-secondary">View Dashboard</Link>
         <Link to="/about" className="btn btn-secondary">Learn More</Link>
       </div>
+      <section id="stats-banner" className="stats-banner"><span>1,024 Users</span><span>5,230 Orders</span><span>99.9% Uptime</span></section>
       <section id="features">
         <h2>Features</h2>
         <ul>
