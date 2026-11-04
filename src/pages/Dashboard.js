@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import './Dashboard.css';
 
 const initialTodos = [
@@ -17,6 +17,7 @@ const stats = [
   { id: 'user-count', label: 'Users', value: '128' },
   { id: 'revenue', label: 'Revenue', value: '$12,450' },
   { id: 'order-count', label: 'Orders', value: '340' },
+  { id: 'conversion-rate', label: 'Conversion Rate', value: '3.2%' },
 ];
 
 function Dashboard() {

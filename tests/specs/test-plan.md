@@ -90,6 +90,15 @@ Sample Web App — a React application with React Router that provides routes su
         Expectation: The completed todo ("Deploy to staging") is removed, leaving the two incomplete todos ("Review pull requests", "Write documentation"), and the summary (`#todo-summary`) reads "0 of 2 tasks completed"
      3. Step: Observe the "Clear completed" button after clearing
         Expectation: The "Clear completed" button is no longer present (it only shows while at least one todo is completed)
+39. **Dashboard displays the Conversion Rate stat card with its value** — `tests/dashboard.spec.ts` (change)
+   - Implemented by extending the existing presence test (`should display stat cards for Users, Revenue, Orders, and Conversion Rate`) to also assert the Conversion Rate card, rather than a separate test — keeps the stat-cards coverage in one place.
+   - Preconditions: Authenticated (storageState from auth.setup.ts). No data to seed — the stat cards are client-side static data (`stats` in `Dashboard.js`); nothing to create or clean up.
+   - Postconditions: None.
+   - Step/Expectation Pairs:
+     1. Step: Navigate to /dashboard and wait for the stat cards to finish loading (the chart skeleton clears after ~900 ms)
+        Expectation: A stat card headed "Conversion Rate" (`h3`, level 3) is visible alongside the existing Users, Revenue, and Orders cards
+     2. Step: Inspect the Conversion Rate stat value (`#conversion-rate`)
+        Expectation: The value element `#conversion-rate` displays the text "3.2%"
 
 ### Navigation
 3. **Home and logo links navigate to root** — `tests/navigation.spec.ts`
